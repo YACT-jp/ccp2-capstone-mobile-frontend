@@ -1,24 +1,16 @@
 import React from 'react';
 import { View, Text, StyleSheet, useColorScheme } from 'react-native';
 
-function HomeScreen({navigation}) {
+function SavedScreen({navigation}) {
   const isDarkMode = useColorScheme() === 'dark';
   return (
     <View
     style={{
       backgroundColor: isDarkMode ? '#000' : '#fff',
     }}>
-      <Text>Home Page</Text>
+      <Text>Saved Location go here</Text>
   </View>
   );
 }
 
-export default HomeScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'lightgray',
-  }
-}) 
+export default SavedScreen;

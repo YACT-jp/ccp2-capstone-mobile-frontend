@@ -22,6 +22,7 @@ import {
 
 import HomeScreen from './screens/HomeScreen';
 import ResultsScreen from './screens/ResultsScreen';
+import Menu from './navigation/Menu';
 
 const Stack = createNativeStackNavigator();
 
@@ -42,9 +43,7 @@ const App: () => Node = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={HomeScreen} />
-      </Stack.Navigator>
+      <Menu />
     </NavigationContainer>
   );
 };
