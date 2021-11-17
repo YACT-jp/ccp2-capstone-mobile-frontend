@@ -20,31 +20,10 @@ import {
   View,
 } from 'react-native';
 
+import HomeScreen from './screens/HomeScreen';
+import ResultsScreen from './screens/ResultsScreen';
+
 const Stack = createNativeStackNavigator();
-
-function HomeScreen() {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View
-    style={{
-      backgroundColor: isDarkMode ? '#000' : '#fff',
-    }}>
-      <Text>Hello world</Text>
-  </View>
-  );
-}
-
-function ResultsScreen() {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View
-    style={{
-      backgroundColor: isDarkMode ? '#000' : '#fff',
-    }}>
-      <Text>List of Results Here</Text>
-  </View>
-  );
-}
 
 const App: () => Node = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -70,6 +49,7 @@ const App: () => Node = () => {
   );
 };
 
+//Styles Example
 const styles = StyleSheet.create({
   sectionContainer: {
     marginTop: 32,
