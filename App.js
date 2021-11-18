@@ -6,9 +6,10 @@
  * @flow strict-local
  */
 
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React, {useState} from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+// import {createStackNavigator} from '@react-navigation/stack';
 import type {Node} from 'react';
 import {
   SafeAreaView,
@@ -20,10 +21,11 @@ import {
   View,
 } from 'react-native';
 
-import HomeScreen from './screens/HomeScreen';
-import ResultsScreen from './screens/ResultsScreen';
+import {HomeScreen, ResultsScreen, SignIn, SignUp} from './screens';
 import Menu from './navigation/Menu';
+import {AuthContext} from './context';
 
+const AuthStack = createNativeStackNavigator();
 const Stack = createNativeStackNavigator();
 
 const App: () => Node = () => {
@@ -32,20 +34,44 @@ const App: () => Node = () => {
     backgroundColor: isDarkMode ? '#333' : '#ccc',
   };
 
-//   <SafeAreaView style={backgroundStyle}>
-//   <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-//   <ScrollView
-//     contentInsetAdjustmentBehavior="automatic"
-//     style={backgroundStyle}>
+  //   <SafeAreaView style={backgroundStyle}>
+  //   <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+  //   <ScrollView
+  //     contentInsetAdjustmentBehavior="automatic"
+  //     style={backgroundStyle}>
 
-//   </ScrollView>
-// </SafeAreaView>
+  //   </ScrollView>
+  // </SafeAreaView>
 
-  return (
-    <NavigationContainer>
-      <Menu />
-    </NavigationContainer>
-  );
+  const [user, setUser] = useState(null);
+
+  if (user) {
+    return (
+      <NavigationContainer>
+        <AuthContext.Provider value={{user, setUser}}>
+          <Menu />
+        </AuthContext.Provider>
+      </NavigationContainer>
+    );
+  } else
+    return (
+      <NavigationContainer>
+        <AuthContext.Provider value={{user, setUser}}>
+          <AuthStack.Navigator>
+            <AuthStack.Screen
+              name="SignIn"
+              component={SignIn}
+              options={{title: 'Sign In'}}
+            />
+            <AuthStack.Screen
+              name="SignUp"
+              component={SignUp}
+              options={{title: 'Create Account'}}
+            />
+          </AuthStack.Navigator>
+        </AuthContext.Provider>
+      </NavigationContainer>
+    );
 };
 
 //Styles Example
