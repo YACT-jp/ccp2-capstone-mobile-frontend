@@ -8,7 +8,7 @@ function HomeScreen({navigation}) {
     style={{
       backgroundColor: isDarkMode ? '#000' : '#fff',
     }}>
-      <Text>Home Page</Text>
+      <Text style={styles.text}>Home Page</Text>
   </View>
   );
 }
@@ -20,5 +20,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'lightgray',
+  },
+  text: {
+    color: 'rgb(59,108,212)'
   }
 }) 

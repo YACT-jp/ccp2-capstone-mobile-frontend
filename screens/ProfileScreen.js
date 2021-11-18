@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, useColorScheme } from 'react-native';
+import { View, Text, Button, StyleSheet, useColorScheme } from 'react-native';
 
 function ProfileScreen({navigation}) {
   const isDarkMode = useColorScheme() === 'dark';
@@ -9,6 +9,10 @@ function ProfileScreen({navigation}) {
       backgroundColor: isDarkMode ? '#000' : '#fff',
     }}>
       <Text>Your profile here</Text>
+      <Button
+        title="Go to Results"
+        onPress={() => navigation.navigate('Search')}
+      />
   </View>
   );
 }

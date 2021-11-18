@@ -1,22 +1,25 @@
 import React from 'react';
-import { View, Text, StyleSheet, useColorScheme, FlatList } from 'react-native';
+import { View, Text, StyleSheet, useColorScheme, FlatList, TouchableOpacity, Button } from 'react-native';
 import mediaResults from '../data/data';
+import { searchContext } from '../components/searchContext';
 
 function ResultsScreen({navigation}) {
   const isDarkMode = useColorScheme() === 'dark';
-
+  const queryString = React.useContext(searchContext);
   const DATA = JSON.parse(mediaResults());
 
   //List Item Component 
   const Item = ({ name }) => (
     <View style={styles.item}>
-      <Text style={styles.name}>{name}</Text>
+      <TouchableOpacity onPress={() => navigation.navigate('MediaLocationsResults')} >
+        <Text style={styles.name}>{name}</Text>
+      </TouchableOpacity>
     </View>
   );
 
   //Process each item of the data array
   const renderItem = ({ item }) => (
-    <Item name={item.Name} />
+    item.Name.toLowerCase().includes(queryString.toLowerCase()) ? <Item name={item.Name} /> : null
   );
 
   return (
@@ -24,6 +27,8 @@ function ResultsScreen({navigation}) {
     style={{ 
       backgroundColor: isDarkMode ? '#000' : '#fff',
     }}>
+      <Text>{queryString}</Text>
+      <Button title="Go back" onPress={() => navigation.goBack()} />
       <FlatList
       data={DATA}
       renderItem={renderItem}>

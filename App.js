@@ -44,12 +44,13 @@ const App: () => Node = () => {
   // </SafeAreaView>
 
   const [user, setUser] = useState(null);
+  const [queryString, setQueryString] = useState('kI');
 
   if (user) {
     return (
       <NavigationContainer>
         <AuthContext.Provider value={{user, setUser}}>
-          <Menu />
+          <Menu queryString={queryString} />
         </AuthContext.Provider>
       </NavigationContainer>
     );
