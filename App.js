@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import React from 'react';
+import React, {useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 // import {createStackNavigator} from '@react-navigation/stack';
@@ -23,6 +23,7 @@ import {
 
 import {HomeScreen, ResultsScreen, SignIn, SignUp} from './screens';
 import Menu from './navigation/Menu';
+import {AuthContext} from './context';
 
 const AuthStack = createNativeStackNavigator();
 const Stack = createNativeStackNavigator();
@@ -42,20 +43,24 @@ const App: () => Node = () => {
   //   </ScrollView>
   // </SafeAreaView>
 
+  const [user, setUser] = useState(null);
+
   return (
     <NavigationContainer>
-      <AuthStack.Navigator>
-        <AuthStack.Screen
-          name="SignIn"
-          component={SignIn}
-          options={{title: 'Sign In'}}
-        />
-        <AuthStack.Screen
-          name="SignUp"
-          component={SignUp}
-          options={{title: 'Create Account'}}
-        />
-      </AuthStack.Navigator>
+      <AuthContext.Provider value={{user, setUser}}>
+        <AuthStack.Navigator>
+          <AuthStack.Screen
+            name="SignIn"
+            component={SignIn}
+            options={{title: 'Sign In'}}
+          />
+          <AuthStack.Screen
+            name="SignUp"
+            component={SignUp}
+            options={{title: 'Create Account'}}
+          />
+        </AuthStack.Navigator>
+      </AuthContext.Provider>
       {/* <Menu /> */}
     </NavigationContainer>
   );

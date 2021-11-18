@@ -4,7 +4,7 @@ import {View, Text, StyleSheet, Button} from 'react-native';
 import {AuthContext} from '../context';
 
 export const SignUp = () => {
-  const user = React.useContext(AuthContext);
+  const {user, setUser} = React.useContext(AuthContext);
 
   return (
     <View style={styles.container}>
