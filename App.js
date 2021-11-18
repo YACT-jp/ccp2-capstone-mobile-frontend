@@ -9,7 +9,6 @@
 import React, {useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-// import {createStackNavigator} from '@react-navigation/stack';
 import type {Node} from 'react';
 import {
   SafeAreaView,
@@ -21,7 +20,7 @@ import {
   View,
 } from 'react-native';
 
-import {HomeScreen, ResultsScreen, SignIn, SignUp} from './screens';
+import {HomeScreen, ResultsScreen, LoginForm, SignupForm} from './screens';
 import Menu from './navigation/Menu';
 import {AuthContext} from './context';
 
@@ -57,15 +56,15 @@ const App: () => Node = () => {
     return (
       <NavigationContainer>
         <AuthContext.Provider value={{user, setUser}}>
-          <AuthStack.Navigator>
+          <AuthStack.Navigator initialRouteName="SignIn">
             <AuthStack.Screen
               name="SignIn"
-              component={SignIn}
+              component={LoginForm}
               options={{title: 'Sign In'}}
             />
             <AuthStack.Screen
-              name="SignUp"
-              component={SignUp}
+              name="Signup"
+              component={SignupForm}
               options={{title: 'Create Account'}}
             />
           </AuthStack.Navigator>

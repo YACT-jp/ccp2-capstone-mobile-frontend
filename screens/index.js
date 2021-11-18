@@ -1,4 +1,4 @@
 export * from './HomeScreen';
 export * from './ResultsScreen';
-export * from './SignUp.js';
-export * from './SignIn.js';
+export * from './LoginForm.js';
+export * from './SignupForm.js';
