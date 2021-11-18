@@ -45,25 +45,33 @@ const App: () => Node = () => {
 
   const [user, setUser] = useState(null);
 
-  return (
-    <NavigationContainer>
-      <AuthContext.Provider value={{user, setUser}}>
-        <AuthStack.Navigator>
-          <AuthStack.Screen
-            name="SignIn"
-            component={SignIn}
-            options={{title: 'Sign In'}}
-          />
-          <AuthStack.Screen
-            name="SignUp"
-            component={SignUp}
-            options={{title: 'Create Account'}}
-          />
-        </AuthStack.Navigator>
-      </AuthContext.Provider>
-      {/* <Menu /> */}
-    </NavigationContainer>
-  );
+  if (user) {
+    return (
+      <NavigationContainer>
+        <AuthContext.Provider value={{user, setUser}}>
+          <Menu />
+        </AuthContext.Provider>
+      </NavigationContainer>
+    );
+  } else
+    return (
+      <NavigationContainer>
+        <AuthContext.Provider value={{user, setUser}}>
+          <AuthStack.Navigator>
+            <AuthStack.Screen
+              name="SignIn"
+              component={SignIn}
+              options={{title: 'Sign In'}}
+            />
+            <AuthStack.Screen
+              name="SignUp"
+              component={SignUp}
+              options={{title: 'Create Account'}}
+            />
+          </AuthStack.Navigator>
+        </AuthContext.Provider>
+      </NavigationContainer>
+    );
 };
 
 //Styles Example
