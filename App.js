@@ -7,8 +7,9 @@
  */
 
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+// import {createStackNavigator} from '@react-navigation/stack';
 import type {Node} from 'react';
 import {
   SafeAreaView,
@@ -20,10 +21,10 @@ import {
   View,
 } from 'react-native';
 
-import HomeScreen from './screens/HomeScreen';
-import ResultsScreen from './screens/ResultsScreen';
+import {HomeScreen, ResultsScreen, SignIn, SignUp} from './screens';
 import Menu from './navigation/Menu';
 
+const AuthStack = createNativeStackNavigator();
 const Stack = createNativeStackNavigator();
 
 const App: () => Node = () => {
@@ -32,18 +33,30 @@ const App: () => Node = () => {
     backgroundColor: isDarkMode ? '#333' : '#ccc',
   };
 
-//   <SafeAreaView style={backgroundStyle}>
-//   <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-//   <ScrollView
-//     contentInsetAdjustmentBehavior="automatic"
-//     style={backgroundStyle}>
+  //   <SafeAreaView style={backgroundStyle}>
+  //   <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+  //   <ScrollView
+  //     contentInsetAdjustmentBehavior="automatic"
+  //     style={backgroundStyle}>
 
-//   </ScrollView>
-// </SafeAreaView>
+  //   </ScrollView>
+  // </SafeAreaView>
 
   return (
     <NavigationContainer>
-      <Menu />
+      <AuthStack.Navigator>
+        <AuthStack.Screen
+          name="SignIn"
+          component={SignIn}
+          options={{title: 'Sign In'}}
+        />
+        <AuthStack.Screen
+          name="SignUp"
+          component={SignUp}
+          options={{title: 'Create Account'}}
+        />
+      </AuthStack.Navigator>
+      {/* <Menu /> */}
     </NavigationContainer>
   );
 };
