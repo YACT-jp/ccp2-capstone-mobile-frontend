@@ -5,7 +5,7 @@ import { searchContext } from '../components/searchContext';
 
 function ResultsScreen({navigation}) {
   const isDarkMode = useColorScheme() === 'dark';
-  const queryString = React.useContext(searchContext);
+  const [queryString, setQueryString] = React.useContext(searchContext);
   const DATA = JSON.parse(mediaResults());
 
   //List Item Component 
@@ -27,13 +27,12 @@ function ResultsScreen({navigation}) {
     style={{ 
       backgroundColor: isDarkMode ? '#000' : '#fff',
     }}>
-      <Text>{queryString}</Text>
-      <Button title="Go back" onPress={() => navigation.goBack()} />
+      <Text style={styles.name}>Searching for: {queryString}</Text>
       <FlatList
       data={DATA}
       renderItem={renderItem}>
-
       </FlatList>
+      <Button title="Go back" onPress={() => navigation.goBack()} />
   </View>
   );
 }

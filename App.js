@@ -50,7 +50,7 @@ const App: () => Node = () => {
     return (
       <NavigationContainer>
         <AuthContext.Provider value={{user, setUser}}>
-          <Menu queryString={queryString} />
+          <Menu queryString={queryString} setQueryString={setQueryString} />
         </AuthContext.Provider>
       </NavigationContainer>
     );
