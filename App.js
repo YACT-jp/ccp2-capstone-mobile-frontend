@@ -44,7 +44,7 @@ const App: () => Node = () => {
   // </SafeAreaView>
 
   const [user, setUser] = useState(null);
-  const [queryString, setQueryString] = useState('kI');
+  const [queryString, setQueryString] = useState('');
 
   if (user) {
     return (
