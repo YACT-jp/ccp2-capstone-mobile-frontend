@@ -13,20 +13,6 @@ import {
 } from 'native-base';
 // import MapView from 'react-native-maps';
 
-export function LocationImage() {
-  return (
-    <Image
-      size={150}
-      resizeMode={'contain'}
-      borderRadius={100}
-      source={{
-        uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/IBA-Shinjyuku-sta-202104.jpg/2560px-IBA-Shinjyuku-sta-202104.jpg',
-      }}
-      alt="Alternate Text"
-    />
-  );
-}
-
 function Location({route, navigation}) {
   /*Get the params */
   const {fullItem} = route.params;
@@ -53,7 +39,15 @@ function Location({route, navigation}) {
           }}>
           <Heading></Heading>
           <Center flex={1} px="3">
-            <LocationImage />
+            <Image
+              size={150}
+              resizeMode={'contain'}
+              borderRadius={100}
+              source={{
+                uri: fullItem.location_pic,
+              }}
+              alt="Alternate Text"
+            />
           </Center>
           <View style={{flex: 4}}>
             <Box
@@ -65,9 +59,11 @@ function Location({route, navigation}) {
                 alignItems="center"
                 justifyItems="center"
                 mt={3}>
-                <Text></Text>
                 <Heading textAlign="center">{fullItem.name}</Heading>
                 {/* <Text>{fullItem.description}</Text> */}
+                <Text textAlign="center" padding="5">
+                  {fullItem.coordinates}
+                </Text>
                 <Text textAlign="center" padding="5">
                   Shinjuku Station is a major railway station in the Shinjuku
                   and Shibuya wards in Tokyo, Japan. In Shinjuku, it is part of
