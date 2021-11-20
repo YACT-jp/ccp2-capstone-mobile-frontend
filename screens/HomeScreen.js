@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, useColorScheme } from 'react-native';
 import { searchContext } from '../components/searchContext';
 
@@ -7,6 +7,24 @@ function HomeScreen({navigation}) {
 
   const [text, setText] = useState('')
   const [queryString, setQueryString] = React.useContext(searchContext);
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch(
+        'https://ccp2-capstone-backend-sa-yxiyypij7a-an.a.run.app/api/media',
+      );
+      const data = await response.json()
+      //setTest(data);
+      return data;
+    } catch (err){ 
+      console.log(err)
+    }
+  };
+
+  useEffect( async () => {
+    const test = await fetchData();
+    console.log('test', test);
+  }, []);
 
   return (
     <View
