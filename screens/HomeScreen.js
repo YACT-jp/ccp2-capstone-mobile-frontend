@@ -8,24 +8,6 @@ function HomeScreen({navigation}) {
   const [text, setText] = useState('')
   const [queryString, setQueryString] = React.useContext(searchContext);
 
-  const fetchData = async () => {
-    try {
-      const response = await fetch(
-        'https://ccp2-capstone-backend-sa-yxiyypij7a-an.a.run.app/api/media',
-      );
-      const data = await response.json()
-      //setTest(data);
-      return data;
-    } catch (err){ 
-      console.log(err)
-    }
-  };
-
-  useEffect( async () => {
-    const test = await fetchData();
-    console.log('test', test);
-  }, []);
-
   return (
     <View
     style={{
