@@ -9,7 +9,6 @@
 import React, {useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import type {Node} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -20,9 +19,10 @@ import {
   View,
 } from 'react-native';
 
-import {HomeScreen, ResultsScreen, LoginForm, SignupForm} from './screens';
+import {LoadingScren, LoginForm, SignupForm} from './screens';
 import Menu from './navigation/Menu';
 import {AuthContext} from './context';
+import LoadingScreen from './screens/LoadingScreen';
 
 const AuthStack = createNativeStackNavigator();
 const Stack = createNativeStackNavigator();
@@ -43,7 +43,12 @@ const App: () => Node = () => {
   // </SafeAreaView>
 
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [queryString, setQueryString] = useState('');
+
+  setTimeout(() => {
+    setLoading(false);
+  }, 5000);
 
   if (user) {
     return (
@@ -53,7 +58,10 @@ const App: () => Node = () => {
         </AuthContext.Provider>
       </NavigationContainer>
     );
-  } else
+  } else {
+    if (loading) {
+      return <LoadingScreen></LoadingScreen>;
+    }
     return (
       <NavigationContainer>
         <AuthContext.Provider value={{user, setUser}}>
@@ -72,6 +80,7 @@ const App: () => Node = () => {
         </AuthContext.Provider>
       </NavigationContainer>
     );
+  }
 };
 
 //Styles Example
