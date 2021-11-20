@@ -61,7 +61,7 @@ function Location({route, navigation}) {
                 mt={3}>
                 {/* <Heading textAlign="center">{fullItem.name}</Heading> */}
                 {/* <Text>{fullItem.description}</Text> */}
-                <Text fontSize="lg">Coordinates:</Text>
+                <Text fontSize="lg">Details:</Text>
                 <Text textAlign="center">{fullItem.coordinates}</Text>
                 <Text textAlign="center" padding="3">
                   Shinjuku Station is a major railway station in the Shinjuku
