@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, useColorScheme, FlatList, TouchableOpacity, Button } from 'react-native';
 
-import mediaResults from '../data/data';
+import { locationResults } from '../data/data';
 import { searchContext } from '../components/searchContext';
 
 function LocResultsScreen({route, navigation}) {
@@ -9,21 +9,21 @@ function LocResultsScreen({route, navigation}) {
   const { name, mediaId } = route.params;
   const isDarkMode = useColorScheme() === 'dark';
   const [queryString, setQueryString] = React.useContext(searchContext);
-  const DATA = JSON.parse(mediaResults());
+  const DATA = JSON.parse(locationResults());
 
   //List Item Component 
-  // const Item = ({ name }) => (
-  //   <View style={styles.item}>
-  //     <TouchableOpacity onPress={() => navigation.navigate('Temp')} >
-  //       <Text style={styles.name}>{name}</Text>
-  //     </TouchableOpacity>
-  //   </View>
-  // );
+  const Item = ({ name, fullItem }) => (
+    <View style={styles.item}>
+      <TouchableOpacity onPress={() => navigation.navigate('Location', {fullItem})} >
+        <Text style={styles.name}>{name}</Text>
+      </TouchableOpacity>
+    </View>
+  );
 
-  //Process each item of the data array
-  // const renderItem = ({ item }) => (
-  //   item.Name.toLowerCase().includes(queryString.toLowerCase()) ? <Item name={item.Name} /> : null
-  // );
+  // Process each item of the data array
+  const renderItem = ({ item }) => (
+    JSON.parse(item['Media id']).includes(mediaId) ? <Item name={item.Name} fullItem={item} /> : null
+  );
 
   return (
     <View
@@ -31,10 +31,11 @@ function LocResultsScreen({route, navigation}) {
       backgroundColor: isDarkMode ? '#000' : '#fff',
     }}>
       <Text style={styles.name}>Locations matching Media ID: {mediaId}</Text>
-      {/* <FlatList
+      <Text>Location Name: {JSON.parse(DATA[0]['Media id'])[0]}</Text>
+      <FlatList
       data={DATA}
       renderItem={renderItem}>
-      </FlatList> */}
+      </FlatList>
       <Button title="Go back" onPress={() => navigation.goBack()} />
   </View>
   );

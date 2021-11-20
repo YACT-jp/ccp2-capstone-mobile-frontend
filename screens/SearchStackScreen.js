@@ -2,7 +2,7 @@ import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import ResultsScreen from "../screens/ResultsScreen";
-import SavedScreen from '../screens/SavedScreen';
+import Location from './Location';
 import LocResultsScreen from './LocResultsScreen';
 
 //Create a new Stack to use within the search results tab
@@ -14,6 +14,7 @@ function SearchStackScreen() {
         <SearchStack.Navigator>
           <SearchStack.Screen name="Media Results" component={ResultsScreen} />
           <SearchStack.Screen name="Locations" component={LocResultsScreen} />
+          <SearchStack.Screen name="Location" component={Location} />
         </SearchStack.Navigator>
   );
 }

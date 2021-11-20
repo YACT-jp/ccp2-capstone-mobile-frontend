@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, useColorScheme, FlatList, TouchableOpacity, Button } from 'react-native';
 
-import mediaResults from '../data/data';
+import { mediaResults } from '../data/data';
 import { searchContext } from '../components/searchContext';
 
 function ResultsScreen({navigation}) {
