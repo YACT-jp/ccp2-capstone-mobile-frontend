@@ -11,7 +11,7 @@ import {
   NativeBaseProvider,
   useColorModeValue,
 } from 'native-base';
-import MapView from 'react-native-maps';
+// import MapView from 'react-native-maps';
 
 export function LocationImage() {
   return (
@@ -20,7 +20,7 @@ export function LocationImage() {
       resizeMode={'contain'}
       borderRadius={100}
       source={{
-        uri: 'https://wallpaperaccess.com/full/317501.jpg',
+        uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/IBA-Shinjyuku-sta-202104.jpg/2560px-IBA-Shinjyuku-sta-202104.jpg',
       }}
       alt="Alternate Text"
     />
@@ -80,14 +80,14 @@ function Location({route, navigation}) {
               </VStack>
             </Box>
           </View>
-          <MapView
+          {/* <MapView
             initialRegion={{
               latitude: 37.78825,
               longitude: -122.4324,
               latitudeDelta: 0.0922,
               longitudeDelta: 0.0421,
             }}
-          />
+          /> */}
         </View>
       </Center>
     </NativeBaseProvider>
