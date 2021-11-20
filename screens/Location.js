@@ -37,7 +37,7 @@ function Location({route, navigation}) {
             flex: 1,
             padding: 20,
           }}>
-          <Heading></Heading>
+          <Heading textAlign="center">{fullItem.name}</Heading>
           <Center flex={1} px="3">
             <Image
               size={150}
@@ -59,12 +59,11 @@ function Location({route, navigation}) {
                 alignItems="center"
                 justifyItems="center"
                 mt={3}>
-                <Heading textAlign="center">{fullItem.name}</Heading>
+                {/* <Heading textAlign="center">{fullItem.name}</Heading> */}
                 {/* <Text>{fullItem.description}</Text> */}
-                <Text textAlign="center" padding="5">
-                  {fullItem.coordinates}
-                </Text>
-                <Text textAlign="center" padding="5">
+                <Text fontSize="lg">Coordinates:</Text>
+                <Text textAlign="center">{fullItem.coordinates}</Text>
+                <Text textAlign="center" padding="3">
                   Shinjuku Station is a major railway station in the Shinjuku
                   and Shibuya wards in Tokyo, Japan. In Shinjuku, it is part of
                   the Nishi-Shinjuku and Shinjuku districts. In Shibuya, it is
