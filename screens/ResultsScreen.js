@@ -1,13 +1,24 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, useColorScheme, FlatList, TouchableOpacity, Button } from 'react-native';
 
 import { mediaResults } from '../data/data';
 import { searchContext } from '../components/searchContext';
+import { mediaResultsApi } from '../data/data';
 
 function ResultsScreen({navigation}) {
   const isDarkMode = useColorScheme() === 'dark';
   const [queryString, setQueryString] = React.useContext(searchContext);
-  const DATA = JSON.parse(mediaResults());
+  //const DATA = JSON.parse(mediaResults());
+  const [DATA, setDATA] = useState([]);
+
+  useEffect( () => {
+    async function fetchData() {
+      const data = await mediaResultsApi();
+      //console.log('data', data);
+      setDATA(data);
+    }
+    fetchData();
+  }, []);
 
   //List Item Component 
   const Item = ({ name, mediaId }) => (
@@ -20,7 +31,7 @@ function ResultsScreen({navigation}) {
 
   //Process each item of the data array
   const renderItem = ({ item }) => (
-    item.Name.toLowerCase().includes(queryString.toLowerCase()) ? <Item name={item.Name} mediaId={item['Media ID']} /> : null
+    item.name.toLowerCase().includes(queryString.toLowerCase()) ? <Item name={item.name} mediaId={item['id']} /> : null
   );
 
   return (

@@ -26,6 +26,19 @@ export const locationResults = () => {
   return(data);
 }
 
+export const locResultsByMedia = async (mediaId) => {
+  try {
+    //console.log('GETTING LOCS FOR',mediaId);
+    const response = await fetch(
+      `https://ccp2-capstone-backend-sa-yxiyypij7a-an.a.run.app/api/media/${mediaId}/locations`,
+    );
+    const data = await response.json()
+    return data;
+  } catch (err){ 
+    console.log(err)
+  }
+};
+
 export const mediaInfo = () => {
   const data = `{"_id":{"$oid":"61961ed8b1e5cdc0bf41a44f"},"backdrop_path":"/2Yfzm5857lprGonYPl30XgEpTry.jpg","first_air_date":"2006-10-04","genre_ids":[16,9648],"id":13916,"media_type":"tv","name":"Death Note","origin_country":["JP"],"original_language":"ja","original_name":"DEATH NOTE","overview":"Light Yagami is an ace student with great prospects—and he’s bored out of his mind. But all that changes when he finds the Death Note, a notebook dropped by a rogue Shinigami death god. Any human whose name is written in the notebook dies, and Light has vowed to use the power of the Death Note to rid the world of evil. But will Light succeed in his noble goal, or will the Death Note turn him into the very thing he fights against?","popularity":123.365,"poster_path":"/iigTJJskR1PcjjXqxdyJwVB3BoU.jpg","vote_average":8.7,"vote_count":2502}`;
   return(data);
@@ -40,5 +53,17 @@ export const mediaResults = () => {
     {'Name': 'Kill Bill', 'Media ID': 6}]`.replace(/'/g, '"');
   return(data);
 }
+
+export const mediaResultsApi = async () => {
+  try {
+    const response = await fetch(
+      'https://ccp2-capstone-backend-sa-yxiyypij7a-an.a.run.app/api/media',
+    );
+    const data = await response.json()
+    return data;
+  } catch (err){ 
+    console.log(err)
+  }
+};
 
 //export default mediaResults;

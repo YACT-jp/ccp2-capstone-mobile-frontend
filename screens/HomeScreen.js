@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, useColorScheme } from 'react-native';
 import { searchContext } from '../components/searchContext';
 
