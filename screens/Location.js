@@ -11,9 +11,9 @@ function Location({route, navigation}) {
       backgroundColor: isDarkMode ? '#000' : '#fff',
     }}>
       <Text>Detailed Location Info</Text>
-      <Text>{fullItem.Name}</Text>
+      <Text>{fullItem.name}</Text>
       <Text>{fullItem._id}</Text>
-      <Text>{fullItem['Plus Code']}</Text>
+      <Text>{fullItem.plus_code}</Text>
       <Button title="Go back" onPress={() => navigation.goBack()} />
   </View>
   );
