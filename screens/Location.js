@@ -17,7 +17,7 @@ function Location({route, navigation}) {
   /*Get the params */
   const {fullItem} = route.params;
   const isDarkMode = useColorScheme() === 'dark';
-  console.log(fullItem);
+  // console.log(fullItem);
   return (
     //   <View
     //   style={{
