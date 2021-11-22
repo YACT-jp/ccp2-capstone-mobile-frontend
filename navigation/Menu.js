@@ -23,6 +23,7 @@ const Menu = ({queryString, setQueryString}) => {
       <searchContext.Provider value={[queryString, setQueryString]}>
         <Tab.Navigator
           screenOptions={({route}) => ({
+            headerShown: false,
             tabBarIcon: ({focused, color, size}) => {
               let iconName;
 

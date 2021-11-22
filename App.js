@@ -1,9 +1,7 @@
 import React, {useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {
-  useColorScheme,
-} from 'react-native';
+import {useColorScheme} from 'react-native';
 
 import {LoginForm, SignupForm} from './screens';
 import Menu from './navigation/Menu';
@@ -42,7 +40,11 @@ const App = () => {
     return (
       <NavigationContainer>
         <AuthContext.Provider value={{user, setUser}}>
-          <AuthStack.Navigator initialRouteName="SignIn">
+          <AuthStack.Navigator
+            initialRouteName="SignIn"
+            screenOptions={{
+              headerShown: false,
+            }}>
             <AuthStack.Screen
               name="SignIn"
               component={LoginForm}
