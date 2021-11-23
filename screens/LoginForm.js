@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Box,
   Text,
@@ -12,9 +12,35 @@ import {
   Center,
   NativeBaseProvider,
 } from 'native-base';
-import {AuthContext} from '../context';
+// import {AuthContext} from '../context';
+import {useAuth} from '../providers/AuthProvider';
+
 export const LoginForm = ({navigation: {navigate}}) => {
-  const {user, setUser} = React.useContext(AuthContext);
+  // const {user, setUser} = React.useContext(AuthContext);
+  const {user, signUp, signIn} = useAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    // If there is a user logged in, go to the Projects page.
+    console.log('user', user);
+    if (user != null) {
+      // navigation.navigate("Menu");
+      console.log('not null');
+    }
+  }, [user]);
+
+  // The onPressSignIn method calls AuthProvider.signIn with the
+  // email/password in state.
+  const onPressSignIn = async () => {
+    console.log('Press sign in');
+    try {
+      await signIn(email, password);
+    } catch (error) {
+      Alert.alert(`Failed to sign in: ${error.message}`);
+    }
+  };
+
   return (
     <NativeBaseProvider>
       <Center flex={1} px="3">
@@ -42,11 +68,22 @@ export const LoginForm = ({navigation: {navigate}}) => {
           <VStack space={3} mt="5">
             <FormControl>
               <FormControl.Label>Email ID</FormControl.Label>
-              <Input />
+              <Input
+                onChangeText={setEmail}
+                value={email}
+                placeholder="email"
+                autoCapitalize="none"
+              />
             </FormControl>
             <FormControl>
               <FormControl.Label>Password</FormControl.Label>
-              <Input type="password" />
+              <Input
+                type="password"
+                onChangeText={text => setPassword(text)}
+                value={password}
+                placeholder="password"
+                secureTextEntry
+              />
               <Link
                 _text={{
                   fontSize: 'xs',
@@ -58,10 +95,7 @@ export const LoginForm = ({navigation: {navigate}}) => {
                 Forgot Password?
               </Link>
             </FormControl>
-            <Button
-              mt="2"
-              colorScheme="indigo"
-              onPress={() => setUser('Signed in!')}>
+            <Button mt="2" colorScheme="indigo" onPress={onPressSignIn}>
               Sign in
             </Button>
             <HStack mt="6" justifyContent="center">
