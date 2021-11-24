@@ -11,7 +11,7 @@ import {useAuth, AuthProvider} from './providers/AuthProvider';
 const AuthStack = createNativeStackNavigator();
 const Stack = createNativeStackNavigator();
 
-const AlmostApp = () => {
+const ProtectedApp = () => {
   const isDarkMode = useColorScheme() === 'dark';
   const backgroundStyle = {
     backgroundColor: isDarkMode ? '#333' : '#ccc',
