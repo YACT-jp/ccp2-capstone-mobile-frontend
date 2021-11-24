@@ -1,6 +1,6 @@
-import React, { useContext, useState, useEffect, useRef } from "react";
-import Realm from "realm";
-import app from "../realmApp";
+import React, {useContext, useState, useEffect, useRef} from 'react';
+import Realm from 'realm';
+import app from '../realmApp';
 
 // Create a new Context object that will be provided to descendants of
 // the AuthProvider.
@@ -9,7 +9,7 @@ const AuthContext = React.createContext(null);
 // The AuthProvider is responsible for user management and provides the
 // AuthContext value to its descendants. Components under an AuthProvider can
 // use the useAuth() hook to access the auth value.
-const AuthProvider = ({ children }) => {
+const AuthProvider = ({children}) => {
   const [user, setUser] = useState(app.currentUser);
   const realmRef = useRef(null);
   const [projectData, setProjectData] = useState([]);
@@ -21,7 +21,7 @@ const AuthProvider = ({ children }) => {
 
     // The current user always has their own project, so we don't need
     // to wait for the user object to load before displaying that project.
-    const myProject = { name: "My Project", partition: `project=${user.id}` };
+    const myProject = {name: 'My Project', partition: `project=${user.id}`};
     setProjectData([myProject]);
 
     const config = {
@@ -33,9 +33,9 @@ const AuthProvider = ({ children }) => {
 
     // Open a realm with the logged in user's partition value in order
     // to get the projects that the logged in user is a member of
-    Realm.open(config).then((userRealm) => {
+    Realm.open(config).then(userRealm => {
       realmRef.current = userRealm;
-      const users = userRealm.objects("User");
+      const users = userRealm.objects('User');
 
       users.addListener(() => {
         // The user custom data object may not have been loaded on
@@ -43,7 +43,7 @@ const AuthProvider = ({ children }) => {
         if (users.length === 0) {
           setProjectData([myProject]);
         } else {
-          const { memberOf } = users[0];
+          const {memberOf} = users[0];
           setProjectData([...memberOf]);
         }
       });
@@ -71,7 +71,7 @@ const AuthProvider = ({ children }) => {
   // The signUp function takes an email and password and uses the
   // emailPassword authentication provider to register the user.
   const signUp = async (email, password) => {
-    await app.emailPasswordAuth.registerUser({ email, password });
+    await app.emailPasswordAuth.registerUser({email, password});
   };
 
   // The signOut function calls the logOut function on the currently
@@ -93,8 +93,7 @@ const AuthProvider = ({ children }) => {
         signOut,
         user,
         projectData, // list of projects the user is a memberOf
-      }}
-    >
+      }}>
       {children}
     </AuthContext.Provider>
   );
@@ -105,9 +104,9 @@ const AuthProvider = ({ children }) => {
 const useAuth = () => {
   const auth = useContext(AuthContext);
   if (auth == null) {
-    throw new Error("useAuth() called outside of a AuthProvider?");
+    throw new Error('useAuth() called outside of a AuthProvider?');
   }
   return auth;
 };
 
-export { AuthProvider, useAuth };
+export {AuthProvider, useAuth};
