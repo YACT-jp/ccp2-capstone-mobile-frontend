@@ -35,7 +35,7 @@ function HomeScreen({navigation}) {
       </Text>
       <Button
         title="Go to Results"
-        onPress={() => navigation.navigate('Search')}
+        onPress={() => navigation.navigate('Search', {screen: 'Media Results'})}
       />
     </View>
   );

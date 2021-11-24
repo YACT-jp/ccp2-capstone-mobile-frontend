@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useState} from 'react';
 import {
   Box,
   Heading,
@@ -9,7 +9,19 @@ import {
   Center,
   NativeBaseProvider,
 } from 'native-base';
-export const SignupForm = () => {
+import {useAuth} from '../providers/AuthProvider';
+export const SignupForm = ({navigation: {navigate}}) => {
+  const {user, signUp, signIn} = useAuth();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const onPressSignUp = async () => {
+    try {
+      await signUp(email, password);
+      navigate('SignIn');
+    } catch (error) {
+      Alert.alert(`Failed to sign up: ${error.message}`);
+    }
+  };
   return (
     <NativeBaseProvider>
       <Center flex={1} px="3">
@@ -36,18 +48,29 @@ export const SignupForm = () => {
           <VStack space={3} mt="5">
             <FormControl>
               <FormControl.Label>Email</FormControl.Label>
-              <Input />
+              <Input
+                onChangeText={setEmail}
+                value={email}
+                placeholder="email"
+                autoCapitalize="none"
+              />
             </FormControl>
             <FormControl>
               <FormControl.Label>Password</FormControl.Label>
-              <Input type="password" />
+              <Input
+                type="password"
+                onChangeText={text => setPassword(text)}
+                value={password}
+                placeholder="password"
+                secureTextEntry
+              />
             </FormControl>
-            <FormControl>
+            {/* <FormControl>
               <FormControl.Label>Confirm Password</FormControl.Label>
               <Input type="password" />
-            </FormControl>
-            <Button mt="2" colorScheme="indigo">
-              Sign up
+            </FormControl> */}
+            <Button mt="2" colorScheme="indigo" onPress={onPressSignUp}>
+              Sign Up
             </Button>
           </VStack>
         </Box>
