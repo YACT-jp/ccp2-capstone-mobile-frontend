@@ -10,14 +10,14 @@ import {
   NativeBaseProvider,
 } from 'native-base';
 import {useAuth} from '../providers/AuthProvider';
-export const SignupForm = () => {
+export const SignupForm = ({navigation: {navigate}}) => {
   const {user, signUp, signIn} = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const onPressSignUp = async () => {
     try {
       await signUp(email, password);
-      signIn(email, password);
+      navigate('SignIn');
     } catch (error) {
       Alert.alert(`Failed to sign up: ${error.message}`);
     }
