@@ -1,8 +1,9 @@
 import React from 'react';
 import {View, Text, Button, StyleSheet, useColorScheme} from 'react-native';
-import {AuthContext} from '../context';
+import {useAuth, AuthProvider} from '../providers/AuthProvider';
+
 function ProfileScreen({navigation}) {
-  const {user, setUser} = React.useContext(AuthContext);
+  const {user, signUp, signOut} = useAuth();
   const isDarkMode = useColorScheme() === 'dark';
   return (
     <View
@@ -14,7 +15,13 @@ function ProfileScreen({navigation}) {
         title="Go to Results"
         onPress={() => navigation.navigate('Search')}
       /> */}
-      <Button title="Sign Out" onPress={() => setUser(null)} />
+      <Button
+        title="Sign Out"
+        onPress={() => {
+          signOut();
+          // navigation.navigate('Login');
+        }}
+      />
     </View>
   );
 }
