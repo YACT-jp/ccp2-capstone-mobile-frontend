@@ -64,11 +64,7 @@ function Location({route, navigation}) {
                 <Text fontSize="lg">Details:</Text>
                 <Text textAlign="center">{fullItem.coordinates}</Text>
                 <Text textAlign="center" padding="3">
-                  Shinjuku Station is a major railway station in the Shinjuku
-                  and Shibuya wards in Tokyo, Japan. In Shinjuku, it is part of
-                  the Nishi-Shinjuku and Shinjuku districts. In Shibuya, it is
-                  located in the Yoyogi and Sendagaya districts. It is the
-                  world's busiest railway station.
+                  {fullItem.description}
                 </Text>
                 <Text>{fullItem['Plus Code']}</Text>
                 <Button title="Go back" onPress={() => navigation.goBack()} />
