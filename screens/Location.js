@@ -15,9 +15,10 @@ import {
 
 function Location({route, navigation}) {
   /*Get the params */
-  const {fullItem} = route.params;
+  const {fullItem, cameFrom} = route.params;
   const isDarkMode = useColorScheme() === 'dark';
   console.log(fullItem);
+  console.log(cameFrom);
   return (
     //   <View
     //   style={{

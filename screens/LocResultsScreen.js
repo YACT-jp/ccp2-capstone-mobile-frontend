@@ -26,7 +26,7 @@ function LocResultsScreen({route, navigation}) {
   //List Item Component 
   const Item = ({ name, fullItem }) => (
     <View style={styles.item}>
-      <TouchableOpacity onPress={() => navigation.navigate('Location', {fullItem})} >
+      <TouchableOpacity onPress={() => navigation.navigate('Location', {fullItem, cameFrom: 'search'})} >
         <Text style={styles.name}>{name}</Text>
       </TouchableOpacity>
     </View>
