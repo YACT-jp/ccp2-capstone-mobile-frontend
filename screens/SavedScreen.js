@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, useColorScheme, FlatList, TouchableOpacity, Button } from 'react-native';
+import { View, Text, StyleSheet, useColorScheme, FlatList, TouchableOpacity, Button, SafeAreaView } from 'react-native';
 
-// import { searchContext } from '../components/searchContext';
 import { savedLocations } from '../data/data';
 
 function SavedScreen({navigation}) {
@@ -35,18 +34,23 @@ function SavedScreen({navigation}) {
   );
 
   return (
-    <View
-    style={{ 
-      backgroundColor: isDarkMode ? '#000' : '#fff',
-    }}>
-      <Text style={styles.name}>Saved Locations</Text>
-      <FlatList
-      data={DATA}
-      renderItem={renderItem}>
-      </FlatList>
-      {/* Need to pass mediaId to Locations page */}
-      <Button title="Back to search" onPress={() => navigation.navigate('Search', { screen: 'Media Results'})} />
-  </View>
+    <SafeAreaView
+      style={{
+        backgroundColor: isDarkMode ? '#000' : '#fff',
+      }}>
+      <View
+      style={{ 
+        backgroundColor: isDarkMode ? '#000' : '#fff',
+      }}>
+        <Text style={styles.name}>Saved Locations</Text>
+        <FlatList
+        data={DATA}
+        renderItem={renderItem}>
+        </FlatList>
+        {/* Need to pass mediaId to Locations page */}
+        <Button title="Back to search" onPress={() => navigation.navigate('Search', { screen: 'Media Results'})} />
+    </View>
+  </SafeAreaView>
   );
 }
 

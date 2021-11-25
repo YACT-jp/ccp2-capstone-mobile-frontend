@@ -6,6 +6,7 @@ import {
   Button,
   StyleSheet,
   useColorScheme,
+  SafeAreaView,
 } from 'react-native';
 import {searchContext} from '../components/searchContext';
 
@@ -16,28 +17,35 @@ function HomeScreen({navigation}) {
   const [queryString, setQueryString] = React.useContext(searchContext);
 
   return (
-    <View
+    <SafeAreaView
       style={{
         backgroundColor: isDarkMode ? '#000' : '#fff',
       }}>
-      <Text style={styles.text}>Home Page</Text>
-      <TextInput
-        value={text}
-        style={{fontSize: 42, color: 'steelblue'}}
-        placeholder="Type here..."
-        onChangeText={text => {
-          setText(text);
-          setQueryString(text);
-        }}
-      />
-      <Text style={{fontSize: 24}}>
-        {'\n'}You entered: {text}
-      </Text>
-      <Button
-        title="Go to Results"
-        onPress={() => navigation.navigate('Search', {screen: 'Media Results'})}
-      />
-    </View>
+      <View
+        style={{
+          backgroundColor: isDarkMode ? '#000' : '#fff',
+        }}>
+        <Text style={styles.text}>Home Page</Text>
+        <TextInput
+          value={text}
+          style={{fontSize: 42, color: 'steelblue'}}
+          placeholder="Type here..."
+          onChangeText={text => {
+            setText(text);
+            setQueryString(text);
+          }}
+        />
+        <Text style={{fontSize: 24}}>
+          {'\n'}You entered: {text}
+        </Text>
+        <Button
+          title="Go to Results"
+          onPress={() =>
+            navigation.navigate('Search', {screen: 'Media Results'})
+          }
+        />
+      </View>
+    </SafeAreaView>
   );
 }
 

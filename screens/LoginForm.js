@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import {Alert} from 'react-native';
 import {
   Box,
   Text,
@@ -12,23 +13,12 @@ import {
   Center,
   NativeBaseProvider,
 } from 'native-base';
-// import {AuthContext} from '../context';
 import {useAuth, AuthProvider} from '../providers/AuthProvider';
 
 export const LoginForm = ({navigation: {navigate}}) => {
-  // const {user, setUser} = React.useContext(AuthContext);
   const {user, signUp, signIn} = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  useEffect(() => {
-    // If there is a user logged in, go to the Projects page.
-    console.log('user', user);
-    if (user != null) {
-      // navigation.navigate("Menu");
-      console.log('not null');
-    }
-  }, [user]);
 
   // The onPressSignIn method calls AuthProvider.signIn with the
   // email/password in state.
