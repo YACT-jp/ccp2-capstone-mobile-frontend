@@ -22,7 +22,7 @@ function SavedScreen({navigation}) {
   //List Item Component 
   const Item = ({ name, fullItem }) => (
     <View style={styles.item}>
-      <TouchableOpacity onPress={() => navigation.navigate('Location', {fullItem})} >
+      <TouchableOpacity onPress={() => navigation.navigate('Saved Location', {fullItem})} >
         <Text style={styles.name}>{name}</Text>
         <Text>{fullItem['plus_code']}</Text>
       </TouchableOpacity>
@@ -44,7 +44,8 @@ function SavedScreen({navigation}) {
       data={DATA}
       renderItem={renderItem}>
       </FlatList>
-      <Button title="Back to search results" onPress={() => navigation.navigate('Search', { screen: 'Locations' })} />
+      {/* Need to pass mediaId to Locations page */}
+      <Button title="Back to search" onPress={() => navigation.navigate('Search', { screen: 'Media Results'})} />
   </View>
   );
 }
