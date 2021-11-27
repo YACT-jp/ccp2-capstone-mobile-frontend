@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, useColorScheme, FlatList, TouchableOpacity, Button, SafeAreaView } from 'react-native';
 
-import { savedLocations } from '../data/data';
+import { savedLocationsApi } from '../data/data';
+import { useAuth } from '../providers/AuthProvider';
 
 function SavedScreen({navigation}) {
   const isDarkMode = useColorScheme() === 'dark';
 
   const [DATA, setDATA] = useState([]);
+  const { user } = useAuth();
 
   useEffect( () => {
     async function fetchData() {
-      //const data = await savedLocationsApi();
-      const data = savedLocations();
-      console.log('data', data);
+      const data = await savedLocationsApi(user.id);
+      // const data = savedLocations();
       setDATA(data);
     }
     fetchData();
