@@ -12,15 +12,12 @@ import {
   ScrollView,
   Button,
 } from 'native-base';
-import {View, StyleSheet} from 'react-native';
-import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import {useAuth} from '../providers/AuthProvider';
 
 function Location({route, navigation}) {
   /*Get the params */
   const {fullItem} = route.params;
   const {location_pic, name, description} = fullItem;
-  const coordsObj = eval('(' + fullItem['coordinates'] + ')');
   const {user, signUp, signIn} = useAuth();
   const [userSavedLocation, setUserSavedLocation] = useState([]);
   const [isLocationSaved, setIsLocationSaved] = useState(false);
@@ -183,35 +180,6 @@ function Location({route, navigation}) {
                       ? 'No description yet.'
                       : description}
                   </Text>
-                  <Box
-                    flex={1}
-                    justifyContent="flex-end"
-                    rounded="lg"
-                    overflow="hidden"
-                    alignItems="center"
-                    justifyContent="center">
-                    <AspectRatio w="100%" ratio={16 / 9}>
-                      <MapView
-                        provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-                        style={mapStyles.map}
-                        region={{
-                          latitude: parseFloat(coordsObj['latitude']),
-                          longitude: parseFloat(coordsObj['longitude']),
-                          latitudeDelta: 0.015,
-                          longitudeDelta: 0.0121,
-                        }}>
-                        <Marker
-                          key={0}
-                          coordinate={{
-                            latitude: parseFloat(coordsObj['latitude']),
-                            longitude: parseFloat(coordsObj['longitude']),
-                          }}
-                          // title={marker.title}
-                          // description={marker.description}
-                        />
-                      </MapView>
-                    </AspectRatio>
-                  </Box>
                   {isLocationSaved ? (
                     <Button size="sm" onPress={onDeleteClick}>
                       Remove Location
@@ -230,12 +198,5 @@ function Location({route, navigation}) {
     </NativeBaseProvider>
   );
 }
-
-const mapStyles = StyleSheet.create({
-  map: {
-    ...StyleSheet.absoluteFillObject,
-    borderRadius: 10,
-  },
-});
 
 export default Location;
