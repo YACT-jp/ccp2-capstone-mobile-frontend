@@ -11,13 +11,14 @@ import {
   NativeBaseProvider,
   useColorModeValue,
 } from 'native-base';
-// import MapView from 'react-native-maps';
+import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 
 function Location({route, navigation}) {
   /*Get the params */
   const {fullItem} = route.params;
+  const coordsObj = eval('(' + fullItem['coordinates'] + ')');
   const isDarkMode = useColorScheme() === 'dark';
-  console.log(fullItem);
+
   return (
     //   <View
     //   style={{
@@ -73,21 +74,34 @@ function Location({route, navigation}) {
                 <Text>{fullItem['Plus Code']}</Text>
                 <Button title="Go back" onPress={() => navigation.goBack()} />
               </VStack>
+              <Box style={styles.container}>
+                <MapView
+                  provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+                  style={styles.map}
+                  region={{
+                    latitude: parseFloat(coordsObj['latitude']),
+                    longitude: parseFloat(coordsObj['longitude']),
+                    latitudeDelta: 0.015,
+                    longitudeDelta: 0.0121,
+                  }}></MapView>
+              </Box>
             </Box>
           </View>
-          {/* <MapView
-            initialRegion={{
-              latitude: 37.78825,
-              longitude: -122.4324,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
-            }}
-          /> */}
         </View>
       </Center>
     </NativeBaseProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    ...StyleSheet.absoluteFillObject,
+    height: '20%',
+  },
+  map: {
+    ...StyleSheet.absoluteFillObject,
+  },
+});
 
 export default Location;
 
