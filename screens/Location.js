@@ -13,7 +13,7 @@ import {
   Button,
 } from 'native-base';
 import {View, StyleSheet} from 'react-native';
-import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
+import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import {useAuth} from '../providers/AuthProvider';
 
 function Location({route, navigation}) {
@@ -200,7 +200,17 @@ function Location({route, navigation}) {
                           longitude: parseFloat(coordsObj['longitude']),
                           latitudeDelta: 0.015,
                           longitudeDelta: 0.0121,
-                        }}></MapView>
+                        }}>
+                        <Marker
+                          key={0}
+                          coordinate={{
+                            latitude: parseFloat(coordsObj['latitude']),
+                            longitude: parseFloat(coordsObj['longitude']),
+                          }}
+                          // title={marker.title}
+                          // description={marker.description}
+                        />
+                      </MapView>
                     </AspectRatio>
                   </Box>
                   {isLocationSaved ? (
