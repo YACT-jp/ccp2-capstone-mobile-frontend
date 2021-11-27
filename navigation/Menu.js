@@ -6,7 +6,7 @@ import {
   HamburgerIcon,
   SearchIcon,
   CheckIcon,
-  ArrowBackIcon,
+  InfoOutlineIcon,
 } from 'native-base';
 import HomeScreen from '../screens/HomeScreen';
 //import ResultsScreen from "../screens/ResultsScreen";
@@ -34,8 +34,8 @@ const Menu = ({queryString, setQueryString}) => {
                 return <SearchIcon size="5" mt="0.5" />;
               } else if (route.name === 'Saved') {
                 return <CheckIcon size="5" mt="0.5" />;
-              } else if (route.name === 'Sign Out') {
-                return <ArrowBackIcon size="5" mt="0.5" />;
+              } else if (route.name === 'Profile') {
+                return <InfoOutlineIcon size="5" mt="0.5" />;
               }
             },
             // tabBarActiveTintColor: 'tomato',
@@ -44,7 +44,7 @@ const Menu = ({queryString, setQueryString}) => {
           <Tab.Screen name="Home" component={HomeScreen} />
           <Tab.Screen name="Search" component={SearchStackScreen} />
           <Tab.Screen name="Saved" component={SavedStackScreen} />
-          <Tab.Screen name="Sign Out" component={ProfileScreen} />
+          <Tab.Screen name="Profile" component={ProfileScreen} />
         </Tab.Navigator>
       </searchContext.Provider>
     </NativeBaseProvider>
