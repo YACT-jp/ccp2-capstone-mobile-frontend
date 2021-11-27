@@ -12,16 +12,18 @@ import {
   ScrollView,
   Button,
 } from 'native-base';
+import {View, StyleSheet} from 'react-native';
+import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import {useAuth} from '../providers/AuthProvider';
 
 function Location({route, navigation}) {
   /*Get the params */
   const {fullItem} = route.params;
   const {location_pic} = fullItem;
-  // console.log(fullItem);
+  const coordsObj = eval('(' + fullItem['coordinates'] + ')');
   const {user, signUp, signIn} = useAuth();
 
-  const bookmarkEndpoint = async (inputdata) => {
+  const bookmarkEndpoint = async inputdata => {
     console.log('input', inputdata);
     try {
       const response = await fetch(
@@ -125,6 +127,25 @@ function Location({route, navigation}) {
                     </Text>
                   </Stack>
                   <Text fontWeight="400">{fullItem.description}</Text>
+                  <Box
+                    flex={1}
+                    justifyContent="flex-end"
+                    rounded="lg"
+                    overflow="hidden"
+                    alignItems="center"
+                    justifyContent="center">
+                    <AspectRatio w="100%" ratio={16 / 9}>
+                      <MapView
+                        provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+                        style={mapStyles.map}
+                        region={{
+                          latitude: parseFloat(coordsObj['latitude']),
+                          longitude: parseFloat(coordsObj['longitude']),
+                          latitudeDelta: 0.015,
+                          longitudeDelta: 0.0121,
+                        }}></MapView>
+                    </AspectRatio>
+                  </Box>
                   <Button size="sm" onPress={onSaveClick}>
                     Save Location
                   </Button>
@@ -137,5 +158,12 @@ function Location({route, navigation}) {
     </NativeBaseProvider>
   );
 }
+
+const mapStyles = StyleSheet.create({
+  map: {
+    ...StyleSheet.absoluteFillObject,
+    borderRadius: 10,
+  },
+});
 
 export default Location;
