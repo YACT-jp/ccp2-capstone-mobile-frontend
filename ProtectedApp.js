@@ -30,11 +30,7 @@ const ProtectedApp = () => {
       {user ? (
         <Menu queryString={queryString} setQueryString={setQueryString} />
       ) : (
-        <AuthStack.Navigator
-          initialRouteName="SignIn"
-          screenOptions={({route}) => ({
-            headerShown: false,
-          })}>
+        <AuthStack.Navigator initialRouteName="SignIn">
           <AuthStack.Screen
             name="SignIn"
             component={LoginForm}
