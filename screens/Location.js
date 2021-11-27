@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Heading,
   Text,
@@ -17,17 +17,20 @@ import {useAuth} from '../providers/AuthProvider';
 function Location({route, navigation}) {
   /*Get the params */
   const {fullItem} = route.params;
-  const {location_pic} = fullItem;
-  // console.log(fullItem);
+  const {location_pic, name, description} = fullItem;
   const {user, signUp, signIn} = useAuth();
+  const [userSavedLocation, setUserSavedLocation] = useState([]);
+  const [isLocationSaved, setIsLocationSaved] = useState(false);
 
-  const bookmarkEndpoint = async (inputdata) => {
-    console.log('input', inputdata);
+  /** will move fetch functions to data.js */
+
+  /** fetch for PATCH and DELETE */
+  const bookmarkEndpoint = async (inputdata, method) => {
     try {
       const response = await fetch(
         `https://ccp2-capstone-backend-sa-yxiyypij7a-an.a.run.app/api/user/${user.id}/bookmarks`,
         {
-          method: 'PATCH', // *GET, POST, PUT, DELETE, etc.
+          method: method.toUpperCase(), // *GET, POST, PUT, DELETE, etc.
           // mode: 'cors', // no-cors, *cors, same-origin
           // cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
           // credentials: 'same-origin', // include, *same-origin, omit
@@ -40,7 +43,6 @@ function Location({route, navigation}) {
           body: JSON.stringify(inputdata), // body data type must match "Content-Type" header
         },
       );
-      // console.log(response);
       const data = await response.text();
       return data;
     } catch (err) {
@@ -48,15 +50,70 @@ function Location({route, navigation}) {
     }
   };
 
+  /** fetch for GET */
+  const getBookmarkEndpoint = async () => {
+    try {
+      const response = await fetch(
+        `https://ccp2-capstone-backend-sa-yxiyypij7a-an.a.run.app/api/user/${user.id}/bookmarks`,
+        {
+          method: 'GET',
+        },
+      );
+      const data = await response.text();
+      return data;
+    } catch (err) {
+      console.log('error', err);
+    }
+  };
+
+  /** onClick function that saves location */
   const onSaveClick = () => {
-    console.log('click');
-    console.log('user', user.id);
+    console.log('save click');
     fetchData = async () => {
-      const data = await bookmarkEndpoint(fullItem);
-      console.log('bookmark data', data);
+      const data = await bookmarkEndpoint(fullItem, 'patch');
     };
     fetchData();
+    fetchBookmarkData();
   };
+
+  /** onClick function that deletes location */
+  const onDeleteClick = () => {
+    console.log('delete click');
+    fetchData = async () => {
+      const data = await bookmarkEndpoint(fullItem, 'delete');
+    };
+    fetchData();
+    fetchBookmarkData();
+  };
+
+  /** async function for fetching saved locations used by onClick functions */
+  async function fetchBookmarkData() {
+    const data = await getBookmarkEndpoint('get');
+    setUserSavedLocation(JSON.parse(data)[0].bookmarks);
+  }
+
+  /** compare saved locations if already saved */
+  const checkIfLocationIsSaved = () => {
+    const locationObject = userSavedLocation.find(
+      location => location._id === fullItem._id,
+    );
+    if (locationObject !== undefined) {
+      setIsLocationSaved(true);
+    } else {
+      setIsLocationSaved(false);
+    }
+  };
+
+  /** use effect for initial load only */
+  useEffect(() => {
+    fetchBookmarkData();
+    checkIfLocationIsSaved();
+  }, []);
+
+  /** use effect for every updated of userSavedLocation */
+  useEffect(() => {
+    checkIfLocationIsSaved();
+  }, [userSavedLocation]);
 
   return (
     <NativeBaseProvider>
@@ -72,17 +129,11 @@ function Location({route, navigation}) {
                 ) : (
                   <Image
                     source={{
-                      uri: fullItem.location_pic,
+                      uri: location_pic,
                     }}
                     alt="image"
                   />
                 )}
-                {/* <Image
-                  source={{
-                    uri: fullItem.location_pic,
-                  }}
-                  alt="image"
-                /> */}
               </AspectRatio>
               <Box
                 safeArea
@@ -108,9 +159,9 @@ function Location({route, navigation}) {
                 <Stack p="4" space={3}>
                   <Stack space={2}>
                     <Heading size="md" ml="-1">
-                      {fullItem.name}
+                      {name}
                     </Heading>
-                    <Text
+                    {/* <Text
                       fontSize="xs"
                       _light={{
                         color: 'violet.500',
@@ -122,12 +173,22 @@ function Location({route, navigation}) {
                       ml="-0.5"
                       mt="-1">
                       {`Media Name`}
-                    </Text>
+                    </Text> */}
                   </Stack>
-                  <Text fontWeight="400">{fullItem.description}</Text>
-                  <Button size="sm" onPress={onSaveClick}>
-                    Save Location
-                  </Button>
+                  <Text fontWeight="400">
+                    {description === '' || description === null
+                      ? 'No description yet.'
+                      : description}
+                  </Text>
+                  {isLocationSaved ? (
+                    <Button size="sm" onPress={onDeleteClick}>
+                      Remove Location
+                    </Button>
+                  ) : (
+                    <Button size="sm" onPress={onSaveClick}>
+                      Save Location
+                    </Button>
+                  )}
                 </Stack>
               </Box>
             </VStack>
