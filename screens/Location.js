@@ -58,14 +58,6 @@ function Location({route, navigation}) {
     fetchData();
   };
 
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     const data = await mediaResultsApi();
-  //     setDATA(data);
-  //   }
-  //   fetchData();
-  // }, []);
-
   return (
     <NativeBaseProvider>
       <Center flex={1}>
