@@ -183,7 +183,6 @@ function Location({route, navigation}) {
                       ? 'No description yet.'
                       : description}
                   </Text>
-
                   <Box
                     flex={1}
                     justifyContent="flex-end"
