@@ -11,7 +11,8 @@ import {
 import HomeScreen from '../screens/HomeScreen';
 //import ResultsScreen from "../screens/ResultsScreen";
 import SearchStackScreen from '../screens/SearchStackScreen';
-import SavedScreen from '../screens/SavedScreen';
+//import SavedScreen from '../screens/SavedScreen';
+import SavedStackScreen from '../screens/savedStackScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 
 const Tab = createBottomTabNavigator();
@@ -42,7 +43,7 @@ const Menu = ({queryString, setQueryString}) => {
           })}>
           <Tab.Screen name="Home" component={HomeScreen} />
           <Tab.Screen name="Search" component={SearchStackScreen} />
-          <Tab.Screen name="Saved" component={SavedScreen} />
+          <Tab.Screen name="Saved" component={SavedStackScreen} />
           <Tab.Screen name="Sign Out" component={ProfileScreen} />
         </Tab.Navigator>
       </searchContext.Provider>

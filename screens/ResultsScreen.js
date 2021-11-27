@@ -1,20 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, useColorScheme, FlatList, TouchableOpacity, Button } from 'react-native';
 
-import { mediaResults } from '../data/data';
 import { searchContext } from '../components/searchContext';
 import { mediaResultsApi } from '../data/data';
 
 function ResultsScreen({navigation}) {
   const isDarkMode = useColorScheme() === 'dark';
   const [queryString, setQueryString] = React.useContext(searchContext);
-  //const DATA = JSON.parse(mediaResults());
   const [DATA, setDATA] = useState([]);
 
   useEffect( () => {
     async function fetchData() {
       const data = await mediaResultsApi();
-      //console.log('data', data);
       setDATA(data);
     }
     fetchData();
@@ -54,7 +51,6 @@ export default ResultsScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    //marginTop: StatusBar.currentHeight || 0,
   },
   item: {
     backgroundColor: '#f9c2ff',
