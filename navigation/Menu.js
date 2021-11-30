@@ -1,6 +1,6 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {searchContext} from '../components/searchContext';
+import {searchContext} from '../providers/SearchProvider';
 import {
   NativeBaseProvider,
   HamburgerIcon,
