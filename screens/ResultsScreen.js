@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, useColorScheme, FlatList, TouchableOpacity, Button } from 'react-native';
 
-import { searchContext } from '../components/searchContext';
+import { searchContext } from '../providers/SearchProvider';
 import { mediaResultsApi } from '../data/data';
 
 function ResultsScreen({navigation}) {
