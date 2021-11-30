@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Button,
 } from 'react-native';
+import {HStack, Image, NativeBaseProvider} from 'native-base';
 import {locResultsByMedia} from '../data/data';
 
 function LocResultsScreen({route, navigation}) {
@@ -27,12 +28,26 @@ function LocResultsScreen({route, navigation}) {
 
   //List Item Component
   const Item = ({name, fullItem}) => (
-    <View style={styles.item}>
-      <TouchableOpacity
-        onPress={() => navigation.navigate('Location', {fullItem})}>
-        <Text style={styles.name}>{name}</Text>
-      </TouchableOpacity>
-    </View>
+    <NativeBaseProvider>
+      <View style={styles.item}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Location', {fullItem})}>
+          <HStack space={3} justifyContent="space-between">
+            <Image
+              size={150}
+              resizeMode={'contain'}
+              borderRadius={150}
+              source={{
+                uri: fullItem.location_pic,
+              }}
+              alt="Alternate Text"
+              size="xl"
+            />
+            <Text style={styles.name}>{name}</Text>
+          </HStack>
+        </TouchableOpacity>
+      </View>
+    </NativeBaseProvider>
   );
 
   // Process each item of the data array
