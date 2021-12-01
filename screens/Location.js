@@ -15,15 +15,21 @@ import {
 import {View, StyleSheet} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import {useAuth} from '../providers/AuthProvider';
+import {
+  getAsyncSavedLocations,
+  updateAsyncSavedLocations,
+} from '../data/asyncSavedLocations';
+import {savedLocationsApi} from '../data/data';
+import {cloneNode} from '@babel/types';
 
 function Location({route, navigation}) {
   /*Get the params */
   const {fullItem} = route.params;
   const {location_pic, name, description} = fullItem;
   const coordsObj = eval('(' + fullItem['coordinates'] + ')');
-  const {user, signUp, signIn} = useAuth();
-  const [userSavedLocation, setUserSavedLocation] = useState([]);
+  const {user} = useAuth();
   const [isLocationSaved, setIsLocationSaved] = useState(false);
+  const [refresh, setRefresh] = useState(false);
 
   /** will move fetch functions to data.js */
 
@@ -53,70 +59,47 @@ function Location({route, navigation}) {
     }
   };
 
-  /** fetch for GET */
-  const getBookmarkEndpoint = async () => {
-    try {
-      const response = await fetch(
-        `https://ccp2-capstone-backend-sa-yxiyypij7a-an.a.run.app/api/user/${user.id}/bookmarks`,
-        {
-          method: 'GET',
-        },
-      );
-      const data = await response.text();
-      return data;
-    } catch (err) {
-      console.log('error', err);
-    }
-  };
-
   /** onClick function that saves location */
   const onSaveClick = () => {
-    console.log('save click');
-    fetchData = async () => {
-      const data = await bookmarkEndpoint(fullItem, 'patch');
+    const fetchSaveData = async () => {
+      await bookmarkEndpoint(fullItem, 'patch');
+      await updateAsyncSavedLocations(user.id);
+      setIsLocationSaved(true);
     };
-    fetchData();
-    fetchBookmarkData();
+    setRefresh(!refresh);
+    fetchSaveData();
   };
 
   /** onClick function that deletes location */
   const onDeleteClick = () => {
-    console.log('delete click');
-    fetchData = async () => {
-      const data = await bookmarkEndpoint(fullItem, 'delete');
-    };
-    fetchData();
-    fetchBookmarkData();
-  };
-
-  /** async function for fetching saved locations used by onClick functions */
-  async function fetchBookmarkData() {
-    const data = await getBookmarkEndpoint('get');
-    setUserSavedLocation(JSON.parse(data)[0].bookmarks);
-  }
-
-  /** compare saved locations if already saved */
-  const checkIfLocationIsSaved = () => {
-    const locationObject = userSavedLocation.find(
-      location => location._id === fullItem._id,
-    );
-    if (locationObject !== undefined) {
-      setIsLocationSaved(true);
-    } else {
+    const fetchDelData = async () => {
+      await bookmarkEndpoint(fullItem, 'delete');
+      await updateAsyncSavedLocations(user.id);
       setIsLocationSaved(false);
-    }
+    };
+    setRefresh(!refresh);
+    fetchDelData();
   };
 
-  /** use effect for initial load only */
+  /** load SavedLocations from AsyncStorage */
   useEffect(() => {
-    fetchBookmarkData();
-    checkIfLocationIsSaved();
-  }, []);
-
-  /** use effect for every updated of userSavedLocation */
-  useEffect(() => {
-    checkIfLocationIsSaved();
-  }, [userSavedLocation]);
+    async function fetchData() {
+      try {
+        const asyncSavedLocations = await getAsyncSavedLocations();
+        const locationObject = asyncSavedLocations.find(
+          location => location._id === fullItem._id,
+        );
+        if (locationObject !== undefined) {
+          setIsLocationSaved(true);
+        } else {
+          setIsLocationSaved(false);
+        }
+      } catch (error) {
+        throw error;
+      }
+    }
+    fetchData();
+  }, [refresh]);
 
   return (
     <NativeBaseProvider>
