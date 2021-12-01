@@ -1,4 +1,5 @@
 import AsyncStorageLib from '@react-native-async-storage/async-storage';
+import {savedLocationsApi} from '../data/data';
 
 const STORAGE_KEY = 'SAVED_LOCATIONS';
 
@@ -14,9 +15,10 @@ export const getAsyncSavedLocations = async() => {
   }
 }
 
-export const updateAsyncSavedLocations = async (input) => {
+export const updateAsyncSavedLocations = async (userId) => {
   try {
-    await AsyncStorageLib.setItem(STORAGE_KEY, JSON.stringify(input));
+    const savedLocations = await savedLocationsApi(userId);
+    await AsyncStorageLib.setItem(STORAGE_KEY, JSON.stringify(savedLocations));
     console.log('Success to save AsyncSavedLocations.');
     return 'Success to save AsyncSavedLocations.'
   } catch (e) {
