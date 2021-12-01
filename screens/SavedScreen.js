@@ -1,30 +1,43 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, useColorScheme, FlatList, TouchableOpacity, Button, SafeAreaView } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  useColorScheme,
+  FlatList,
+  TouchableOpacity,
+  Button,
+  SafeAreaView,
+} from 'react-native';
 
-import { savedLocationsApi } from '../data/data';
-import { useAuth } from '../providers/AuthProvider';
+import {useAuth} from '../providers/AuthProvider';
+import {getAsyncSavedLocations} from '../data/asyncSavedLocations';
 
 function SavedScreen({navigation}) {
   const isDarkMode = useColorScheme() === 'dark';
 
   const [DATA, setDATA] = useState([]);
-  const { user } = useAuth();
   const [refresh, setRefresh] = useState(false);
 
-  useEffect( () => {
+  // load Saved Locations from AsyncStorage 
+  useEffect(() => {
     async function fetchData() {
-      const data = await savedLocationsApi(user.id);
-      // const data = savedLocations();
-      console.log('refreshing saved data');
-      setDATA(data);
+      try {
+        const res = await getAsyncSavedLocations();
+        setDATA(res)
+        return res;
+      } catch (error) {
+        throw error;
+      }
     }
     fetchData();
   }, [refresh]);
 
-  //List Item Component 
-  const Item = ({ name, fullItem }) => (
+  //List Item Component
+  const Item = ({name, fullItem}) => (
     <View style={styles.item}>
-      <TouchableOpacity onPress={() => navigation.navigate('Saved Location', {fullItem})} >
+      <TouchableOpacity
+        onPress={() => navigation.navigate('Saved Location', {fullItem})}>
         <Text style={styles.name}>{name}</Text>
         <Text>{fullItem['plus_code']}</Text>
       </TouchableOpacity>
@@ -32,9 +45,7 @@ function SavedScreen({navigation}) {
   );
 
   //Process each item of the data array
-  const renderItem = ({ item }) => (
-    <Item name={item.name} fullItem={item} />
-  );
+  const renderItem = ({item}) => <Item name={item.name} fullItem={item} />;
 
   return (
     <SafeAreaView
@@ -42,21 +53,23 @@ function SavedScreen({navigation}) {
         backgroundColor: isDarkMode ? '#000' : '#fff',
       }}>
       <View
-      style={{ 
-        backgroundColor: isDarkMode ? '#000' : '#fff',
-        paddingBottom: 230,
-      }}>
+        style={{
+          backgroundColor: isDarkMode ? '#000' : '#fff',
+          paddingBottom: 230,
+        }}>
         <Text style={styles.name}>Saved Locations</Text>
-        <Button title="Refresh" onPress={() => setRefresh(!refresh) } />
-        <FlatList
-        data={DATA}
-        renderItem={renderItem}>
-        </FlatList>
-        
+        <Button title="Refresh" onPress={() => setRefresh(!refresh)} />
+        <FlatList data={DATA} renderItem={renderItem}></FlatList>
+
         {/* Need to pass mediaId to Locations page */}
-        <Button title="Back to search" onPress={() => navigation.navigate('Search', { screen: 'Media Results'})} />
-    </View>
-  </SafeAreaView>
+        <Button
+          title="Back to search"
+          onPress={() =>
+            navigation.navigate('Search', {screen: 'Media Results'})
+          }
+        />
+      </View>
+    </SafeAreaView>
   );
 }
 
