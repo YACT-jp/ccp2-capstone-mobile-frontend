@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   Button,
 } from 'react-native';
-import {HStack, Image, NativeBaseProvider} from 'native-base';
+
 import {searchContext} from '../components/searchContext';
 import {mediaResultsApi} from '../data/data';
 
@@ -26,44 +26,21 @@ function ResultsScreen({navigation}) {
   }, []);
 
   //List Item Component
-  const Item = ({name, mediaId, mediaPic, originalName}) => (
-    <NativeBaseProvider>
-      <View style={styles.item}>
-        <TouchableOpacity
-          onPress={
-            (() => navigation.navigate('Locations', {name, mediaId}),
-            console.log('poster_path', mediaPic),
-            console.log('original_name', originalName))
-          }>
-          <HStack space={3} justifyContent="space-between">
-            <Image
-              width={150}
-              resizeMode={'contain'}
-              borderRadius={100}
-              source={{
-                uri: 'https://image.tmdb.org/t/p/w500/' + `${mediaPic}`,
-              }}
-              alt="Alternate Text"
-              size="xl"
-            />
-            <Text style={styles.name}>
-              {name} (id:{mediaId})
-            </Text>
-          </HStack>
-        </TouchableOpacity>
-      </View>
-    </NativeBaseProvider>
+  const Item = ({name, mediaId}) => (
+    <View style={styles.item}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('Locations', {name, mediaId})}>
+        <Text style={styles.name}>
+          {name} (id:{mediaId})
+        </Text>
+      </TouchableOpacity>
+    </View>
   );
 
   //Process each item of the data array
   const renderItem = ({item}) =>
     item.name.toLowerCase().includes(queryString.toLowerCase()) ? (
-      <Item
-        name={item.name}
-        mediaId={item['id']}
-        mediaPic={item['poster_path']}
-        originalName={item['original_name']}
-      />
+      <Item name={item.name} mediaId={item['id']} />
     ) : null;
 
   return (
