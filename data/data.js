@@ -33,3 +33,22 @@ export const savedLocationsApi = async userId => {
     console.log(err);
   }
 };
+
+export const dynamicSavedLocationsApi = async (userId, inputdata, method) => {
+  try {
+    const response = await fetch(
+      `https://ccp2-capstone-backend-sa-yxiyypij7a-an.a.run.app/api/user/${userId}/bookmarks`,
+      {
+        method: method.toUpperCase(), // *GET, POST, PUT, DELETE, etc.
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(inputdata), // body data type must match "Content-Type" header
+      },
+    );
+    const data = await response.text();
+    return data;
+  } catch (err) {
+    console.log('error', err);
+  }
+};
