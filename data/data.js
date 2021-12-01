@@ -22,14 +22,14 @@ export const mediaResultsApi = async () => {
   }
 };
 
-export const savedLocationsApi = async (userId) => {
+export const savedLocationsApi = async userId => {
   try {
     const response = await fetch(
       `https://ccp2-capstone-backend-sa-yxiyypij7a-an.a.run.app/api/user/${userId}/bookmarks`,
     );
-    const data = await response.json()
+    const data = await response.json();
     return data[0].bookmarks;
-  } catch (err){ 
-    console.log(err)
+  } catch (err) {
+    console.log(err);
   }
 };
