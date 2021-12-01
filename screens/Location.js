@@ -19,7 +19,7 @@ import {
   getAsyncSavedLocations,
   updateAsyncSavedLocations,
 } from '../data/asyncSavedLocations';
-import {savedLocationsApi} from '../data/data';
+import {dynamicSavedLocationsApi} from '../data/data';
 import {cloneNode} from '@babel/types';
 
 function Location({route, navigation}) {
@@ -31,38 +31,11 @@ function Location({route, navigation}) {
   const [isLocationSaved, setIsLocationSaved] = useState(false);
   const [refresh, setRefresh] = useState(false);
 
-  /** will move fetch functions to data.js */
-
-  /** fetch for PATCH and DELETE */
-  const bookmarkEndpoint = async (inputdata, method) => {
-    try {
-      const response = await fetch(
-        `https://ccp2-capstone-backend-sa-yxiyypij7a-an.a.run.app/api/user/${user.id}/bookmarks`,
-        {
-          method: method.toUpperCase(), // *GET, POST, PUT, DELETE, etc.
-          // mode: 'cors', // no-cors, *cors, same-origin
-          // cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-          // credentials: 'same-origin', // include, *same-origin, omit
-          headers: {
-            'Content-Type': 'application/json',
-            // 'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          // redirect: 'follow', // manual, *follow, error
-          // referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-          body: JSON.stringify(inputdata), // body data type must match "Content-Type" header
-        },
-      );
-      const data = await response.text();
-      return data;
-    } catch (err) {
-      console.log('error', err);
-    }
-  };
-
   /** onClick function that saves location */
   const onSaveClick = () => {
     const fetchSaveData = async () => {
-      await bookmarkEndpoint(fullItem, 'patch');
+      const res = await dynamicSavedLocationsApi(user.id, fullItem, 'patch');
+      console.log('save res', res)
       await updateAsyncSavedLocations(user.id);
       setIsLocationSaved(true);
     };
@@ -73,7 +46,8 @@ function Location({route, navigation}) {
   /** onClick function that deletes location */
   const onDeleteClick = () => {
     const fetchDelData = async () => {
-      await bookmarkEndpoint(fullItem, 'delete');
+      const res = await dynamicSavedLocationsApi(user.id, fullItem, 'delete');
+      console.log('delete res', res)
       await updateAsyncSavedLocations(user.id);
       setIsLocationSaved(false);
     };
