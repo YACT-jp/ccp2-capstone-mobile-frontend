@@ -13,7 +13,6 @@ import SearchStackScreen from '../screens/SearchStackScreen';
 import SavedStackScreen from '../screens/savedStackScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import {updateAsyncSavedLocations} from '../data/asyncSavedLocations';
-import {savedLocationsApi} from '../data/data';
 import {useAuth} from '../providers/AuthProvider';
 
 const Tab = createBottomTabNavigator();
@@ -27,8 +26,7 @@ const Menu = ({queryString, setQueryString}) => {
     async function fetchData() {
       console.log('fetching data');
       try {
-        const data = await savedLocationsApi(user.id);
-        const res = await updateAsyncSavedLocations(data);
+        await updateAsyncSavedLocations(user.id);
       } catch (error) {
         throw error;
       }
