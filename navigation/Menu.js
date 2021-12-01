@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {searchContext} from '../providers/SearchProvider';
 import {
@@ -9,16 +9,34 @@ import {
   InfoOutlineIcon,
 } from 'native-base';
 import HomeScreen from '../screens/HomeScreen';
-//import ResultsScreen from "../screens/ResultsScreen";
 import SearchStackScreen from '../screens/SearchStackScreen';
-//import SavedScreen from '../screens/SavedScreen';
 import SavedStackScreen from '../screens/savedStackScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import {updateAsyncSavedLocations} from '../data/asyncSavedLocations';
+import {savedLocationsApi} from '../data/data';
+import {useAuth} from '../providers/AuthProvider';
 
 const Tab = createBottomTabNavigator();
 
 const Menu = ({queryString, setQueryString}) => {
   console.log('query', queryString);
+  const {user} = useAuth();
+
+  // load to AsyncStorage saved location on application startup
+  useEffect(() => {
+    async function fetchData() {
+      console.log('fetching data');
+      try {
+        const data = await savedLocationsApi(user.id);
+        const res = await updateAsyncSavedLocations(data);
+      } catch (error) {
+        throw error;
+      }
+    }
+    fetchData();
+  }),
+    [];
+
   return (
     <NativeBaseProvider>
       <searchContext.Provider value={[queryString, setQueryString]}>
