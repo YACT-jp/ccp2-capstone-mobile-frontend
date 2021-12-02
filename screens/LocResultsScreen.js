@@ -110,7 +110,4 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 32,
   },
-  image: {
-    ...StyleSheet.absoluteFillObject,
-  },
 });
