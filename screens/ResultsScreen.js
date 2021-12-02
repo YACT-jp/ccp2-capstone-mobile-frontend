@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from 'react';
+import {StyleSheet, useColorScheme, FlatList, Button} from 'react-native';
 import {
+  HStack,
   View,
+  Pressable,
   Text,
-  StyleSheet,
-  useColorScheme,
-  FlatList,
-  TouchableOpacity,
-  Button,
-} from 'react-native';
+  Image,
+  NativeBaseProvider,
+} from 'native-base';
 
 import {searchContext} from '../components/searchContext';
 import {mediaResultsApi} from '../data/data';
@@ -21,20 +21,48 @@ function ResultsScreen({navigation}) {
     async function fetchData() {
       const data = await mediaResultsApi();
       setDATA(data);
+      console.log(data);
     }
     fetchData();
   }, []);
 
   //List Item Component
   const Item = ({name, mediaId}) => (
-    <View style={styles.item}>
-      <TouchableOpacity
-        onPress={() => navigation.navigate('Locations', {name, mediaId})}>
-        <Text style={styles.name}>
-          {name} (id:{mediaId})
-        </Text>
-      </TouchableOpacity>
-    </View>
+    <NativeBaseProvider>
+      <View style={styles.item} rounded="xl">
+        <Pressable
+          rounded="xl"
+          onPress={() => navigation.navigate('Locations', {name, mediaId})}>
+          <HStack
+            style={styles.container}
+            space={5}
+            justifyContent="space-between">
+            <Image
+              border={1}
+              borderWidth={5}
+              borderColor="white"
+              height={150}
+              borderRadius={150}
+              source={{
+                uri: null,
+              }}
+              alt="Alternate Text"
+              size="xl"
+            />
+            <Text
+              fontSize="3xl"
+              color="white"
+              isTruncated
+              maxW="200"
+              w="80%"
+              multiline={true}
+              numberOfLines={3}>
+              {name}
+            </Text>
+          </HStack>
+        </Pressable>
+      </View>
+    </NativeBaseProvider>
   );
 
   //Process each item of the data array
@@ -45,12 +73,23 @@ function ResultsScreen({navigation}) {
 
   return (
     <View
+      style={styles.container}
       style={{
         backgroundColor: isDarkMode ? '#000' : '#fff',
       }}>
-      <Text style={styles.name}>Searching for: {queryString}</Text>
+      <>
+        {queryString === '' ? (
+          <Text fontSize="3xl" textAlign="center">
+            Searching <Text bold>all media</Text>
+          </Text>
+        ) : (
+          <Text fontSize="3xl" textAlign="center">
+            Results for: <Text bold>{queryString}</Text>
+          </Text>
+        )}
+      </>
       <FlatList data={DATA} renderItem={renderItem}></FlatList>
-      <Button title="Go back" onPress={() => navigation.goBack()} />
+      {/* <Button title="Go back" onPress={() => navigation.goBack()} /> */}
     </View>
   );
 }
@@ -59,10 +98,12 @@ export default ResultsScreen;
 
 const styles = StyleSheet.create({
   container: {
+    justifyContent: 'center',
+    alignItems: 'center',
     flex: 1,
   },
   item: {
-    backgroundColor: '#f9c2ff',
+    backgroundColor: '#2096f3',
     padding: 20,
     marginVertical: 8,
     marginHorizontal: 16,
