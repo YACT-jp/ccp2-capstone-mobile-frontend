@@ -164,19 +164,6 @@ function Location({route, navigation}) {
                     <Heading size="md" ml="-1">
                       {name}
                     </Heading>
-                    {/* <Text
-                      fontSize="xs"
-                      _light={{
-                        color: 'violet.500',
-                      }}
-                      _dark={{
-                        color: 'violet.400',
-                      }}
-                      fontWeight="500"
-                      ml="-0.5"
-                      mt="-1">
-                      {`Media Name`}
-                    </Text> */}
                   </Stack>
                   <Text fontWeight="400">
                     {description === '' || description === null
