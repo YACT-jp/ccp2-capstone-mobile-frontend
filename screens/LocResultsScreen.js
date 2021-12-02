@@ -47,12 +47,14 @@ function LocResultsScreen({route, navigation}) {
               }}
               alt="Alternate Text"
               size="xl"
+              ml="5"
             />
             <Text
-              fontSize="3xl"
+              fontSize="4xl"
+              lineHeight="sm"
               color="white"
               isTruncated
-              maxW="200"
+              maxW="180"
               w="80%"
               multiline={true}
               numberOfLines={3}>
@@ -76,7 +78,13 @@ function LocResultsScreen({route, navigation}) {
       style={{
         backgroundColor: isDarkMode ? '#000' : '#fff',
       }}>
-      <Text fontSize="3xl" textAlign="center">
+      <Text
+        fontSize="2xl"
+        isTruncated
+        margin="1"
+        textAlign="center"
+        multiline={true}
+        numberOfLines={3}>
         Locations from: <Text bold>{name}</Text>
       </Text>
       <FlatList data={DATA} renderItem={renderItem}></FlatList>
@@ -96,10 +104,13 @@ const styles = StyleSheet.create({
   item: {
     backgroundColor: '#2096f3',
     padding: 20,
-    marginVertical: 8,
+    marginVertical: 2,
     marginHorizontal: 16,
   },
   name: {
     fontSize: 32,
+  },
+  image: {
+    ...StyleSheet.absoluteFillObject,
   },
 });

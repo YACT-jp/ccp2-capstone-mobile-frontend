@@ -18,7 +18,7 @@ function SearchStackScreen() {
         name="Media Results"
         component={ResultsScreen}
         options={{
-          headerRight: () => (
+          headerLeft: () => (
             <IconButton
               icon={<SearchIcon />}
               _icon={{
@@ -28,11 +28,16 @@ function SearchStackScreen() {
               onPress={() => navigation.navigate('Home')}
               title="Info"
               color="#fff"
+              marginRight="15"
+              marginLeft="-1"
             />
           ),
         }}
       />
-      <SearchStack.Screen name="Locations" component={LocResultsScreen} />
+      <SearchStack.Screen
+        name="Location Results"
+        component={LocResultsScreen}
+      />
       <SearchStack.Screen name="Location" component={Location} />
     </SearchStack.Navigator>
   );
