@@ -40,4 +40,28 @@ export const savedLocationsApi = async (userId) => {
   }
 };
 
+export const photosByUser = async (userId) => {
+  try {
+    const response = await fetch(
+      `https://ccp2-capstone-backend-sa-yxiyypij7a-an.a.run.app/api/user/${userId}/photo`,
+    );
+    const data = await response.json()
+    return data;
+  } catch(err) {
+    console.log(err)
+  }
+};
+
+export const photosByLocation = async (locationId) => {
+  try {
+    const response = await fetch(
+      `https://ccp2-capstone-backend-sa-yxiyypij7a-an.a.run.app/api/location/${locationId}/photo`,
+    );
+    const data = await response.json()
+    return data;
+  } catch(err) {
+    console.log(err)
+  }
+};
+
 //export default mediaResults;
