@@ -45,6 +45,7 @@ function LocResultsScreen({route, navigation}) {
     <View
       style={{
         backgroundColor: isDarkMode ? '#000' : '#fff',
+        flex: 1,
       }}>
       <Text style={styles.name}>Locations matching Media ID: {mediaId}</Text>
       <FlatList data={DATA} renderItem={renderItem}></FlatList>

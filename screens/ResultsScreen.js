@@ -35,6 +35,7 @@ function ResultsScreen({navigation}) {
     <View
     style={{ 
       backgroundColor: isDarkMode ? '#000' : '#fff',
+      flex: 1
     }}>
       <Text style={styles.name}>Searching for: {queryString}</Text>
       <FlatList
