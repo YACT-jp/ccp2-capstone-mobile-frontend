@@ -1,5 +1,6 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {useNavigation} from '@react-navigation/native';
 import {Button, SearchIcon, IconButton} from 'native-base';
 import ResultsScreen from '../screens/ResultsScreen';
 import Location from './Location';
@@ -10,6 +11,7 @@ import LocResultsScreen from './LocResultsScreen';
 const SearchStack = createNativeStackNavigator();
 
 function SearchStackScreen() {
+  const navigation = useNavigation();
   return (
     <SearchStack.Navigator>
       <SearchStack.Screen
@@ -18,9 +20,12 @@ function SearchStackScreen() {
         options={{
           headerRight: () => (
             <IconButton
-              size="5"
-              mt="0.5"
-              onPress={() => navigation.goBack()}
+              icon={<SearchIcon />}
+              _icon={{
+                color: '#2096f3',
+                size: 'md',
+              }}
+              onPress={() => navigation.navigate('Home')}
               title="Info"
               color="#fff"
             />
