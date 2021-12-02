@@ -73,12 +73,23 @@ function ResultsScreen({navigation}) {
 
   return (
     <View
+      style={styles.container}
       style={{
         backgroundColor: isDarkMode ? '#000' : '#fff',
       }}>
-      <Text style={styles.name}>Searching for: {queryString}</Text>
+      <>
+        {queryString === '' ? (
+          <Text fontSize="3xl" textAlign="center">
+            Searching <Text bold>all media</Text>
+          </Text>
+        ) : (
+          <Text fontSize="3xl" textAlign="center">
+            Results for: <Text bold>{queryString}</Text>
+          </Text>
+        )}
+      </>
       <FlatList data={DATA} renderItem={renderItem}></FlatList>
-      <Button title="Go back" onPress={() => navigation.goBack()} />
+      {/* <Button title="Go back" onPress={() => navigation.goBack()} /> */}
     </View>
   );
 }
