@@ -11,19 +11,23 @@ import {
   Stack,
   ScrollView,
   Button,
+  FlatList,
 } from 'native-base';
 import {View, StyleSheet} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import {useAuth} from '../providers/AuthProvider';
+import { photosByLocation } from '../data/data';
 
 function Location({route, navigation}) {
   /*Get the params */
   const {fullItem} = route.params;
   const {location_pic, name, description} = fullItem;
+  const locationId = fullItem._id;
   const coordsObj = eval('(' + fullItem['coordinates'] + ')');
   const {user, signUp, signIn} = useAuth();
   const [userSavedLocation, setUserSavedLocation] = useState([]);
   const [isLocationSaved, setIsLocationSaved] = useState(false);
+  const [photoData, setPhotoData] = useState([]);
 
   /** will move fetch functions to data.js */
 
@@ -118,113 +122,155 @@ function Location({route, navigation}) {
     checkIfLocationIsSaved();
   }, [userSavedLocation]);
 
+  
+  /** get user photos for this location */
+  useEffect( () => {
+    async function fetchData() {
+      const data = await photosByLocation(locationId);
+      setPhotoData(data);
+    }
+    fetchData();
+  }, []);
+
+  //List Item Component 
+  const Item = ({ url }) => (
+    <Box maxWidth="25%" height="100">
+      <Image
+        source={{
+          uri: url,
+        }}
+        alt="Alternate Text"
+        maxHeight="100%"
+        minWidth="100%"
+        objectFit="contain"
+        align="bottom"
+        height="200"
+      />
+    </Box>
+  );
+
+  //Process each item of the data array for the list
+  const renderItem = ({ item }) => (<Item url={item.url} />);
+
+  // Header element for the scrolling Flatlist 
+    const _renderHeader = () => <ScrollView>
+    <VStack space={4} alignItems="center">
+      <AspectRatio w="100%" ratio={16 / 9}>
+        {location_pic === '' || location_pic === null ? (
+          <Center flex="1">
+            <Text fontWeight="400">No Image yet</Text>
+          </Center>
+        ) : (
+          <Image
+            source={{
+              uri: location_pic,
+            }}
+            alt="image"
+          />
+        )}
+      </AspectRatio>
+      <Box
+        safeArea
+        w="80"
+        maxW="80"
+        rounded="lg"
+        overflow="hidden"
+        borderColor="coolGray.200"
+        borderWidth="1"
+        p="2"
+        py="8"
+        _dark={{
+          borderColor: 'coolGray.600',
+          backgroundColor: 'gray.700',
+        }}
+        _web={{
+          shadow: 2,
+          borderWidth: 0,
+        }}
+        _light={{
+          backgroundColor: 'gray.50',
+        }}>
+        <Stack p="4" space={3}>
+          <Stack space={2}>
+            <Heading size="md" ml="-1">
+              {name}
+            </Heading>
+            {/* <Text
+              fontSize="xs"
+              _light={{
+                color: 'violet.500',
+              }}
+              _dark={{
+                color: 'violet.400',
+              }}
+              fontWeight="500"
+              ml="-0.5"
+              mt="-1">
+              {`Media Name`}
+            </Text> */}
+          </Stack>
+          <Text fontWeight="400">
+            {description === '' || description === null
+              ? 'No description yet.'
+              : description}
+          </Text>
+          <Box
+            flex={1}
+            justifyContent="flex-end"
+            rounded="lg"
+            overflow="hidden"
+            alignItems="center"
+            justifyContent="center">
+            <AspectRatio w="100%" ratio={16 / 9}>
+              <MapView
+                provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+                style={mapStyles.map}
+                region={{
+                  latitude: parseFloat(coordsObj['latitude']),
+                  longitude: parseFloat(coordsObj['longitude']),
+                  latitudeDelta: 0.015,
+                  longitudeDelta: 0.0121,
+                }}>
+                <Marker
+                  key={0}
+                  coordinate={{
+                    latitude: parseFloat(coordsObj['latitude']),
+                    longitude: parseFloat(coordsObj['longitude']),
+                  }}
+                  // title={marker.title}
+                  // description={marker.description}
+                />
+              </MapView>
+            </AspectRatio>
+          </Box>
+          {isLocationSaved ? (
+            <Button size="sm" onPress={onDeleteClick}>
+              Remove Location
+            </Button>
+          ) : (
+            <Button size="sm" onPress={onSaveClick}>
+              Save Location
+            </Button>
+          )}
+        </Stack>
+      </Box>
+    </VStack>
+  </ScrollView>
+
   return (
     <NativeBaseProvider>
       <Center flex={1}>
         <Box flex="1" safeAreaTop>
-          <ScrollView>
-            <VStack space={4} alignItems="center">
-              <AspectRatio w="100%" ratio={16 / 9}>
-                {location_pic === '' || location_pic === null ? (
-                  <Center flex="1">
-                    <Text fontWeight="400">No Image yet</Text>
-                  </Center>
-                ) : (
-                  <Image
-                    source={{
-                      uri: location_pic,
-                    }}
-                    alt="image"
-                  />
-                )}
-              </AspectRatio>
-              <Box
-                safeArea
-                w="80"
-                maxW="80"
-                rounded="lg"
-                overflow="hidden"
-                borderColor="coolGray.200"
-                borderWidth="1"
-                p="2"
-                py="8"
-                _dark={{
-                  borderColor: 'coolGray.600',
-                  backgroundColor: 'gray.700',
-                }}
-                _web={{
-                  shadow: 2,
-                  borderWidth: 0,
-                }}
-                _light={{
-                  backgroundColor: 'gray.50',
-                }}>
-                <Stack p="4" space={3}>
-                  <Stack space={2}>
-                    <Heading size="md" ml="-1">
-                      {name}
-                    </Heading>
-                    {/* <Text
-                      fontSize="xs"
-                      _light={{
-                        color: 'violet.500',
-                      }}
-                      _dark={{
-                        color: 'violet.400',
-                      }}
-                      fontWeight="500"
-                      ml="-0.5"
-                      mt="-1">
-                      {`Media Name`}
-                    </Text> */}
-                  </Stack>
-                  <Text fontWeight="400">
-                    {description === '' || description === null
-                      ? 'No description yet.'
-                      : description}
-                  </Text>
-                  <Box
-                    flex={1}
-                    justifyContent="flex-end"
-                    rounded="lg"
-                    overflow="hidden"
-                    alignItems="center"
-                    justifyContent="center">
-                    <AspectRatio w="100%" ratio={16 / 9}>
-                      <MapView
-                        provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-                        style={mapStyles.map}
-                        region={{
-                          latitude: parseFloat(coordsObj['latitude']),
-                          longitude: parseFloat(coordsObj['longitude']),
-                          latitudeDelta: 0.015,
-                          longitudeDelta: 0.0121,
-                        }}>
-                        <Marker
-                          key={0}
-                          coordinate={{
-                            latitude: parseFloat(coordsObj['latitude']),
-                            longitude: parseFloat(coordsObj['longitude']),
-                          }}
-                          // title={marker.title}
-                          // description={marker.description}
-                        />
-                      </MapView>
-                    </AspectRatio>
-                  </Box>
-                  {isLocationSaved ? (
-                    <Button size="sm" onPress={onDeleteClick}>
-                      Remove Location
-                    </Button>
-                  ) : (
-                    <Button size="sm" onPress={onSaveClick}>
-                      Save Location
-                    </Button>
-                  )}
-                </Stack>
-              </Box>
-            </VStack>
-          </ScrollView>
+          
+          <FlatList
+          ListHeaderComponent={() => _renderHeader()}
+          numColumns={4}
+          key={4}
+          data={photoData}
+          renderItem={renderItem}
+          style={{ width: '100%' }}
+          >
+          </FlatList>
         </Box>
       </Center>
     </NativeBaseProvider>
