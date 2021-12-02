@@ -93,9 +93,7 @@ function ProfileScreen({navigation}) {
     );
   
     //Process each item of the data array
-    const renderItem = ({ item }) => (
-      <Item url={item.url} />
-    );
+    const renderItem = ({ item }) => (<Item url={item.url} />);
 
     return (
       <View
@@ -106,7 +104,6 @@ function ProfileScreen({navigation}) {
         width: '100%',
       }}>
         <FlatList
-        // scrollEnabled={false}
         ListHeaderComponent={() => _renderHeader()}
         ListFooterComponent={() => _renderFooter()}
         numColumns={4}
