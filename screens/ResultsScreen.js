@@ -27,7 +27,7 @@ function ResultsScreen({navigation}) {
   }, []);
 
   //List Item Component
-  const Item = ({name, mediaId}) => (
+  const Item = ({name, path, mediaId}) => (
     <NativeBaseProvider>
       <View style={styles.item} rounded="xl">
         <Pressable
@@ -44,7 +44,7 @@ function ResultsScreen({navigation}) {
               height={150}
               borderRadius={150}
               source={{
-                uri: null,
+                uri: 'https://image.tmdb.org/t/p/w500' + path,
               }}
               alt="Alternate Text"
               size="xl"
@@ -68,7 +68,7 @@ function ResultsScreen({navigation}) {
   //Process each item of the data array
   const renderItem = ({item}) =>
     item.name.toLowerCase().includes(queryString.toLowerCase()) ? (
-      <Item name={item.name} mediaId={item['id']} />
+      <Item name={item.name} path={item['poster_path']} mediaId={item['id']} />
     ) : null;
 
   return (
