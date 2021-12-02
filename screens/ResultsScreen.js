@@ -3,6 +3,7 @@ import {StyleSheet, useColorScheme, FlatList} from 'react-native';
 import {
   Button,
   HStack,
+  VStack,
   View,
   Pressable,
   Text,
@@ -27,38 +28,49 @@ function ResultsScreen({navigation}) {
   }, []);
 
   //List Item Component
-  const Item = ({name, path, mediaId}) => (
+  const Item = ({name, path, description, mediaId}) => (
     <NativeBaseProvider>
-      <View style={styles.item} rounded="xl">
+      <View style={styles.item} rounded="lg">
         <Pressable
-          rounded="xl"
-          onPress={() => navigation.navigate('Locations', {name, mediaId})}>
-          <HStack
-            style={styles.container}
-            space={5}
-            justifyContent="space-between">
+          rounded="lg"
+          onPress={() =>
+            navigation.navigate('Location Results', {name, mediaId})
+          }>
+          <HStack style={styles.container} space={5}>
             <Image
               border={1}
-              borderWidth={5}
+              borderWidth={2}
               borderColor="white"
               height={150}
               borderRadius={150}
               source={{
                 uri: 'https://image.tmdb.org/t/p/w500' + path,
               }}
-              alt="Alternate Text"
-              size="xl"
+              alt={`${name} poster`}
+              size="md"
+              ml="2"
             />
-            <Text
-              fontSize="3xl"
-              color="white"
-              isTruncated
-              maxW="200"
-              w="80%"
-              multiline={true}
-              numberOfLines={3}>
-              {name}
-            </Text>
+            <VStack>
+              <Text
+                fontSize="xl"
+                color="white"
+                isTruncated
+                maxW="225"
+                lineHeight="xs">
+                {name}
+              </Text>
+              <Text
+                mt="1"
+                fontSize="2xs"
+                color="white"
+                isTruncated
+                maxW="225"
+                fontWeight="500"
+                multiline={true}
+                numberOfLines={3}>
+                {description}
+              </Text>
+            </VStack>
           </HStack>
         </Pressable>
       </View>
@@ -68,7 +80,12 @@ function ResultsScreen({navigation}) {
   //Process each item of the data array
   const renderItem = ({item}) =>
     item.name.toLowerCase().includes(queryString.toLowerCase()) ? (
-      <Item name={item.name} path={item['poster_path']} mediaId={item['id']} />
+      <Item
+        name={item.name}
+        path={item['poster_path']}
+        description={item['overview']}
+        mediaId={item['id']}
+      />
     ) : null;
 
   return (
@@ -79,17 +96,16 @@ function ResultsScreen({navigation}) {
       }}>
       <>
         {queryString === '' ? (
-          <Text fontSize="3xl" textAlign="center">
+          <Text fontSize="xl" textAlign="center" mt="2">
             Searching <Text bold>all media</Text>
           </Text>
         ) : (
-          <Text fontSize="3xl" textAlign="center">
+          <Text fontSize="xl" textAlign="center">
             Results for: <Text bold>{queryString}</Text>
           </Text>
         )}
       </>
       <FlatList data={DATA} renderItem={renderItem}></FlatList>
-      {/* <Button title="Go back" onPress={() => navigation.goBack()} /> */}
     </View>
   );
 }
@@ -104,8 +120,8 @@ const styles = StyleSheet.create({
   },
   item: {
     backgroundColor: '#2096f3',
-    padding: 20,
-    marginVertical: 8,
+    padding: 10,
+    marginVertical: 2,
     marginHorizontal: 16,
   },
   name: {
