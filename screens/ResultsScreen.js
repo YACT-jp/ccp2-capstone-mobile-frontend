@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, useColorScheme, FlatList, Button} from 'react-native';
+import {StyleSheet, useColorScheme, FlatList} from 'react-native';
 import {
+  Button,
   HStack,
   View,
   Pressable,
@@ -21,7 +22,6 @@ function ResultsScreen({navigation}) {
     async function fetchData() {
       const data = await mediaResultsApi();
       setDATA(data);
-      console.log(data);
     }
     fetchData();
   }, []);
