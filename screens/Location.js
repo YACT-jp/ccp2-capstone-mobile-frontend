@@ -11,6 +11,10 @@ import {
   Stack,
   ScrollView,
   Button,
+  FormControl,
+  Modal,
+  HStack,
+  Input,
 } from 'native-base';
 import {View, StyleSheet} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
@@ -26,6 +30,8 @@ function Location({route, navigation}) {
   const [userSavedLocation, setUserSavedLocation] = useState([]);
   const [isLocationSaved, setIsLocationSaved] = useState(false);
   const [imageUri, setImageUri] = useState();
+  const [dispImageUri, setDispImageUri] = useState(fullItem.location_pic);
+  const [showModal, setShowModal] = useState(false);
   // const [imageUriGallery, setImageUriGallery] = useState(null);
 
   /** will move fetch functions to data.js */
@@ -144,6 +150,7 @@ function Location({route, navigation}) {
       } else {
         const uri = response.assets[0].uri;
         setImageUri(response.assets[0].uri);
+        setDispImageUri(response.assets[0].uri);
       }
     });
   };
@@ -175,6 +182,7 @@ function Location({route, navigation}) {
       } else {
         const uri = response.assets[0].uri;
         setImageUri(response.assets[0].uri);
+        setDispImageUri(response.assets[0].uri);
       }
     });
   };
@@ -290,48 +298,85 @@ function Location({route, navigation}) {
                   </Box>
                   {isLocationSaved ? (
                     <Button
-                      bg="#2096f3"
-                      _text={{color: 'white'}}
-                      size="sm"
+                      colorScheme="blue"
+                      size="md"
                       onPress={onDeleteClick}>
                       Remove Location
                     </Button>
                   ) : (
-                    <Button
-                      bg="#2096f3"
-                      _text={{color: 'white'}}
-                      size="sm"
-                      onPress={onSaveClick}>
+                    <Button colorScheme="blue" size="md" onPress={onSaveClick}>
                       Save Location
                     </Button>
                   )}
-                  <Button
-                    bg="#2096f3"
-                    _text={{color: 'white'}}
-                    size="sm"
-                    onPress={() => {
-                      openCamera();
-                    }}>
-                    Take Photo
+                  <Button colorScheme="blue" onPress={() => setShowModal(true)}>
+                    Add Post
                   </Button>
-                  <Button
-                    bg="#2096f3"
-                    _text={{color: 'white'}}
-                    size="sm"
-                    onPress={() => {
-                      openLibrary();
-                    }}>
-                    Choose From Library
-                  </Button>
-                  <Button
-                    bg="#2096f3"
-                    _text={{color: 'white'}}
-                    size="sm"
-                    onPress={() => {
-                      postImage(imageUri);
-                    }}>
-                    Upload Photo
-                  </Button>
+                  <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+                    <Modal.Content size="sm">
+                      <Modal.CloseButton />
+                      <Modal.Header>New Post</Modal.Header>
+                      <Modal.Body>
+                        <HStack space={5} alignItems="center">
+                          <Image
+                            border={1}
+                            borderWidth={5}
+                            borderColor="white"
+                            source={{
+                              uri: dispImageUri,
+                            }}
+                            alt="Alternate Text"
+                            size="xl"
+                          />
+                          <VStack space={5}>
+                            <Button
+                              colorScheme="blue"
+                              size="md"
+                              onPress={() => {
+                                openCamera();
+                              }}>
+                              Take Photo
+                            </Button>
+                            <Button
+                              colorScheme="blue"
+                              size="md"
+                              onPress={() => {
+                                openLibrary();
+                              }}>
+                              Choose From Library
+                            </Button>
+                          </VStack>
+                        </HStack>
+                        <Input
+                          height="30%"
+                          placeholder="Add a caption..."
+                          mt="2"
+                          paddingLeft="3"
+                          rounded="lg"
+                          borderWidth="5"
+                          style={{borderColor: '#3b81f6', fontSize: 15}}
+                        />
+                      </Modal.Body>
+                      <Modal.Footer>
+                        <Button.Group space={2}>
+                          <Button
+                            variant="ghost"
+                            colorScheme="blueGray"
+                            onPress={() => {
+                              setShowModal(false);
+                            }}>
+                            Cancel
+                          </Button>
+                          <Button
+                            colorScheme="blue"
+                            onPress={() => {
+                              setShowModal(false), postImage(imageUri);
+                            }}>
+                            Post
+                          </Button>
+                        </Button.Group>
+                      </Modal.Footer>
+                    </Modal.Content>
+                  </Modal>
                 </Stack>
               </Box>
             </VStack>
