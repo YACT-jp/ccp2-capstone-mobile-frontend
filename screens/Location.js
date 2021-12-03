@@ -198,6 +198,14 @@ function Location({route, navigation}) {
         </Stack>
       </Box>
     </VStack>
+    <>
+        {photoData !== undefined && photoData.length > 0 ? (
+          <Heading>User pics:</Heading>
+        ) : (
+          <Heading>Add your user pics:</Heading>
+        )}
+      </>
+    
   </ScrollView>
 
   return (
