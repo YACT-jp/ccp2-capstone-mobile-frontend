@@ -11,8 +11,8 @@ import {
   NativeBaseProvider,
 } from 'native-base';
 
-import {searchContext} from '../components/searchContext';
-import {mediaResultsApi} from '../data/data';
+import { searchContext } from '../providers/SearchProvider';
+import { mediaResultsApi } from '../data/data';
 
 function ResultsScreen({navigation}) {
   const isDarkMode = useColorScheme() === 'dark';
