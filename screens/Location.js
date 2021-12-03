@@ -14,16 +14,19 @@ import {
 } from 'native-base';
 import {View, StyleSheet} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {useAuth} from '../providers/AuthProvider';
 
 function Location({route, navigation}) {
   /*Get the params */
   const {fullItem} = route.params;
-  const {location_pic, name, description} = fullItem;
+  const {_id, location_pic, name, description} = fullItem;
   const coordsObj = eval('(' + fullItem['coordinates'] + ')');
   const {user, signUp, signIn} = useAuth();
   const [userSavedLocation, setUserSavedLocation] = useState([]);
   const [isLocationSaved, setIsLocationSaved] = useState(false);
+  const [imageUri, setImageUri] = useState();
+  // const [imageUriGallery, setImageUriGallery] = useState(null);
 
   /** will move fetch functions to data.js */
 
@@ -118,6 +121,92 @@ function Location({route, navigation}) {
     checkIfLocationIsSaved();
   }, [userSavedLocation]);
 
+  /** Image Picker via camera access */
+  const openCamera = () => {
+    const options = {
+      storageOptions: {
+        path: 'images',
+        mediaType: 'photo',
+        cameraType: 'back',
+        allowsEditing: true,
+        noData: true,
+      },
+      includeBase64: true,
+    };
+
+    launchCamera(options, response => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+      } else {
+        const uri = response.assets[0].uri;
+        setImageUri(response.assets[0].uri);
+      }
+    });
+  };
+
+  /** Image Picker via library access */
+  const openLibrary = () => {
+    const options = {
+      storageOptions: {
+        quality: 1,
+        mediaType: 'photo',
+        cameraType: 'back',
+        allowsEditing: true,
+        noData: true,
+        maxWidth: 8000,
+        maxHeight: 8000,
+      },
+    };
+
+    launchImageLibrary(options, response => {
+      console.log('response: ', response);
+      console.log('response latitude: ', response.latitude);
+      console.log('response longitude: ', response.longitude);
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+      } else {
+        const uri = response.assets[0].uri;
+        setImageUri(response.assets[0].uri);
+      }
+    });
+  };
+
+  /** POST request sending imageUri to backend */
+  const postImage = imageUri => {
+    // console.log('POST imageUri');
+    // console.log('imageUri', imageUri);
+    // console.log('user.id', user.id);
+    // console.log('_id', _id);
+    const url = `https://ccp2-capstone-backend-sa-yxiyypij7a-an.a.run.app/api/user/${user.id}/location/${_id}/photo`;
+    let formData = new FormData();
+    formData.append('file', {
+      uri: imageUri,
+      name: 'image.jpg',
+      type: 'image/jpeg',
+    });
+    return fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      body: formData,
+    }).catch(error => {
+      console.warn(error);
+    });
+  };
+
+  // useEffect(() => {
+  //   postImage(imageUri);
+  // }, [imageUri]);
+
   return (
     <NativeBaseProvider>
       <Center flex={1}>
@@ -200,14 +289,49 @@ function Location({route, navigation}) {
                     </AspectRatio>
                   </Box>
                   {isLocationSaved ? (
-                    <Button size="sm" onPress={onDeleteClick}>
+                    <Button
+                      bg="#2096f3"
+                      _text={{color: 'white'}}
+                      size="sm"
+                      onPress={onDeleteClick}>
                       Remove Location
                     </Button>
                   ) : (
-                    <Button size="sm" onPress={onSaveClick}>
+                    <Button
+                      bg="#2096f3"
+                      _text={{color: 'white'}}
+                      size="sm"
+                      onPress={onSaveClick}>
                       Save Location
                     </Button>
                   )}
+                  <Button
+                    bg="#2096f3"
+                    _text={{color: 'white'}}
+                    size="sm"
+                    onPress={() => {
+                      openCamera();
+                    }}>
+                    Take Photo
+                  </Button>
+                  <Button
+                    bg="#2096f3"
+                    _text={{color: 'white'}}
+                    size="sm"
+                    onPress={() => {
+                      openLibrary();
+                    }}>
+                    Choose From Library
+                  </Button>
+                  <Button
+                    bg="#2096f3"
+                    _text={{color: 'white'}}
+                    size="sm"
+                    onPress={() => {
+                      postImage(imageUri);
+                    }}>
+                    Upload Photo
+                  </Button>
                 </Stack>
               </Box>
             </VStack>
