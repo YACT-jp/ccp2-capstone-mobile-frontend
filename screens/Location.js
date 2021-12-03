@@ -20,15 +20,21 @@ import {View, StyleSheet} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {useAuth} from '../providers/AuthProvider';
+import {
+  getAsyncSavedLocations,
+  updateAsyncSavedLocations,
+} from '../data/asyncSavedLocations';
+import {dynamicSavedLocationsApi} from '../data/data';
+import {cloneNode} from '@babel/types';
 
 function Location({route, navigation}) {
   /*Get the params */
   const {fullItem} = route.params;
   const {_id, location_pic, name, description} = fullItem;
   const coordsObj = eval('(' + fullItem['coordinates'] + ')');
-  const {user, signUp, signIn} = useAuth();
-  const [userSavedLocation, setUserSavedLocation] = useState([]);
+  const {user} = useAuth();
   const [isLocationSaved, setIsLocationSaved] = useState(false);
+  const [refresh, setRefresh] = useState(false);
   const [imageUri, setImageUri] = useState();
   const [dispImageUri, setDispImageUri] = useState(fullItem.location_pic);
   const [showModal, setShowModal] = useState(false);
@@ -80,52 +86,47 @@ function Location({route, navigation}) {
 
   /** onClick function that saves location */
   const onSaveClick = () => {
-    console.log('save click');
-    fetchData = async () => {
-      const data = await bookmarkEndpoint(fullItem, 'patch');
+    const fetchSaveData = async () => {
+      const res = await dynamicSavedLocationsApi(user.id, fullItem, 'patch');
+      console.log('save res', res)
+      await updateAsyncSavedLocations(user.id);
+      setIsLocationSaved(true);
     };
-    fetchData();
-    fetchBookmarkData();
+    setRefresh(!refresh);
+    fetchSaveData();
   };
 
   /** onClick function that deletes location */
   const onDeleteClick = () => {
-    console.log('delete click');
-    fetchData = async () => {
-      const data = await bookmarkEndpoint(fullItem, 'delete');
-    };
-    fetchData();
-    fetchBookmarkData();
-  };
-
-  /** async function for fetching saved locations used by onClick functions */
-  async function fetchBookmarkData() {
-    const data = await getBookmarkEndpoint('get');
-    setUserSavedLocation(JSON.parse(data)[0].bookmarks);
-  }
-
-  /** compare saved locations if already saved */
-  const checkIfLocationIsSaved = () => {
-    const locationObject = userSavedLocation.find(
-      location => location._id === fullItem._id,
-    );
-    if (locationObject !== undefined) {
-      setIsLocationSaved(true);
-    } else {
+    const fetchDelData = async () => {
+      const res = await dynamicSavedLocationsApi(user.id, fullItem, 'delete');
+      console.log('delete res', res)
+      await updateAsyncSavedLocations(user.id);
       setIsLocationSaved(false);
-    }
+    };
+    setRefresh(!refresh);
+    fetchDelData();
   };
 
-  /** use effect for initial load only */
+  /** load SavedLocations from AsyncStorage */
   useEffect(() => {
-    fetchBookmarkData();
-    checkIfLocationIsSaved();
-  }, []);
-
-  /** use effect for every updated of userSavedLocation */
-  useEffect(() => {
-    checkIfLocationIsSaved();
-  }, [userSavedLocation]);
+    async function fetchData() {
+      try {
+        const asyncSavedLocations = await getAsyncSavedLocations();
+        const locationObject = asyncSavedLocations.find(
+          location => location._id === fullItem._id,
+        );
+        if (locationObject !== undefined) {
+          setIsLocationSaved(true);
+        } else {
+          setIsLocationSaved(false);
+        }
+      } catch (error) {
+        throw error;
+      }
+    }
+    fetchData();
+  }, [refresh]);
 
   /** Image Picker via camera access */
   const openCamera = () => {

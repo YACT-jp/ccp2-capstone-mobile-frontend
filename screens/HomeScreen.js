@@ -8,7 +8,7 @@ import {
   useColorScheme,
   SafeAreaView,
 } from 'react-native';
-import {searchContext} from '../components/searchContext';
+import {searchContext} from '../providers/SearchProvider';
 
 function HomeScreen({navigation}) {
   const isDarkMode = useColorScheme() === 'dark';
