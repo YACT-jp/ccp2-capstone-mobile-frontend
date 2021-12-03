@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useColorScheme} from 'react-native';
 
 import {LoginForm, SignupForm} from './screens';

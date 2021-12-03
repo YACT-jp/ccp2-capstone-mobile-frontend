@@ -9,9 +9,12 @@
     "test": "jest",
     "lint": "eslint .",
     "npxa": "npx react-native run-android",
-    "npxi": "react-native run-ios"
+    "npxi": "react-native run-ios",
+    "android-build": "react-native-version && cd android && ./gradlew bundleRelease",
+    "test-android-build": "npx react-native run-android --variant=release --port=8080"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.15.13",
     "@react-navigation/bottom-tabs": "^6.0.9",
     "@react-navigation/native": "^6.0.6",
     "@react-navigation/native-stack": "^6.2.5",
@@ -19,6 +22,7 @@
     "native-base": "^3.2.2",
     "react": "17.0.2",
     "react-native": "0.66.3",
+    "react-native-dotenv": "^3.3.0",
     "react-native-maps": "0.29.4",
     "react-native-safe-area-context": "^3.3.2",
     "react-native-screens": "^3.9.0",
@@ -33,6 +37,7 @@
     "eslint": "7.14.0",
     "jest": "^26.6.3",
     "metro-react-native-babel-preset": "^0.66.2",
+    "react-native-version": "^4.0.0",
     "react-test-renderer": "17.0.2"
   },
   "jest": {
