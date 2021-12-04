@@ -77,6 +77,7 @@ function LocResultsScreen({route, navigation}) {
       style={styles.container}
       style={{
         backgroundColor: isDarkMode ? '#000' : '#fff',
+        flex: 1,
       }}>
       <Text
         fontSize="2xl"
