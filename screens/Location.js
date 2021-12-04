@@ -119,7 +119,7 @@ function Location({route, navigation}) {
   // Header element for the scrolling Flatlist
   const _renderHeader = () => (
     <ScrollView>
-      <VStack space={4} alignItems="center">
+      <VStack mb="4" space={4} alignItems="center">
         <AspectRatio w="100%" ratio={16 / 9}>
           {location_pic === '' || location_pic === null ? (
             <Center flex="1">
@@ -143,7 +143,6 @@ function Location({route, navigation}) {
           borderColor="coolGray.200"
           borderWidth="1"
           p="2"
-          py="8"
           _dark={{
             borderColor: 'coolGray.600',
             backgroundColor: 'gray.700',
@@ -205,7 +204,7 @@ function Location({route, navigation}) {
               </Button>
             )}
             <Button colorScheme="blue" onPress={() => setShowModal(true)}>
-              Add Post
+              Add Photo
             </Button>
             <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
               <Modal.Content size="xs">
