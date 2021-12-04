@@ -74,6 +74,7 @@ function ProfileScreen({navigation}) {
   const _renderFooter = () => (
     <View style={{paddingVertical: 4}}>
       <Button
+        margin="2"
         colorScheme="blue"
         size="md"
         onPress={() => {

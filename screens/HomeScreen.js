@@ -3,11 +3,11 @@ import {
   View,
   Text,
   TextInput,
-  Button,
   StyleSheet,
   useColorScheme,
   SafeAreaView,
 } from 'react-native';
+import {Button} from 'native-base';
 import {searchContext} from '../providers/SearchProvider';
 
 function HomeScreen({navigation}) {
@@ -39,11 +39,13 @@ function HomeScreen({navigation}) {
           {'\n'}You entered: {text}
         </Text>
         <Button
-          title="Go to Results"
+          margin="2"
+          colorScheme="blue"
           onPress={() =>
             navigation.navigate('Search', {screen: 'Media Results'})
-          }
-        />
+          }>
+          Go to Results
+        </Button>
       </View>
     </SafeAreaView>
   );
