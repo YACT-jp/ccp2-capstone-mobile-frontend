@@ -11,8 +11,8 @@ import {
   NativeBaseProvider,
 } from 'native-base';
 
-import { searchContext } from '../providers/SearchProvider';
-import { mediaResultsApi } from '../data/data';
+import {searchContext} from '../providers/SearchProvider';
+import {mediaResultsApi} from '../data/data';
 
 function ResultsScreen({navigation}) {
   const isDarkMode = useColorScheme() === 'dark';
@@ -93,7 +93,7 @@ function ResultsScreen({navigation}) {
       style={styles.container}
       style={{
         backgroundColor: isDarkMode ? '#000' : '#fff',
-        flex: 1
+        flex: 1,
       }}>
       <>
         {queryString === '' ? (
@@ -107,7 +107,6 @@ function ResultsScreen({navigation}) {
         )}
       </>
       <FlatList data={DATA} renderItem={renderItem}></FlatList>
-      <Button title="Go back" onPress={() => navigation.goBack()} />
     </View>
   );
 }
