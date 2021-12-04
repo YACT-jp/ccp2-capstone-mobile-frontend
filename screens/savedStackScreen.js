@@ -10,10 +10,10 @@ const SavedStack = createNativeStackNavigator();
 
 function SavedStackScreen() {
   return (
-        <SavedStack.Navigator>
-          <SavedStack.Screen name="Saved List" component={SavedScreen} />
-          <SavedStack.Screen name="Saved Location" component={Location} />
-        </SavedStack.Navigator>
+    <SavedStack.Navigator>
+      <SavedStack.Screen name="Saved Locations" component={SavedScreen} />
+      <SavedStack.Screen name="Saved Location" component={Location} />
+    </SavedStack.Navigator>
   );
 }
 
