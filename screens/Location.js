@@ -41,6 +41,7 @@ function Location({route, navigation}) {
   const [showModal, setShowModal] = useState(false);
   const [photoData, setPhotoData] = useState([]);
   const [refresh, setRefresh] = useState(false);
+  const [galleryRefresh, setGalleryRefresh] = useState(false);
 
   /** onClick function that saves location */
   const onSaveClick = () => {
@@ -93,7 +94,7 @@ function Location({route, navigation}) {
       setPhotoData(data);
     }
     fetchData();
-  }, []);
+  }, [galleryRefresh]);
 
   //List Item Component
   const Item = ({url}) => (
@@ -277,7 +278,11 @@ function Location({route, navigation}) {
                     <Button
                       colorScheme="blue"
                       onPress={() => {
-                        setShowModal(false), postImage(imageUri);
+                        setShowModal(false),
+                          postImage(imageUri),
+                          setTimeout(() => {
+                            setGalleryRefresh(!galleryRefresh);
+                          }, 1000);
                       }}>
                       Post
                     </Button>
