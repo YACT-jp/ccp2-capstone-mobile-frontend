@@ -334,9 +334,9 @@ function Location({route, navigation}) {
     };
 
     launchImageLibrary(options, response => {
-      console.log('response: ', response);
-      console.log('response latitude: ', response.latitude);
-      console.log('response longitude: ', response.longitude);
+      // console.log('response: ', response);
+      // console.log('response latitude: ', response.latitude);
+      // console.log('response longitude: ', response.longitude);
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
