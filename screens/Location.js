@@ -353,7 +353,6 @@ function Location({route, navigation}) {
 
   /** POST request sending imageUri to backend */
   const postImage = imageUri => {
-    console.log('Posted image');
     const url = `https://ccp2-capstone-backend-sa-yxiyypij7a-an.a.run.app/api/user/${user.id}/location/${locationId}}/photo`;
     let formData = new FormData();
     formData.append('file', {
