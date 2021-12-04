@@ -93,6 +93,7 @@ function ResultsScreen({navigation}) {
       style={styles.container}
       style={{
         backgroundColor: isDarkMode ? '#000' : '#fff',
+        flex: 1
       }}>
       <>
         {queryString === '' ? (
@@ -106,6 +107,7 @@ function ResultsScreen({navigation}) {
         )}
       </>
       <FlatList data={DATA} renderItem={renderItem}></FlatList>
+      <Button title="Go back" onPress={() => navigation.goBack()} />
     </View>
   );
 }
