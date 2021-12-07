@@ -36,6 +36,13 @@ function ProfileScreen({navigation}) {
   const [currentIndex, setCurrentIndex] = useState();
 
   useEffect(() => {
+    if (currentIndex) {
+      setSinglePhoto(DATA[`${currentIndex}`]['url']);
+    }
+    console.log('currentIndex', currentIndex);
+  }, [currentIndex]);
+
+  useEffect(() => {
     async function fetchData() {
       const data = await photosByUser(user.id);
       setDATA(data);
@@ -53,10 +60,10 @@ function ProfileScreen({navigation}) {
   const lastPhoto = (event, item) => {
     if (currentIndex === 0) {
       setCurrentIndex(DATA.length - 1);
-      setSinglePhoto(DATA[`${currentIndex}`]['url']);
+      // setSinglePhoto(DATA[`${currentIndex}`]['url']);
     } else {
       setCurrentIndex(currentIndex - 1);
-      setSinglePhoto(DATA[`${currentIndex}`]['url']);
+      // setSinglePhoto(DATA[`${currentIndex}`]['url']);
       event.preventDefault();
     }
   };
@@ -64,10 +71,10 @@ function ProfileScreen({navigation}) {
   const nextPhoto = (event, item) => {
     if (currentIndex === DATA.length - 1) {
       setCurrentIndex(0);
-      setSinglePhoto(DATA[`${currentIndex}`]['url']);
+      // setSinglePhoto(DATA[`${currentIndex}`]['url']);
     } else {
       setCurrentIndex(currentIndex + 1);
-      setSinglePhoto(DATA[`${currentIndex}`]['url']);
+      // setSinglePhoto(DATA[`${currentIndex}`]['url']);
       event.preventDefault();
     }
   };
