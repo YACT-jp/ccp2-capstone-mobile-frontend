@@ -36,10 +36,9 @@ function ProfileScreen({navigation}) {
   const [currentIndex, setCurrentIndex] = useState();
 
   useEffect(() => {
-    if (currentIndex) {
+    if (currentIndex !== undefined) {
       setSinglePhoto(DATA[`${currentIndex}`]['url']);
     }
-    console.log('currentIndex', currentIndex);
   }, [currentIndex]);
 
   useEffect(() => {
@@ -60,23 +59,25 @@ function ProfileScreen({navigation}) {
   const lastPhoto = (event, item) => {
     if (currentIndex === 0) {
       setCurrentIndex(DATA.length - 1);
-      // setSinglePhoto(DATA[`${currentIndex}`]['url']);
+      setSinglePhoto(DATA[`${currentIndex}`]['url']);
     } else {
       setCurrentIndex(currentIndex - 1);
-      // setSinglePhoto(DATA[`${currentIndex}`]['url']);
-      event.preventDefault();
     }
+    console.log('singlePhoto', singlePhoto);
+    console.log('currentIndex', currentIndex);
+    event.preventDefault();
   };
 
   const nextPhoto = (event, item) => {
     if (currentIndex === DATA.length - 1) {
       setCurrentIndex(0);
-      // setSinglePhoto(DATA[`${currentIndex}`]['url']);
+      setSinglePhoto(DATA[0]['url']);
     } else {
       setCurrentIndex(currentIndex + 1);
-      // setSinglePhoto(DATA[`${currentIndex}`]['url']);
-      event.preventDefault();
     }
+    console.log('singlePhoto', singlePhoto);
+    console.log('currentIndex', currentIndex);
+    event.preventDefault();
   };
 
   const isDarkMode = useColorScheme() === 'dark';
