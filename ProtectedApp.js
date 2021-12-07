@@ -4,7 +4,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useColorScheme} from 'react-native';
 import {LoginForm, SignupForm} from './screens';
 import Menu from './navigation/Menu';
-import LoadingScreen from './screens/LoadingScreen';
+import LoadingScreen from './screens/StartUpScreen';
 
 import {useAuth} from './providers/AuthProvider';
 
@@ -17,7 +17,7 @@ const ProtectedApp = () => {
 
   setTimeout(() => {
     setLoading(false);
-  }, 5000);
+  }, 3000);
 
   if (loading) {
     return <LoadingScreen />;

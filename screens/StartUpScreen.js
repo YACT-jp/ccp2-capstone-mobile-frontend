@@ -1,15 +1,10 @@
 import React, {useEffect} from 'react';
-import {View, Text, StyleSheet, Image, Button} from 'react-native';
-import appLogo from '../assets/logo-app.png';
+import {View, StyleSheet, Image} from 'react-native';
+import appLogo from '../assets/emina_logo.png';
 
 const LoadingScreen = () => {
   useEffect(() => {
-    // load initial data (location, anime) to local storage
   }, []);
-
-  const testButton = () => {
-    console.log('test');
-  };
 
   return (
     <View style={styles.container}>
@@ -23,16 +18,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'white'
   },
   logo: {
     width: '80%',
     resizeMode: 'contain',
-  },
-  buttonsContainer: {
-    padding: 10
-  },
-  buttonsStyle: {
-    margin: 10
   },
 });
 
