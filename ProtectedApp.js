@@ -6,28 +6,28 @@ import {LoginForm, SignupForm} from './screens';
 import Menu from './navigation/Menu';
 import LoadingScreen from './screens/LoadingScreen';
 
-import {useAuth, AuthProvider} from './providers/AuthProvider';
+import {useAuth} from './providers/AuthProvider';
 
 const AuthStack = createNativeStackNavigator();
-const Stack = createNativeStackNavigator();
 
 const ProtectedApp = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? '#333' : '#ccc',
-  };
-
   const [loading, setLoading] = useState(true);
   const [queryString, setQueryString] = useState('');
-  const {user, signUp, signIn} = useAuth();
+  const {user} = useAuth();
 
   setTimeout(() => {
     setLoading(false);
   }, 5000);
 
+  if (loading) {
+    return <LoadingScreen />;
+  }
+
   return (
     <NavigationContainer>
-      {user ? (
+      {loading ? (
+        <LoadingScreen />
+      ) : user ? (
         <Menu queryString={queryString} setQueryString={setQueryString} />
       ) : (
         <AuthStack.Navigator initialRouteName="SignIn">
