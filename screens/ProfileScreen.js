@@ -7,7 +7,19 @@ import {
   FlatList,
   StyleSheet,
 } from 'react-native';
-import {Heading, Button, Image, Box} from 'native-base';
+import {
+  Heading,
+  Button,
+  Image,
+  Box,
+  Modal,
+  VStack,
+  HStack,
+  Pressable,
+  Input,
+  ArrowBackIcon,
+  ArrowForwardIcon,
+} from 'native-base';
 import {useAuth, AuthProvider} from '../providers/AuthProvider';
 import {photosByUser} from '../data/data';
 
@@ -19,6 +31,9 @@ function ProfileScreen({navigation}) {
 
   const [DATA, setDATA] = useState([]);
   const [refresh, setRefresh] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [singlePhoto, setSinglePhoto] = useState();
+  const [currentIndex, setCurrentIndex] = useState();
 
   useEffect(() => {
     async function fetchData() {
@@ -27,6 +42,35 @@ function ProfileScreen({navigation}) {
     }
     fetchData();
   }, [refresh]);
+
+  const handleClick = (event, url, item) => {
+    setShowModal(true);
+    setSinglePhoto(url);
+    setCurrentIndex(DATA.indexOf(item));
+    event.preventDefault();
+  };
+
+  const lastPhoto = (event, item) => {
+    if (currentIndex === 0) {
+      setCurrentIndex(DATA.length - 1);
+      setSinglePhoto(DATA[`${currentIndex}`]['url']);
+    } else {
+      setCurrentIndex(currentIndex - 1);
+      setSinglePhoto(DATA[`${currentIndex}`]['url']);
+      event.preventDefault();
+    }
+  };
+
+  const nextPhoto = (event, item) => {
+    if (currentIndex === DATA.length - 1) {
+      setCurrentIndex(0);
+      setSinglePhoto(DATA[`${currentIndex}`]['url']);
+    } else {
+      setCurrentIndex(currentIndex + 1);
+      setSinglePhoto(DATA[`${currentIndex}`]['url']);
+      event.preventDefault();
+    }
+  };
 
   const isDarkMode = useColorScheme() === 'dark';
 
@@ -61,7 +105,6 @@ function ProfileScreen({navigation}) {
           size="md"
           onPress={() => {
             signOut();
-            // navigation.navigate('Login');
           }}>
           Sign Out
         </Button>
@@ -70,24 +113,12 @@ function ProfileScreen({navigation}) {
     </View>
   );
 
-  // Footer element for the scrolling Flatlist
-  const _renderFooter = () => (
-    <View style={{paddingVertical: 4}}>
-      <Button
-        margin="2"
-        colorScheme="blue"
-        size="md"
-        onPress={() => {
-          setRefresh(!refresh);
-        }}>
-        Refresh Gallery
-      </Button>
-    </View>
-  );
-
   //List Item Component
-  const Item = ({url}) => (
-    <Box maxWidth="25%" height="100">
+  const Item = ({url, item}) => (
+    <Pressable
+      onPress={event => handleClick(event, url, item)}
+      maxWidth="25%"
+      height="100">
       <Image
         source={{
           uri: url,
@@ -99,11 +130,69 @@ function ProfileScreen({navigation}) {
         align="bottom"
         height="200"
       />
-    </Box>
+    </Pressable>
   );
 
   //Process each item of the data array
-  const renderItem = ({item}) => <Item url={item.url} />;
+  const renderItem = ({item}) => <Item url={item.url} item={item} />;
+
+  const SinglePhoto = (item, DATA) => (
+    <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+      <Modal.Content size="lg">
+        <Modal.CloseButton />
+        <Modal.Header>Image Gallery</Modal.Header>
+        <Modal.Body space={5} alignItems="center">
+          <HStack space={5} alignItems="center" justifyContent="center">
+            <ArrowBackIcon onPress={(event, item) => lastPhoto(event, item)} />
+            <Image
+              border={1}
+              borderWidth={5}
+              borderColor="white"
+              source={{
+                uri: singlePhoto,
+              }}
+              alt="Alternate Text"
+              size="2xl"
+            />
+            <ArrowForwardIcon
+              onPress={(event, item) => nextPhoto(event, item)}
+            />
+          </HStack>
+          <Input
+            placeholder="Add a caption..."
+            mt="2"
+            paddingLeft="3"
+            rounded="lg"
+            borderWidth="5"
+            style={{borderColor: '#3b81f6', fontSize: 15}}
+          />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button.Group space={2}>
+            <Button
+              variant="ghost"
+              colorScheme="blueGray"
+              onPress={() => {
+                setShowModal(false);
+              }}>
+              Back
+            </Button>
+            <Button
+              colorScheme="blue"
+              onPress={() => {
+                setShowModal(false);
+                // postImage(imageUri),
+                // setTimeout(() => {
+                //   setGalleryRefresh(!galleryRefresh);
+                // }, 1000);
+              }}>
+              Edit
+            </Button>
+          </Button.Group>
+        </Modal.Footer>
+      </Modal.Content>
+    </Modal>
+  );
 
   return (
     <View
@@ -115,12 +204,25 @@ function ProfileScreen({navigation}) {
       }}>
       <FlatList
         ListHeaderComponent={() => _renderHeader()}
-        ListFooterComponent={() => _renderFooter()}
         numColumns={4}
         key={4}
         data={DATA}
         renderItem={renderItem}
         style={{paddingHorizontal: 4, width: '100%'}}></FlatList>
+      <SinglePhoto />
+      <Button
+        position="absolute"
+        margin="2"
+        colorScheme="blue"
+        size="md"
+        left="0"
+        bottom="0"
+        right="0"
+        onPress={() => {
+          setRefresh(!refresh);
+        }}>
+        Refresh Gallery
+      </Button>
     </View>
   );
 }
