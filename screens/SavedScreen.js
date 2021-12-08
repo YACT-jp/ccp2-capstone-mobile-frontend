@@ -1,9 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState, useCallback} from 'react';
 import {
   StyleSheet,
   useColorScheme,
   FlatList,
-  TouchableOpacity,
   SafeAreaView,
 } from 'react-native';
 import {
@@ -16,8 +15,8 @@ import {
   NativeBaseProvider,
 } from 'native-base';
 
-import {useAuth} from '../providers/AuthProvider';
 import {getAsyncSavedLocations} from '../data/asyncSavedLocations';
+import {useFocusEffect} from '@react-navigation/core';
 
 function SavedScreen({navigation}) {
   const isDarkMode = useColorScheme() === 'dark';
@@ -26,18 +25,24 @@ function SavedScreen({navigation}) {
   const [refresh, setRefresh] = useState(false);
 
   // load Saved Locations from AsyncStorage
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const res = await getAsyncSavedLocations();
-        setDATA(res);
-        return res;
-      } catch (error) {
-        throw error;
+  useFocusEffect(
+    useCallback(() => {
+      async function fetchData() {
+        try {
+          const res = await getAsyncSavedLocations();
+          setDATA(res);
+          return res;
+        } catch (error) {
+          throw error;
+        }
       }
-    }
-    fetchData();
-  }, [refresh]);
+      fetchData();
+      // this function runs on "screen unfocus/unmount"
+      return () => {
+        console.log('hello world');
+      };
+    }, []),
+  );
 
   //List Item Component
   const Item = ({name, fullItem}) => (
