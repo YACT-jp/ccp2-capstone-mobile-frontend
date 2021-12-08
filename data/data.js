@@ -1,3 +1,5 @@
+import { retrieveUserSession } from '../data/secureStorage';
+
 export const locResultsByMedia = async mediaId => {
   try {
     const response = await fetch(
@@ -75,5 +77,44 @@ export const dynamicSavedLocationsApi = async (userId, inputdata, method) => {
     return data;
   } catch (err) {
     console.log('error', err);
+  }
+};
+
+export const apiAuth = async (userId, userEmail) => {   
+  try {     
+    const response = await fetch('https://ccp2-capstone-backend-sa-yxiyypij7a-an.a.run.app/api/auth',
+    {
+        method: 'POST',
+        headers: {         
+          'Content-Type': 'application/json',       
+        },
+        body: JSON.stringify({_id: userId, email: userEmail}), 
+        // body data type must match "Content-Type" header     
+      });     
+    const data = await response.text();     
+    return data;   
+  } catch (err) { 
+    console.log('error', err);   
+  } 
+};
+
+export const authTest = async () => {
+  try {
+    const userToken = await retrieveUserSession();
+    console.log('userToken pure:', userToken['token']);
+    const response = await fetch(
+      'https://ccp2-capstone-backend-sa-yxiyypij7a-an.a.run.app/authtest',
+      {
+          method: 'GET',
+          headers: {         
+            'Content-Type': 'application/json',   
+            'Authorization': `Bearer ${userToken['token']}`   
+          },
+          // body data type must match "Content-Type" header     
+        });     
+    const data = await response.text();
+    return data;
+  } catch (err) {
+    console.log(err);
   }
 };

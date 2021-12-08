@@ -20,6 +20,10 @@ const ProtectedApp = () => {
   const [loading, setLoading] = useState(true);
   const [queryString, setQueryString] = useState('');
   const {user, signUp, signIn} = useAuth();
+  
+  //Useful code to find additional functions on the user object:
+  // console.log(Object.getOwnPropertyNames(user).forEach( (props) => console.log(props)));
+  //console.log(user.accessToken);
 
   setTimeout(() => {
     setLoading(false);

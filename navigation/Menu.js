@@ -14,15 +14,31 @@ import SavedStackScreen from '../screens/savedStackScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import {updateAsyncSavedLocations} from '../data/asyncSavedLocations';
 import {useAuth} from '../providers/AuthProvider';
+import { apiAuth } from '../data/data';
+import { storeUserSession } from '../data/secureStorage';
 
 const Tab = createBottomTabNavigator();
 
 const Menu = ({queryString, setQueryString}) => {
   console.log('query', queryString);
   const {user} = useAuth();
+  const userInfo = JSON.parse(user._customData);
 
   // load to AsyncStorage saved location on application startup
   useEffect(() => {
+    async function fetchToken() {
+      console.log('fetching token');
+      try {
+        const userData = await apiAuth(user.id, userInfo.email);
+        const inMemToken = JSON.parse(userData).data.token;
+        console.log('GOT TOKEN:', inMemToken);
+        storeUserSession(inMemToken);
+      } catch (error) {
+        throw error;
+      }
+    }
+    fetchToken();
+
     async function fetchData() {
       console.log('fetching data');
       try {
@@ -32,8 +48,7 @@ const Menu = ({queryString, setQueryString}) => {
       }
     }
     fetchData();
-  }),
-    [];
+  }), [];
 
   return (
     <NativeBaseProvider>

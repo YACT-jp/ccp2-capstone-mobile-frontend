@@ -66,6 +66,8 @@ const AuthProvider = ({children}) => {
     const creds = Realm.Credentials.emailPassword(email, password);
     const newUser = await app.logIn(creds);
     setUser(newUser);
+    //console.log(Object.getOwnPropertyNames(newUser).forEach( (props) => console.log(props)));
+    //console.log('newUser id', newUser.id);
   };
 
   // The signUp function takes an email and password and uses the
