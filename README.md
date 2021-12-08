@@ -3,7 +3,7 @@
 ## Cloning this repository
 
 ```
-git clone
+git clone https://github.com/YACT-jp/ccp2-capstone-mobile-frontend.git
 npm install
 ```
 
