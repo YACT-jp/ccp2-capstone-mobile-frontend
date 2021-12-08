@@ -1,6 +1,7 @@
-import React, {useEffect, useState} from 'react';
-import {Alert} from 'react-native';
+import React, {useState} from 'react';
+import {Alert, StyleSheet} from 'react-native';
 import {
+  Image,
   Box,
   Text,
   Heading,
@@ -16,7 +17,8 @@ import {
 import {useAuth, AuthProvider} from '../providers/AuthProvider';
 
 export const LoginForm = ({navigation: {navigate}}) => {
-  const {user, signUp, signIn} = useAuth();
+  const appText = require('../assets/emina_text.png');
+  const {signIn} = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -35,16 +37,8 @@ export const LoginForm = ({navigation: {navigate}}) => {
     <AuthProvider>
       <NativeBaseProvider>
         <Center flex={1} px="3">
+          <Image source={appText} alt="E-Mina" style={styles.logo} />
           <Box safeArea p="2" py="8" w="90%" maxW="290">
-            <Heading
-              size="lg"
-              fontWeight="600"
-              color="coolGray.800"
-              _dark={{
-                color: 'warmGray.50',
-              }}>
-              Welcome
-            </Heading>
             <Heading
               mt="1"
               _dark={{
@@ -58,11 +52,11 @@ export const LoginForm = ({navigation: {navigate}}) => {
 
             <VStack space={3} mt="5">
               <FormControl>
-                <FormControl.Label>Email ID</FormControl.Label>
+                <FormControl.Label>Email</FormControl.Label>
                 <Input
                   onChangeText={setEmail}
                   value={email}
-                  placeholder="email"
+                  placeholder="Email"
                   autoCapitalize="none"
                 />
               </FormControl>
@@ -72,10 +66,10 @@ export const LoginForm = ({navigation: {navigate}}) => {
                   type="password"
                   onChangeText={text => setPassword(text)}
                   value={password}
-                  placeholder="password"
+                  placeholder="Password"
                   secureTextEntry
                 />
-                <Link
+                {/* <Link
                   _text={{
                     fontSize: 'xs',
                     fontWeight: '500',
@@ -84,9 +78,9 @@ export const LoginForm = ({navigation: {navigate}}) => {
                   alignSelf="flex-end"
                   mt="1">
                   Forgot Password?
-                </Link>
+                </Link> */}
               </FormControl>
-              <Button mt="2" colorScheme="indigo" onPress={onPressSignIn}>
+              <Button mt="2" colorScheme="blue" onPress={onPressSignIn}>
                 Sign in
               </Button>
               <HStack mt="6" justifyContent="center">
@@ -100,7 +94,7 @@ export const LoginForm = ({navigation: {navigate}}) => {
                 </Text>
                 <Link
                   _text={{
-                    color: 'indigo.500',
+                    color: 'blue.500',
                     fontWeight: 'medium',
                     fontSize: 'sm',
                   }}
@@ -115,3 +109,16 @@ export const LoginForm = ({navigation: {navigate}}) => {
     </AuthProvider>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white'
+  },
+  logo: {
+    width: '80%',
+    resizeMode: 'contain',
+  },
+});
