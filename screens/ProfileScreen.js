@@ -9,13 +9,23 @@ import {
 } from 'react-native';
 import {Heading, Button, Image, Box} from 'native-base';
 import {useAuth, AuthProvider} from '../providers/AuthProvider';
-import {photosByUser} from '../data/data';
+import {photosByUser, authTest } from '../data/data';
 
 function ProfileScreen({navigation}) {
   const {user, signUp, signOut} = useAuth();
   //Find additional functions on the user object
   //console.log(Object.getOwnPropertyNames(user).forEach( (props) => console.log(props)));
   const userInfo = JSON.parse(user._customData);
+  //console.log(user.identities);
+
+  useEffect(() => {
+    testUserToken();
+  }, [])
+
+  const testUserToken = async () => {
+    const userData = await authTest();
+    console.log('AUTH TEST:', userData);
+  }
 
   const [DATA, setDATA] = useState([]);
   const [refresh, setRefresh] = useState(false);
