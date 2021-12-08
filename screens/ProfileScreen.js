@@ -36,12 +36,6 @@ function ProfileScreen({navigation}) {
   const [currentIndex, setCurrentIndex] = useState();
 
   useEffect(() => {
-    if (currentIndex !== undefined) {
-      setSinglePhoto(DATA[`${currentIndex}`]['url']);
-    }
-  }, [currentIndex]);
-
-  useEffect(() => {
     async function fetchData() {
       const data = await photosByUser(user.id);
       setDATA(data);
@@ -49,6 +43,14 @@ function ProfileScreen({navigation}) {
     fetchData();
   }, [refresh]);
 
+  /** update photo url for singlePhoto modal */
+  useEffect(() => {
+    if (currentIndex !== undefined) {
+      setSinglePhoto(DATA[`${currentIndex}`]['url']);
+    }
+  }, [currentIndex]);
+
+  /** update photo url for singlePhoto modal */
   const handleClick = (event, url, item) => {
     setShowModal(true);
     setSinglePhoto(url);
