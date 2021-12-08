@@ -63,7 +63,7 @@ export const SignupForm = ({navigation: {navigate}}) => {
               <FormControl.Label>Confirm Password</FormControl.Label>
               <Input type="password" />
             </FormControl> */}
-            <Button mt="2" colorScheme="indigo" onPress={onPressSignUp}>
+            <Button mt="2" colorScheme="blue" onPress={onPressSignUp}>
               Sign Up
             </Button>
             <HStack mt="6" justifyContent="center">
