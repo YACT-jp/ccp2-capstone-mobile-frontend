@@ -3,7 +3,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {LoginForm, SignupForm} from './screens';
 import Menu from './navigation/Menu';
-import LoadingScreen from './screens/StartUpScreen';
+import StartUpScreen from './screens/StartUpScreen';
 
 import {useAuth} from './providers/AuthProvider';
 
@@ -19,7 +19,7 @@ const ProtectedApp = () => {
   }, 3000);
 
   if (loading) {
-    return <LoadingScreen />;
+    return <StartUpScreen />;
   }
 
   return (

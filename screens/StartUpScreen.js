@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import {View, StyleSheet, Image} from 'react-native';
 import appLogo from '../assets/emina_logo.png';
 
-const LoadingScreen = () => {
+const StartUpScreen = () => {
   useEffect(() => {
   }, []);
 
@@ -26,4 +26,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoadingScreen;
+export default StartUpScreen;
