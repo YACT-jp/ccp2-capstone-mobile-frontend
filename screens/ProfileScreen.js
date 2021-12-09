@@ -48,6 +48,7 @@ function ProfileScreen({navigation}) {
   useEffect(() => {
     if (currentIndex !== undefined) {
       setSinglePhoto(DATA[`${currentIndex}`]['url']);
+      setSingleDescription(DATA[`${currentIndex}`]['description']);
     }
   }, [currentIndex]);
 
