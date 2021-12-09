@@ -2,10 +2,12 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 
 export async function storeUserSession(token) {
   try {
+      const now = new Date();
       await EncryptedStorage.setItem(
           "user_token",
           JSON.stringify({
               token : token,
+              timestamp: now
           })
       );
       console.log('secure token stored:', token);

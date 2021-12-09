@@ -43,6 +43,7 @@ export const mediaResultsApi = async () => {
 export const savedLocationsApi = async userId => {
   try {
     const userToken = await retrieveUserSession();
+    console.log('userToken',userToken);
     const response = await fetch(
       `https://ccp2-capstone-backend-sa-yxiyypij7a-an.a.run.app/api/user/${userId}/bookmarks`,
       {

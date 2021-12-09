@@ -21,7 +21,8 @@ import {
   ArrowForwardIcon,
 } from 'native-base';
 import {useAuth, AuthProvider} from '../providers/AuthProvider';
-import {photosByUser, authTest } from '../data/data';
+import {photosByUser} from '../data/data';
+import {retrieveUserSession} from '../data/secureStorage';
 
 function ProfileScreen({navigation}) {
   const {user, signUp, signOut} = useAuth();
@@ -35,8 +36,14 @@ function ProfileScreen({navigation}) {
   }, [])
 
   const testUserToken = async () => {
-    const userData = await authTest();
-    console.log('AUTH TEST:', userData);
+    const userData = await retrieveUserSession();
+    console.log('SECURE STORAGE:', userData);
+    const nowTime = new Date();
+    const thenTime = new Date(userData["timestamp"]);
+    const maxDiff = 86400000 * 0.5; //Days in milliseconds * number of days to refresh token
+    if (nowTime.getTime() - thenTime.getTime() > maxDiff) {
+      console.log ('====== NEED TO REFRESH TOKEN AFTER HALF DAY ======');
+    }
   }
 
   const [DATA, setDATA] = useState([]);
