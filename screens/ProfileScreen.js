@@ -32,9 +32,10 @@ function ProfileScreen({navigation}) {
   const [DATA, setDATA] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [singlePhoto, setSinglePhoto] = useState();
+  const [singlePhoto, setSinglePhoto] = useState(); // passes only URL
+  const [currentPhoto, setCurrentPhoto] = useState(); // passes entire photo object
   const [currentIndex, setCurrentIndex] = useState();
-  const [singleDescription, setSingleDescription] = useState();
+  const [singleDescription, setSingleDescription] = useState('No description');
 
   useEffect(() => {
     async function fetchData() {
@@ -56,6 +57,7 @@ function ProfileScreen({navigation}) {
   const handleClick = (event, url, item) => {
     setShowModal(true);
     setSinglePhoto(url);
+    setCurrentPhoto(item);
     setCurrentIndex(DATA.indexOf(item));
     event.preventDefault();
   };
@@ -148,6 +150,27 @@ function ProfileScreen({navigation}) {
   //Process each item of the data array
   const renderItem = ({item}) => <Item url={item.url} item={item} />;
 
+  /** DELETE request sending imageUri to backend */
+  const deleteImage = (imageUri, photoDescription) => {
+    const url = `https://ccp2-capstone-backend-sa-yxiyypij7a-an.a.run.app/api/photo/${currentPhoto._id}`;
+    let formData = new FormData();
+    formData.append('file', {
+      uri: imageUri,
+      name: 'image.jpg',
+      type: 'image/jpeg',
+    });
+    formData.append('description', photoDescription);
+    return fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      body: formData,
+    }).catch(error => {
+      console.warn(error);
+    });
+  };
+
   const SinglePhoto = (item, DATA) => (
     <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
       <Modal.Content size="lg">
@@ -190,12 +213,13 @@ function ProfileScreen({navigation}) {
               colorScheme="blue"
               onPress={() => {
                 setShowModal(false);
+                console.log(currentPhoto._id);
                 // postImage(imageUri),
                 // setTimeout(() => {
                 //   setGalleryRefresh(!galleryRefresh);
                 // }, 1000);
               }}>
-              Edit
+              Delete
             </Button>
           </Button.Group>
         </Modal.Footer>
