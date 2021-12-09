@@ -47,6 +47,7 @@ function Location({route, navigation}) {
   const [galleryRefresh, setGalleryRefresh] = useState(false);
   const [showSinglePhoto, setShowSinglePhoto] = useState(false);
   const [singlePhoto, setSinglePhoto] = useState();
+  const [singleDescription, setSingleDescription] = useState();
   const [currentIndex, setCurrentIndex] = useState();
   const [photoDescription, setPhotoDescription] = useState();
 
@@ -107,6 +108,7 @@ function Location({route, navigation}) {
   useEffect(() => {
     if (currentIndex !== undefined) {
       setSinglePhoto(photoData[`${currentIndex}`]['url']);
+      setSingleDescription(photoData[`${currentIndex}`]['description']);
     }
   }, [currentIndex]);
 
@@ -453,14 +455,11 @@ function Location({route, navigation}) {
               onPress={(event, item) => nextPhoto(event, item)}
             />
           </HStack>
-          <Input
-            placeholder="Add a caption..."
-            mt="2"
-            paddingLeft="3"
-            rounded="lg"
-            borderWidth="5"
-            style={{borderColor: '#3b81f6', fontSize: 15}}
-          />
+          {singleDescription ? (
+            <Text>{singleDescription}</Text>
+          ) : (
+            <Text>No description</Text>
+          )}
         </Modal.Body>
         <Modal.Footer>
           <Button.Group space={2}>
