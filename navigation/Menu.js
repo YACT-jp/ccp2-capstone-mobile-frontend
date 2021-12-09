@@ -26,8 +26,7 @@ const Menu = ({queryString, setQueryString}) => {
 
   // load to AsyncStorage saved location on application startup
   useEffect(() => {
-    async function fetchToken() {
-      
+    async function fetchToken() { 
       try {
         // Check if we already have a token in secure storage 
         const localToken = await retrieveUserSession();
@@ -41,21 +40,23 @@ const Menu = ({queryString, setQueryString}) => {
           console.log('GOT REMOTE TOKEN:', inMemToken);
           storeUserSession(inMemToken);
         }
+        console.log('fetching data');
+        await updateAsyncSavedLocations(user.id);
       } catch (error) {
         console.warn(error);
       }
     }
     fetchToken();
 
-    async function fetchData() {
-      console.log('fetching data');
-      try {
-        await updateAsyncSavedLocations(user.id);
-      } catch (error) {
-        console.warn(error);
-      }
-    }
-    fetchData();
+    // async function fetchData() {
+    //   console.log('fetching data');
+    //   try {
+    //     await updateAsyncSavedLocations(user.id);
+    //   } catch (error) {
+    //     console.warn(error);
+    //   }
+    // }
+    // fetchData();
   }), [];
 
   return (
