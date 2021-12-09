@@ -3,7 +3,7 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 export async function storeUserSession(token) {
   try {
       await EncryptedStorage.setItem(
-          "user_session",
+          "user_token",
           JSON.stringify({
               token : token,
           })
@@ -16,7 +16,7 @@ export async function storeUserSession(token) {
 
 export async function retrieveUserSession() {
   try {   
-      const session = await EncryptedStorage.getItem("user_session");
+      const session = await EncryptedStorage.getItem("user_token");
   
       if (session !== undefined) {
           // Congrats! You've just retrieved your first value!
@@ -29,8 +29,9 @@ export async function retrieveUserSession() {
 
 export async function removeUserSession() {
   try {
-      await EncryptedStorage.removeItem("user_session");
+      await EncryptedStorage.removeItem("user_token");
       // Congrats! You've just removed your first value!
+      console.log('secure token removed');
   } catch (error) {
       // There was an error on the native side
   }

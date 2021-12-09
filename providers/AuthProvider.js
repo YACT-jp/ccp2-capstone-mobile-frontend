@@ -1,6 +1,7 @@
 import React, {useContext, useState, useEffect, useRef} from 'react';
 import Realm from 'realm';
 import app from '../realmApp';
+import { removeUserSession } from '../data/secureStorage';
 
 // Create a new Context object that will be provided to descendants of
 // the AuthProvider.
@@ -85,6 +86,8 @@ const AuthProvider = ({children}) => {
     }
     user.logOut();
     setUser(null);
+    //Do we want to remove user token on sign out?
+    removeUserSession();
   };
 
   return (

@@ -27,6 +27,7 @@ import {
 } from '../data/asyncSavedLocations';
 import {dynamicSavedLocationsApi, photosByLocation} from '../data/data';
 import {cloneNode} from '@babel/types';
+import {retrieveUserSession} from '../data/secureStorage';
 
 function Location({route, navigation}) {
   /*Get the params */
@@ -356,7 +357,8 @@ function Location({route, navigation}) {
   };
 
   /** POST request sending imageUri to backend */
-  const postImage = imageUri => {
+  const postImage = async imageUri => {
+    const userToken = await retrieveUserSession();
     const url = `https://ccp2-capstone-backend-sa-yxiyypij7a-an.a.run.app/api/user/${user.id}/location/${locationId}/photo`;
     let formData = new FormData();
     formData.append('file', {
@@ -364,15 +366,18 @@ function Location({route, navigation}) {
       name: 'image.jpg',
       type: 'image/jpeg',
     });
-    return fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-      body: formData,
-    }).catch(error => {
+    try {
+      return fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${userToken['token']}`
+        },
+        body: formData,
+      });
+    } catch (error) {
       console.warn(error);
-    });
+    }
   };
 
   return (
