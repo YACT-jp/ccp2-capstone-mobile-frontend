@@ -8,6 +8,9 @@ import {
   Input,
   Button,
   Center,
+  HStack,
+  Text,
+  Link,
   NativeBaseProvider,
 } from 'native-base';
 import {useAuth} from '../providers/AuthProvider';
@@ -34,17 +37,7 @@ export const SignupForm = ({navigation: {navigate}}) => {
               color: 'warmGray.50',
             }}
             fontWeight="semibold">
-            Welcome
-          </Heading>
-          <Heading
-            mt="1"
-            color="coolGray.600"
-            _dark={{
-              color: 'warmGray.200',
-            }}
-            fontWeight="medium"
-            size="xs">
-            Sign up to continue!
+            Let's create your account!
           </Heading>
           <VStack space={3} mt="5">
             <FormControl>
@@ -70,10 +63,89 @@ export const SignupForm = ({navigation: {navigate}}) => {
               <FormControl.Label>Confirm Password</FormControl.Label>
               <Input type="password" />
             </FormControl> */}
-            <Button mt="2" colorScheme="indigo" onPress={onPressSignUp}>
+            <Button mt="2" colorScheme="blue" onPress={onPressSignUp}>
               Sign Up
             </Button>
+            <HStack mt="6" justifyContent="center">
+              <Text
+                fontSize="sm"
+                color="coolGray.600"
+                _dark={{
+                  color: 'warmGray.200',
+                }}>
+                Already have an account?{' '}
+              </Text>
+              <Link
+                _text={{
+                  color: 'blue.500',
+                  fontWeight: 'medium',
+                  fontSize: 'sm',
+                }}
+                onPress={() => navigate('SignIn')}>
+                Sign In
+              </Link>
+            </HStack>
           </VStack>
+        </Box>
+        <Box safeArea p="2" w="90%" py="8">
+          <HStack justifyContent="center">
+            <Text
+              fontSize="xs"
+              color="coolGray.600"
+              _dark={{
+                color: 'warmGray.200',
+              }}>
+              By continuing, you agree to our{' '}
+            </Text>
+            <Link
+              _text={{
+                color: 'blue.500',
+                fontWeight: 'medium',
+                fontSize: 'xs',
+              }}
+              href="https://github.com/YACT-jp/ccp2-capstone-termsAndConditions"
+              isExternal>
+              Terms And Conditions
+            </Link>
+            <Text
+              fontSize="xs"
+              color="coolGray.600"
+              _dark={{
+                color: 'warmGray.200',
+              }}>
+              ,{' '}
+            </Text>
+          </HStack>
+          <HStack justifyContent="center">
+            <Link
+              _text={{
+                color: 'blue.500',
+                fontWeight: 'medium',
+                fontSize: 'xs',
+              }}
+              href="https://github.com/YACT-jp/ccp2-capstone-privacyPolicy"
+              isExternal>
+              Privacy Policy
+            </Link>
+            <Text
+              fontSize="xs"
+              color="coolGray.600"
+              _dark={{
+                color: 'warmGray.200',
+              }}>
+              , and{' '}
+            </Text>
+            <Link
+              _text={{
+                color: 'blue.500',
+                fontWeight: 'medium',
+                fontSize: 'xs',
+              }}
+              href="https://github.com/YACT-jp/ccp2-capstone-EULA"
+              isExternal>
+              End User License Agreement
+            </Link>
+          </HStack>
         </Box>
       </Center>
     </NativeBaseProvider>

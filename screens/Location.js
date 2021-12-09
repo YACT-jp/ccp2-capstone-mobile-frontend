@@ -16,6 +16,9 @@ import {
   HStack,
   Input,
   FlatList,
+  Pressable,
+  ArrowBackIcon,
+  ArrowForwardIcon,
 } from 'native-base';
 import {View, StyleSheet} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
@@ -43,6 +46,9 @@ function Location({route, navigation}) {
   const [photoData, setPhotoData] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const [galleryRefresh, setGalleryRefresh] = useState(false);
+  const [showSinglePhoto, setShowSinglePhoto] = useState(false);
+  const [singlePhoto, setSinglePhoto] = useState();
+  const [currentIndex, setCurrentIndex] = useState();
 
   /** onClick function that saves location */
   const onSaveClick = () => {
@@ -97,9 +103,48 @@ function Location({route, navigation}) {
     fetchData();
   }, [galleryRefresh]);
 
+  /** update photo url for singlePhoto modal */
+  useEffect(() => {
+    if (currentIndex !== undefined) {
+      setSinglePhoto(photoData[`${currentIndex}`]['url']);
+    }
+  }, [currentIndex]);
+
+  /** update photo url for singlePhoto modal */
+  const handleClick = (event, url, item) => {
+    setShowSinglePhoto(true);
+    setSinglePhoto(url);
+    let index = photoData.findIndex(x => x._id === item._id);
+    setCurrentIndex(index);
+    event.preventDefault();
+  };
+
+  const lastPhoto = (event, item) => {
+    if (currentIndex === 0) {
+      setCurrentIndex(photoData.length - 1);
+      setSinglePhoto(photoData[`${currentIndex}`]['url']);
+    } else {
+      setCurrentIndex(currentIndex - 1);
+    }
+    event.preventDefault();
+  };
+
+  const nextPhoto = (event, item) => {
+    if (currentIndex === photoData.length - 1) {
+      setCurrentIndex(0);
+      setSinglePhoto(photoData[0]['url']);
+    } else {
+      setCurrentIndex(currentIndex + 1);
+    }
+    event.preventDefault();
+  };
+
   //List Item Component
-  const Item = ({url}) => (
-    <Box maxWidth="25%" height="100">
+  const Item = ({url, item}) => (
+    <Pressable
+      onPress={event => handleClick(event, url, item)}
+      maxWidth="25%"
+      height="100">
       <Image
         source={{
           uri: url,
@@ -111,11 +156,11 @@ function Location({route, navigation}) {
         align="bottom"
         height="200"
       />
-    </Box>
+    </Pressable>
   );
 
   //Process each item of the data array for the list
-  const renderItem = ({item}) => <Item url={item.url} />;
+  const renderItem = ({item}) => <Item url={item.url} item={item} />;
 
   // Header element for the scrolling Flatlist
   const _renderHeader = () => (
@@ -380,6 +425,64 @@ function Location({route, navigation}) {
     }
   };
 
+  const SinglePhoto = (item, photoData) => (
+    <Modal isOpen={showSinglePhoto} onClose={() => setShowSinglePhoto(false)}>
+      <Modal.Content size="lg">
+        <Modal.CloseButton />
+        <Modal.Header>Image Gallery</Modal.Header>
+        <Modal.Body space={5} alignItems="center">
+          <HStack space={5} alignItems="center" justifyContent="center">
+            <ArrowBackIcon onPress={(event, item) => lastPhoto(event, item)} />
+            <Image
+              border={1}
+              borderWidth={5}
+              borderColor="white"
+              source={{
+                uri: singlePhoto,
+              }}
+              alt="Alternate Text"
+              size="2xl"
+            />
+            <ArrowForwardIcon
+              onPress={(event, item) => nextPhoto(event, item)}
+            />
+          </HStack>
+          <Input
+            placeholder="Add a caption..."
+            mt="2"
+            paddingLeft="3"
+            rounded="lg"
+            borderWidth="5"
+            style={{borderColor: '#3b81f6', fontSize: 15}}
+          />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button.Group space={2}>
+            <Button
+              variant="ghost"
+              colorScheme="blueGray"
+              onPress={() => {
+                setShowSinglePhoto(false);
+              }}>
+              Back
+            </Button>
+            <Button
+              colorScheme="blue"
+              onPress={() => {
+                setShowSinglePhoto(false);
+                // postImage(imageUri),
+                // setTimeout(() => {
+                //   setGalleryRefresh(!galleryRefresh);
+                // }, 1000);
+              }}>
+              Edit
+            </Button>
+          </Button.Group>
+        </Modal.Footer>
+      </Modal.Content>
+    </Modal>
+  );
+
   return (
     <NativeBaseProvider>
       <Center flex={1}>
@@ -391,6 +494,7 @@ function Location({route, navigation}) {
             data={photoData}
             renderItem={renderItem}
             style={{width: '100%'}}></FlatList>
+          <SinglePhoto />
         </Box>
       </Center>
     </NativeBaseProvider>
