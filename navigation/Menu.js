@@ -15,26 +15,34 @@ import ProfileScreen from '../screens/ProfileScreen';
 import {updateAsyncSavedLocations} from '../data/asyncSavedLocations';
 import {useAuth} from '../providers/AuthProvider';
 import { apiAuth } from '../data/data';
-import { storeUserSession } from '../data/secureStorage';
+import { retrieveUserSession, storeUserSession } from '../data/secureStorage';
 
 const Tab = createBottomTabNavigator();
 
 const Menu = ({queryString, setQueryString}) => {
-  console.log('query', queryString);
+  //console.log('query', queryString);
   const {user} = useAuth();
   const userInfo = JSON.parse(user._customData);
 
   // load to AsyncStorage saved location on application startup
   useEffect(() => {
     async function fetchToken() {
-      console.log('fetching token');
+      
       try {
-        const userData = await apiAuth(user.id, userInfo.email);
-        const inMemToken = JSON.parse(userData).data.token;
-        console.log('GOT TOKEN:', inMemToken);
-        storeUserSession(inMemToken);
+        // Check if we already have a token in secure storage 
+        const localToken = await retrieveUserSession();
+        if (localToken && localToken["token"]) {
+          console.log('getting local token:',localToken["token"]);
+        }
+        if (!localToken || !localToken["token"]) {         
+          console.log('fetching token from api');
+          const userData = await apiAuth(user.id, userInfo.email);
+          const inMemToken = JSON.parse(userData).data.token;
+          console.log('GOT REMOTE TOKEN:', inMemToken);
+          storeUserSession(inMemToken);
+        }
       } catch (error) {
-        throw error;
+        console.warn(error);
       }
     }
     fetchToken();
@@ -44,7 +52,7 @@ const Menu = ({queryString, setQueryString}) => {
       try {
         await updateAsyncSavedLocations(user.id);
       } catch (error) {
-        throw error;
+        console.warn(error);
       }
     }
     fetchData();
