@@ -151,24 +151,18 @@ function ProfileScreen({navigation}) {
   const renderItem = ({item}) => <Item url={item.url} item={item} />;
 
   /** DELETE request sending imageUri to backend */
-  const deleteImage = (imageUri, photoDescription) => {
+  const deleteImage = async () => {
     const url = `https://ccp2-capstone-backend-sa-yxiyypij7a-an.a.run.app/api/photo/${currentPhoto._id}`;
-    let formData = new FormData();
-    formData.append('file', {
-      uri: imageUri,
-      name: 'image.jpg',
-      type: 'image/jpeg',
-    });
-    formData.append('description', photoDescription);
-    return fetch(url, {
+    return await fetch(url, {
       method: 'DELETE',
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-      body: formData,
-    }).catch(error => {
-      console.warn(error);
-    });
+    })
+      .then(response => response.json())
+      .then(response => {
+        console.log(response);
+      })
+      .catch(error => {
+        console.warn(error);
+      });
   };
 
   const SinglePhoto = (item, DATA) => (
@@ -213,11 +207,7 @@ function ProfileScreen({navigation}) {
               colorScheme="blue"
               onPress={() => {
                 setShowModal(false);
-                console.log(currentPhoto._id);
-                // postImage(imageUri),
-                // setTimeout(() => {
-                //   setGalleryRefresh(!galleryRefresh);
-                // }, 1000);
+                deleteImage();
               }}>
               Delete
             </Button>
