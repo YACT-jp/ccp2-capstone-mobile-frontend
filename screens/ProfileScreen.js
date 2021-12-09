@@ -34,6 +34,7 @@ function ProfileScreen({navigation}) {
   const [showModal, setShowModal] = useState(false);
   const [singlePhoto, setSinglePhoto] = useState();
   const [currentIndex, setCurrentIndex] = useState();
+  const [singleDescription, setSingleDescription] = useState();
 
   useEffect(() => {
     async function fetchData() {
@@ -47,6 +48,7 @@ function ProfileScreen({navigation}) {
   useEffect(() => {
     if (currentIndex !== undefined) {
       setSinglePhoto(DATA[`${currentIndex}`]['url']);
+      setSingleDescription(DATA[`${currentIndex}`]['description']);
     }
   }, [currentIndex]);
 
@@ -150,7 +152,7 @@ function ProfileScreen({navigation}) {
     <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
       <Modal.Content size="lg">
         <Modal.CloseButton />
-        <Modal.Header>Image Gallery</Modal.Header>
+        <Modal.Header>Your Image Gallery</Modal.Header>
         <Modal.Body space={5} alignItems="center">
           <HStack space={5} alignItems="center" justifyContent="center">
             <ArrowBackIcon onPress={(event, item) => lastPhoto(event, item)} />
@@ -168,14 +170,11 @@ function ProfileScreen({navigation}) {
               onPress={(event, item) => nextPhoto(event, item)}
             />
           </HStack>
-          <Input
-            placeholder="Add a caption..."
-            mt="2"
-            paddingLeft="3"
-            rounded="lg"
-            borderWidth="5"
-            style={{borderColor: '#3b81f6', fontSize: 15}}
-          />
+          {singleDescription ? (
+            <Text>{singleDescription}</Text>
+          ) : (
+            <Text>No description</Text>
+          )}
         </Modal.Body>
         <Modal.Footer>
           <Button.Group space={2}>
