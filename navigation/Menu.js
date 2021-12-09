@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {searchContext} from '../providers/SearchProvider';
 import {
@@ -23,6 +23,7 @@ const Menu = ({queryString, setQueryString}) => {
   //console.log('query', queryString);
   const {user} = useAuth();
   const userInfo = JSON.parse(user._customData);
+  const [appStarted, setAppStarted] = useState(false);
 
   // load to AsyncStorage saved location on application startup
   useEffect(() => {
@@ -46,7 +47,10 @@ const Menu = ({queryString, setQueryString}) => {
         console.warn(error);
       }
     }
-    fetchToken();
+    if (!appStarted) {
+      fetchToken();
+      setAppStarted(true);
+    }
 
     // async function fetchData() {
     //   console.log('fetching data');
