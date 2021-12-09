@@ -124,7 +124,6 @@ export const dynamicSavedLocationsApi = async (userId, inputdata, method) => {
 
 export const apiAuth = async (userId, userEmail) => {   
   try {    
-    const userToken = await retrieveUserSession(); 
     const response = await fetch('https://ccp2-capstone-backend-sa-yxiyypij7a-an.a.run.app/api/auth',
     {
         method: 'POST',

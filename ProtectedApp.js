@@ -1,40 +1,42 @@
 import React, {useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {useColorScheme} from 'react-native';
 import {LoginForm, SignupForm} from './screens';
 import Menu from './navigation/Menu';
-import LoadingScreen from './screens/LoadingScreen';
+import StartUpScreen from './screens/StartUpScreen';
 
-import {useAuth, AuthProvider} from './providers/AuthProvider';
+import {useAuth} from './providers/AuthProvider';
 
 const AuthStack = createNativeStackNavigator();
-const Stack = createNativeStackNavigator();
 
 const ProtectedApp = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? '#333' : '#ccc',
-  };
-
   const [loading, setLoading] = useState(true);
   const [queryString, setQueryString] = useState('');
-  const {user, signUp, signIn} = useAuth();
+  const {user} = useAuth();
   
   //Useful code to find additional functions on the user object:
   // console.log(Object.getOwnPropertyNames(user).forEach( (props) => console.log(props)));
-  //console.log(user.accessToken);
 
   setTimeout(() => {
     setLoading(false);
-  }, 5000);
+  }, 3000);
+
+  if (loading) {
+    return <StartUpScreen />;
+  }
 
   return (
     <NavigationContainer>
-      {user ? (
+      {loading ? (
+        <LoadingScreen />
+      ) : user ? (
         <Menu queryString={queryString} setQueryString={setQueryString} />
       ) : (
-        <AuthStack.Navigator initialRouteName="SignIn">
+        <AuthStack.Navigator
+          initialRouteName="SignIn"
+          screenOptions={({route}) => ({
+            headerShown: false,
+          })}>
           <AuthStack.Screen
             name="SignIn"
             component={LoginForm}
