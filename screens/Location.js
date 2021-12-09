@@ -48,6 +48,7 @@ function Location({route, navigation}) {
   const [showSinglePhoto, setShowSinglePhoto] = useState(false);
   const [singlePhoto, setSinglePhoto] = useState();
   const [currentIndex, setCurrentIndex] = useState();
+  const [photoDescription, setPhotoDescription] = useState();
 
   /** onClick function that saves location */
   const onSaveClick = () => {
@@ -300,8 +301,11 @@ function Location({route, navigation}) {
                     </VStack>
                   </HStack>
                   <Input
+                    // onSubmitEditing={text => setPhotoDescription(text)}
+                    onChangeText={text => setPhotoDescription(text)}
+                    value={photoDescription}
                     height="30%"
-                    placeholder="Add a caption..."
+                    placeholder="Add a description..."
                     mt="2"
                     paddingLeft="3"
                     rounded="lg"
@@ -323,7 +327,9 @@ function Location({route, navigation}) {
                       colorScheme="blue"
                       onPress={() => {
                         setShowModal(false),
-                          postImage(imageUri),
+                          // setPhotoDescription(photoDescription),
+                          console.log('photoDescription', photoDescription),
+                          postImage(imageUri, photoDescription),
                           setTimeout(() => {
                             setGalleryRefresh(!galleryRefresh);
                           }, 1000);
@@ -401,7 +407,7 @@ function Location({route, navigation}) {
   };
 
   /** POST request sending imageUri to backend */
-  const postImage = imageUri => {
+  const postImage = (imageUri, photoDescription) => {
     const url = `https://ccp2-capstone-backend-sa-yxiyypij7a-an.a.run.app/api/user/${user.id}/location/${locationId}/photo`;
     let formData = new FormData();
     formData.append('file', {
@@ -409,6 +415,7 @@ function Location({route, navigation}) {
       name: 'image.jpg',
       type: 'image/jpeg',
     });
+    formData.append('description', photoDescription);
     return fetch(url, {
       method: 'POST',
       headers: {
@@ -424,7 +431,11 @@ function Location({route, navigation}) {
     <Modal isOpen={showSinglePhoto} onClose={() => setShowSinglePhoto(false)}>
       <Modal.Content size="lg">
         <Modal.CloseButton />
-        <Modal.Header>Image Gallery</Modal.Header>
+        <Modal.Header>
+          <Heading size="sm" multiline={true}>
+            {name} Image Gallery
+          </Heading>
+        </Modal.Header>
         <Modal.Body space={5} alignItems="center">
           <HStack space={5} alignItems="center" justifyContent="center">
             <ArrowBackIcon onPress={(event, item) => lastPhoto(event, item)} />

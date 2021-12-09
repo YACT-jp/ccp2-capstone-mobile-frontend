@@ -150,7 +150,7 @@ function ProfileScreen({navigation}) {
     <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
       <Modal.Content size="lg">
         <Modal.CloseButton />
-        <Modal.Header>Image Gallery</Modal.Header>
+        <Modal.Header>Your Image Gallery</Modal.Header>
         <Modal.Body space={5} alignItems="center">
           <HStack space={5} alignItems="center" justifyContent="center">
             <ArrowBackIcon onPress={(event, item) => lastPhoto(event, item)} />
