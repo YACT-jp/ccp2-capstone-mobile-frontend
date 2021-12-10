@@ -49,7 +49,7 @@ function Location({route, navigation}) {
   const [singlePhoto, setSinglePhoto] = useState();
   const [singleDescription, setSingleDescription] = useState();
   const [currentIndex, setCurrentIndex] = useState();
-  const [photoDescription, setPhotoDescription] = useState();
+  const [photoDescription, setPhotoDescription] = useState('No description');
 
   /** onClick function that saves location */
   const onSaveClick = () => {
@@ -303,7 +303,6 @@ function Location({route, navigation}) {
                     </VStack>
                   </HStack>
                   <Input
-                    // onSubmitEditing={text => setPhotoDescription(text)}
                     onChangeText={text => setPhotoDescription(text)}
                     value={photoDescription}
                     height="30%"
