@@ -48,7 +48,9 @@ function Location({route, navigation}) {
   const [galleryRefresh, setGalleryRefresh] = useState(false);
   const [showSinglePhoto, setShowSinglePhoto] = useState(false);
   const [singlePhoto, setSinglePhoto] = useState();
+  const [singleDescription, setSingleDescription] = useState();
   const [currentIndex, setCurrentIndex] = useState();
+  const [photoDescription, setPhotoDescription] = useState('No description');
 
   /** onClick function that saves location */
   const onSaveClick = () => {
@@ -107,6 +109,7 @@ function Location({route, navigation}) {
   useEffect(() => {
     if (currentIndex !== undefined) {
       setSinglePhoto(photoData[`${currentIndex}`]['url']);
+      setSingleDescription(photoData[`${currentIndex}`]['description']);
     }
   }, [currentIndex]);
 
@@ -301,8 +304,10 @@ function Location({route, navigation}) {
                     </VStack>
                   </HStack>
                   <Input
+                    onChangeText={text => setPhotoDescription(text)}
+                    value={photoDescription}
                     height="30%"
-                    placeholder="Add a caption..."
+                    placeholder="Add a description..."
                     mt="2"
                     paddingLeft="3"
                     rounded="lg"
@@ -324,7 +329,9 @@ function Location({route, navigation}) {
                       colorScheme="blue"
                       onPress={() => {
                         setShowModal(false),
-                          postImage(imageUri),
+                          // setPhotoDescription(photoDescription),
+                          console.log('photoDescription', photoDescription),
+                          postImage(imageUri, photoDescription),
                           setTimeout(() => {
                             setGalleryRefresh(!galleryRefresh);
                           }, 1000);
@@ -402,7 +409,7 @@ function Location({route, navigation}) {
   };
 
   /** POST request sending imageUri to backend */
-  const postImage = async imageUri => {
+  const postImage = async (imageUri, photoDescription) => {
     const userToken = await retrieveUserSession();
     const url = `https://ccp2-capstone-backend-sa-yxiyypij7a-an.a.run.app/api/user/${user.id}/location/${locationId}/photo`;
     let formData = new FormData();
@@ -411,25 +418,30 @@ function Location({route, navigation}) {
       name: 'image.jpg',
       type: 'image/jpeg',
     });
+    formData.append('description', photoDescription);
     try {
-      return fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${userToken['token']}`
-        },
-        body: formData,
-      });
-    } catch (error) {
-      console.warn(error);
-    }
+        return await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Authorization': `Bearer ${userToken['token']}`
+          },
+          body: formData,
+        });
+      } catch (error) {
+        console.warn(error);
+      }
   };
 
   const SinglePhoto = (item, photoData) => (
     <Modal isOpen={showSinglePhoto} onClose={() => setShowSinglePhoto(false)}>
       <Modal.Content size="lg">
         <Modal.CloseButton />
-        <Modal.Header>Image Gallery</Modal.Header>
+        <Modal.Header>
+          <Heading size="sm" multiline={true}>
+            {name} Image Gallery
+          </Heading>
+        </Modal.Header>
         <Modal.Body space={5} alignItems="center">
           <HStack space={5} alignItems="center" justifyContent="center">
             <ArrowBackIcon onPress={(event, item) => lastPhoto(event, item)} />
@@ -447,14 +459,11 @@ function Location({route, navigation}) {
               onPress={(event, item) => nextPhoto(event, item)}
             />
           </HStack>
-          <Input
-            placeholder="Add a caption..."
-            mt="2"
-            paddingLeft="3"
-            rounded="lg"
-            borderWidth="5"
-            style={{borderColor: '#3b81f6', fontSize: 15}}
-          />
+          {singleDescription ? (
+            <Text>{singleDescription}</Text>
+          ) : (
+            <Text>No description</Text>
+          )}
         </Modal.Body>
         <Modal.Footer>
           <Button.Group space={2}>
