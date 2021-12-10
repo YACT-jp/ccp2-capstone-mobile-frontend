@@ -49,8 +49,10 @@ function ProfileScreen({navigation}) {
   const [DATA, setDATA] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [singlePhoto, setSinglePhoto] = useState();
+  const [singlePhoto, setSinglePhoto] = useState(); // passes only URL
+  const [currentPhoto, setCurrentPhoto] = useState(); // passes entire photo object
   const [currentIndex, setCurrentIndex] = useState();
+  const [singleDescription, setSingleDescription] = useState('No description');
 
   useEffect(() => {
     async function fetchData() {
@@ -64,6 +66,7 @@ function ProfileScreen({navigation}) {
   useEffect(() => {
     if (currentIndex !== undefined) {
       setSinglePhoto(DATA[`${currentIndex}`]['url']);
+      setSingleDescription(DATA[`${currentIndex}`]['description']);
     }
   }, [currentIndex]);
 
@@ -71,6 +74,7 @@ function ProfileScreen({navigation}) {
   const handleClick = (event, url, item) => {
     setShowModal(true);
     setSinglePhoto(url);
+    setCurrentPhoto(item);
     setCurrentIndex(DATA.indexOf(item));
     event.preventDefault();
   };
@@ -163,11 +167,32 @@ function ProfileScreen({navigation}) {
   //Process each item of the data array
   const renderItem = ({item}) => <Item url={item.url} item={item} />;
 
+  /** DELETE request sending imageUri to backend */
+  const deleteImage = (imageUri, photoDescription) => {
+    const url = `https://ccp2-capstone-backend-sa-yxiyypij7a-an.a.run.app/api/photo/${currentPhoto._id}`;
+    let formData = new FormData();
+    formData.append('file', {
+      uri: imageUri,
+      name: 'image.jpg',
+      type: 'image/jpeg',
+    });
+    formData.append('description', photoDescription);
+    return fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      body: formData,
+    }).catch(error => {
+      console.warn(error);
+    });
+  };
+
   const SinglePhoto = (item, DATA) => (
     <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
       <Modal.Content size="lg">
         <Modal.CloseButton />
-        <Modal.Header>Image Gallery</Modal.Header>
+        <Modal.Header>Your Image Gallery</Modal.Header>
         <Modal.Body space={5} alignItems="center">
           <HStack space={5} alignItems="center" justifyContent="center">
             <ArrowBackIcon onPress={(event, item) => lastPhoto(event, item)} />
@@ -185,14 +210,11 @@ function ProfileScreen({navigation}) {
               onPress={(event, item) => nextPhoto(event, item)}
             />
           </HStack>
-          <Input
-            placeholder="Add a caption..."
-            mt="2"
-            paddingLeft="3"
-            rounded="lg"
-            borderWidth="5"
-            style={{borderColor: '#3b81f6', fontSize: 15}}
-          />
+          {singleDescription ? (
+            <Text>{singleDescription}</Text>
+          ) : (
+            <Text>No description</Text>
+          )}
         </Modal.Body>
         <Modal.Footer>
           <Button.Group space={2}>
@@ -208,12 +230,13 @@ function ProfileScreen({navigation}) {
               colorScheme="blue"
               onPress={() => {
                 setShowModal(false);
+                console.log(currentPhoto._id);
                 // postImage(imageUri),
                 // setTimeout(() => {
                 //   setGalleryRefresh(!galleryRefresh);
                 // }, 1000);
               }}>
-              Edit
+              Delete
             </Button>
           </Button.Group>
         </Modal.Footer>
