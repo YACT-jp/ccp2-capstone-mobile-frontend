@@ -9,12 +9,34 @@ import {
 } from 'react-native';
 import {Button} from 'native-base';
 import {searchContext} from '../providers/SearchProvider';
+import { mediaResultsApi } from '../data/data';
 
 function HomeScreen({navigation}) {
   const isDarkMode = useColorScheme() === 'dark';
 
   const [text, setText] = useState('');
   const [queryString, setQueryString] = React.useContext(searchContext);
+  const [threeRandomMedia, setThreeRandomMedia] = useState([]);
+
+
+  useEffect(async () => {
+    async function fetchThreeRandomData() {
+      const data = await mediaResultsApi();
+
+      const randomThree = [];
+      while(randomThree.length < 3){
+        let randomIndex = Math.floor(Math.random() * data.length);
+        
+        if(!randomThree.includes(randomIndex)){
+          randomThree.push(randomIndex);
+        }
+      }
+      return randomThree.map(index => data[index]);
+    }
+    const fetchedThreeMedia = await fetchThreeRandomData();
+    console.log(fetchedThreeMedia);
+    setThreeRandomMedia(fetchedThreeMedia);
+  },[]);
 
   return (
     <SafeAreaView
