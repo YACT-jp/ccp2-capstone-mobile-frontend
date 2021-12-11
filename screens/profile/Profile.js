@@ -21,7 +21,7 @@ import {
 import {useFocusEffect} from '@react-navigation/core';
 import {useAuth, AuthProvider} from '../../providers/AuthProvider';
 import {photosByUser} from '../../data/data';
-import {retrieveUserSession} from '../data/secureStorage';
+import { retrieveUserSession } from '../../data/secureStorage';
 
 
 function ProfileScreen({navigation}) {
