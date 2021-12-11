@@ -1,28 +1,28 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
-  View,
   Text,
-  useColorScheme,
-  SafeAreaView,
   FlatList,
   StyleSheet,
 } from 'react-native';
 import {
+  NativeBaseProvider,
+  Center,
+  Stack,
   Heading,
   Button,
   Image,
   Box,
   Modal,
-  VStack,
   HStack,
   Pressable,
-  Input,
   ArrowBackIcon,
   ArrowForwardIcon,
 } from 'native-base';
-import {useAuth, AuthProvider} from '../providers/AuthProvider';
-import {photosByUser} from '../data/data';
+import {useFocusEffect} from '@react-navigation/core';
+import {useAuth, AuthProvider} from '../../providers/AuthProvider';
+import {photosByUser} from '../../data/data';
 import {retrieveUserSession} from '../data/secureStorage';
+
 
 function ProfileScreen({navigation}) {
   const {user, signUp, signOut} = useAuth();
@@ -45,22 +45,27 @@ function ProfileScreen({navigation}) {
       console.log ('====== NEED TO REFRESH TOKEN AFTER HALF DAY ======');
     }
   }
+  const {username, bio} = userInfo;
 
   const [DATA, setDATA] = useState([]);
-  const [refresh, setRefresh] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [singlePhoto, setSinglePhoto] = useState(); // passes only URL
   const [currentPhoto, setCurrentPhoto] = useState(); // passes entire photo object
   const [currentIndex, setCurrentIndex] = useState();
   const [singleDescription, setSingleDescription] = useState('No description');
 
-  useEffect(() => {
-    async function fetchData() {
-      const data = await photosByUser(user.id);
-      setDATA(data);
-    }
-    fetchData();
-  }, [refresh]);
+  useFocusEffect(
+    useCallback(() => {
+      async function fetchData() {
+        const data = await photosByUser(user.id);
+        setDATA(data);
+      }
+      fetchData();
+      return () => {
+        console.log('unmount profile');
+      };
+    }, []),
+  );
 
   /** update photo url for singlePhoto modal */
   useEffect(() => {
@@ -103,75 +108,6 @@ function ProfileScreen({navigation}) {
     event.preventDefault();
   };
 
-  const isDarkMode = useColorScheme() === 'dark';
-
-  // Header element for the scrolling Flatlist
-  const _renderHeader = () => (
-    <View style={styles.container}>
-      <Box
-        safeArea
-        w="100%"
-        rounded="lg"
-        overflow="hidden"
-        borderColor="coolGray.200"
-        borderWidth="1"
-        p="2"
-        my="2"
-        _dark={{
-          borderColor: 'coolGray.600',
-          backgroundColor: 'gray.700',
-        }}
-        _web={{
-          shadow: 2,
-          borderWidth: 0,
-        }}
-        _light={{
-          backgroundColor: 'gray.50',
-        }}>
-        <Heading>My Profile</Heading>
-        <Text>Username: {userInfo.username}</Text>
-        <Text>Bio: {userInfo.bio}</Text>
-        <Button
-          colorScheme="blue"
-          size="md"
-          onPress={() => {
-            navigation.navigate('Edit Profile');
-          }}>
-          Edit Profile
-        </Button>
-        <Button
-          colorScheme="blue"
-          size="md"
-          onPress={() => {
-            signOut();
-          }}>
-          Sign Out
-        </Button>
-      </Box>
-      <Heading alignSelf="flex-start">My Pics</Heading>
-    </View>
-  );
-
-  //List Item Component
-  const Item = ({url, item}) => (
-    <Pressable
-      onPress={event => handleClick(event, url, item)}
-      maxWidth="25%"
-      height="100">
-      <Image
-        source={{
-          uri: url,
-        }}
-        alt="Alternate Text"
-        maxHeight="100%"
-        minWidth="100%"
-        objectFit="contain"
-        align="bottom"
-        height="200"
-      />
-    </Pressable>
-  );
-
   //Process each item of the data array
   const renderItem = ({item}) => <Item url={item.url} item={item} />;
 
@@ -195,6 +131,59 @@ function ProfileScreen({navigation}) {
       console.warn(error);
     });
   };
+
+  // Header element for the scrolling Flatlist
+  const _renderHeader = () => (
+    <Stack p="8" space={3}>
+      <Stack space={2}>
+        <Heading size="md" ml="-1">
+          {username}
+        </Heading>
+      </Stack>
+      <Text fontWeight="400">
+        {bio === null || bio === undefined ? 'No bio yet.' : bio}
+      </Text>
+      <Box
+        flex={1}
+        justifyContent="flex-end"
+        rounded="lg"
+        overflow="hidden"
+        alignItems="center"
+        justifyContent="center"></Box>
+      <HStack>
+        <Button
+          w="100%"
+          colorScheme="blue"
+          variant="outline"
+          size="md"
+          onPress={() => {
+            navigation.navigate('Edit Profile');
+          }}>
+          Edit Profile
+        </Button>
+      </HStack>
+    </Stack>
+  );
+
+  //List Item Component
+  const Item = ({url, item}) => (
+    <Pressable
+      onPress={event => handleClick(event, url, item)}
+      maxWidth="25%"
+      height="100">
+      <Image
+        source={{
+          uri: url,
+        }}
+        alt="Alternate Text"
+        maxHeight="100%"
+        minWidth="100%"
+        objectFit="contain"
+        align="bottom"
+        height="200"
+      />
+    </Pressable>
+  );
 
   const SinglePhoto = (item, DATA) => (
     <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
@@ -253,35 +242,18 @@ function ProfileScreen({navigation}) {
   );
 
   return (
-    <View
-      style={{
-        backgroundColor: isDarkMode ? '#000' : '#fff',
-        flex: 1,
-        alignItems: 'center',
-        width: '100%',
-      }}>
-      <FlatList
-        ListHeaderComponent={() => _renderHeader()}
-        numColumns={4}
-        key={4}
-        data={DATA}
-        renderItem={renderItem}
-        style={{paddingHorizontal: 4, width: '100%'}}></FlatList>
-      <SinglePhoto />
-      <Button
-        position="absolute"
-        margin="2"
-        colorScheme="blue"
-        size="md"
-        left="0"
-        bottom="0"
-        right="0"
-        onPress={() => {
-          setRefresh(!refresh);
-        }}>
-        Refresh Gallery
-      </Button>
-    </View>
+    <NativeBaseProvider>
+      <Center flex={1}>
+        <FlatList
+          ListHeaderComponent={() => _renderHeader()}
+          numColumns={4}
+          key={4}
+          data={DATA}
+          renderItem={renderItem}
+          style={{paddingHorizontal: 4, width: '100%'}}></FlatList>
+        <SinglePhoto />
+      </Center>
+    </NativeBaseProvider>
   );
 }
 
