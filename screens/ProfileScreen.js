@@ -7,22 +7,10 @@ import {
   FlatList,
   StyleSheet,
 } from 'react-native';
-import {
-  Heading,
-  Button,
-  Image,
-  Box,
-  Modal,
-  VStack,
-  HStack,
-  Pressable,
-  Input,
-  ArrowBackIcon,
-  ArrowForwardIcon,
-} from 'native-base';
+import {Heading, Button, Image, Box, Modal, Pressable} from 'native-base';
 import {useAuth, AuthProvider} from '../providers/AuthProvider';
-import {photosByUser} from '../data/data';
-import {ProfileGalleryNav} from './ProfileGalleryNav';
+import {photosByUser, deletePhoto} from '../data/data';
+import ProfileGalleryNav from './ProfileGalleryNav';
 import {retrieveUserSession} from '../data/secureStorage';
 
 function ProfileScreen({navigation}) {
@@ -49,6 +37,10 @@ function ProfileScreen({navigation}) {
 
   const [DATA, setDATA] = useState([]);
   const [refresh, setRefresh] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [singlePhoto, setSinglePhoto] = useState(); // passes only URL
+  const [currentIndex, setCurrentIndex] = useState();
+  const [deleteId, setDeleteId] = useState(); // passes photo object id to delete
 
   useEffect(() => {
     async function fetchData() {
@@ -57,6 +49,15 @@ function ProfileScreen({navigation}) {
     }
     fetchData();
   }, [refresh]);
+
+  /** update photo url for singlePhoto modal */
+  const handleClick = (event, url, item) => {
+    setShowModal(true);
+    setSinglePhoto(url);
+    setDeleteId(item._id);
+    setCurrentIndex(DATA.indexOf(item));
+    event.preventDefault();
+  };
 
   const isDarkMode = useColorScheme() === 'dark';
 
@@ -137,7 +138,44 @@ function ProfileScreen({navigation}) {
         data={DATA}
         renderItem={renderItem}
         style={{paddingHorizontal: 4, width: '100%'}}></FlatList>
-      <SinglePhoto />
+      <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+        <Modal.Content size="lg">
+          <Modal.CloseButton />
+          <Modal.Header>Your Image Gallery</Modal.Header>
+          <Modal.Body space={5} alignItems="center">
+            <ProfileGalleryNav
+              DATA={DATA}
+              item={singlePhoto}
+              showModalInit={showModal}
+              singlePhoto={singlePhoto}
+              currentIndex={currentIndex}
+              deleteId={deleteId}
+              setDeleteId={setDeleteId}
+            />
+          </Modal.Body>
+          <Modal.Footer>
+            <Button.Group space={2}>
+              <Button
+                variant="ghost"
+                colorScheme="blueGray"
+                onPress={() => {
+                  setShowModal(false);
+                }}>
+                Back
+              </Button>
+              <Button
+                colorScheme="blue"
+                onPress={async () => {
+                  setShowModal(false);
+                  let results = await deletePhoto(deleteId);
+                  console.log(results);
+                }}>
+                Delete
+              </Button>
+            </Button.Group>
+          </Modal.Footer>
+        </Modal.Content>
+      </Modal>
       <Button
         position="absolute"
         margin="2"
