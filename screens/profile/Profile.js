@@ -96,6 +96,14 @@ function ProfileScreen({navigation}) {
           colorScheme="blue"
           size="md"
           onPress={() => {
+            navigation.navigate('Edit Profile');
+          }}>
+          Edit Profile
+        </Button>
+        <Button
+          colorScheme="blue"
+          size="md"
+          onPress={() => {
             signOut();
           }}>
           Sign Out
