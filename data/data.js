@@ -188,6 +188,23 @@ export const authTest = async () => {
     return data;
   } catch (err) {
     console.log(err);
+//export default mediaResults;
+export const updateProfile = async (userId, inputdata) => {
+  try {
+    const response = await fetch(
+      `https://ccp2-capstone-backend-sa-yxiyypij7a-an.a.run.app/api/user/${userId}/bookmarks`,
+      {
+        method: PATCH,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(inputdata), // body data type must match "Content-Type" header
+      },
+    );
+    const data = await response.text();
+    return data;
+  } catch (err) {
+    console.log('error', err);
   }
 };
 
