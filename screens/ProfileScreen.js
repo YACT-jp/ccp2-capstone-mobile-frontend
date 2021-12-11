@@ -31,6 +31,7 @@ function ProfileScreen({navigation}) {
   const userInfo = JSON.parse(user._customData);
   //console.log(user.identities);
 
+  // TODO LATER: Remove this useEffect and testUserToken once functionality is confirmed
   useEffect(() => {
     testUserToken();
   }, [])
@@ -39,10 +40,14 @@ function ProfileScreen({navigation}) {
     const userData = await retrieveUserSession();
     console.log('SECURE STORAGE:', userData);
     const nowTime = new Date();
-    const thenTime = new Date(userData["timestamp"]);
-    const maxDiff = 86400000 * 0.5; //Days in milliseconds * number of days to refresh token
-    if (nowTime.getTime() - thenTime.getTime() > maxDiff) {
-      console.log ('====== NEED TO REFRESH TOKEN AFTER HALF DAY ======');
+    if(!userData) console.log('ERROR-No userData');
+    if(!userData["timestamp"]) console.log('ERROR-No timestamp in userData');
+    if(userData && userData["timestamp"]) {
+      const thenTime = new Date(userData["timestamp"]);
+      const maxDiff = 86400000 * 0.5; //Days in milliseconds * number of days to refresh token
+      if (nowTime.getTime() - thenTime.getTime() > maxDiff) {
+        console.log ('====== NEED TO REFRESH TOKEN AFTER HALF DAY ======');
+      }   
     }
   }
 

@@ -96,11 +96,9 @@ function ResultsScreen({navigation}) {
         flex: 1,
       }}>
       <>
-        {queryString === '' ? (
-          <Text fontSize="xl" textAlign="center" mt="2">
-            Searching <Text bold>all media</Text>
-          </Text>
-        ) : (
+        {queryString === '' ? 
+          (<Text></Text>)
+        : (
           <Text fontSize="xl" textAlign="center">
             Results for: <Text bold>{queryString}</Text>
           </Text>
