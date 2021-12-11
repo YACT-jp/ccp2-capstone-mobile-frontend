@@ -11,7 +11,7 @@ import {
 import HomeScreen from '../screens/HomeScreen';
 import SearchStackScreen from '../screens/SearchStackScreen';
 import SavedStackScreen from '../screens/savedStackScreen';
-import ProfileScreen from '../screens/ProfileScreen';
+import ProfileStack from '../screens/profile/ProfileStack';
 import {updateAsyncSavedLocations} from '../data/asyncSavedLocations';
 import {useAuth} from '../providers/AuthProvider';
 import { apiAuth } from '../data/data';
@@ -88,7 +88,7 @@ const Menu = ({queryString, setQueryString}) => {
           <Tab.Screen name="Home" component={HomeScreen} />
           <Tab.Screen name="Search" component={SearchStackScreen} />
           <Tab.Screen name="Saved" component={SavedStackScreen} />
-          <Tab.Screen name="Profile" component={ProfileScreen} />
+          <Tab.Screen name="Profile" component={ProfileStack} />
         </Tab.Navigator>
       </searchContext.Provider>
     </NativeBaseProvider>
