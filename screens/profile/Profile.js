@@ -1,9 +1,5 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import {
-  Text,
-  FlatList,
-  StyleSheet,
-} from 'react-native';
+import {Text, FlatList, StyleSheet} from 'react-native';
 import {
   NativeBaseProvider,
   Center,
@@ -19,35 +15,36 @@ import {
   ArrowForwardIcon,
 } from 'native-base';
 import {useFocusEffect} from '@react-navigation/core';
-import {useAuth, AuthProvider} from '../../providers/AuthProvider';
-import {photosByUser} from '../../data/data';
-import { retrieveUserSession } from '../../data/secureStorage';
-
+import {useAuth} from '../../providers/AuthProvider';
+import {photosByUser, getProfile} from '../../data/data';
+import {retrieveUserSession} from '../../data/secureStorage';
 
 function ProfileScreen({navigation}) {
-  const {user, signUp, signOut} = useAuth();
   //Find additional functions on the user object
   //console.log(Object.getOwnPropertyNames(user).forEach( (props) => console.log(props)));
+
+  const {user} = useAuth();
   const userInfo = JSON.parse(user._customData);
   //console.log(user.identities);
 
   useEffect(() => {
     testUserToken();
-  }, [])
+  }, []);
 
   const testUserToken = async () => {
     const userData = await retrieveUserSession();
     console.log('SECURE STORAGE:', userData);
     const nowTime = new Date();
-    const thenTime = new Date(userData["timestamp"]);
+    const thenTime = new Date(userData['timestamp']);
     const maxDiff = 86400000 * 0.5; //Days in milliseconds * number of days to refresh token
     if (nowTime.getTime() - thenTime.getTime() > maxDiff) {
-      console.log ('====== NEED TO REFRESH TOKEN AFTER HALF DAY ======');
+      console.log('====== NEED TO REFRESH TOKEN AFTER HALF DAY ======');
     }
-  }
-  const {username, bio} = userInfo;
+  };
+  const {username, email, bio} = userInfo;
 
   const [DATA, setDATA] = useState([]);
+  const [profileData, setProfileData] = useState({username, email, bio});
   const [showModal, setShowModal] = useState(false);
   const [singlePhoto, setSinglePhoto] = useState(); // passes only URL
   const [currentPhoto, setCurrentPhoto] = useState(); // passes entire photo object
@@ -59,10 +56,13 @@ function ProfileScreen({navigation}) {
       async function fetchData() {
         const data = await photosByUser(user.id);
         setDATA(data);
+        const profData = await getProfile(user.id);
+        setProfileData(profData[0]);
       }
       fetchData();
+
       return () => {
-        console.log('unmount profile');
+        console.log('unmount my profile');
       };
     }, []),
   );
@@ -137,11 +137,15 @@ function ProfileScreen({navigation}) {
     <Stack p="8" space={3}>
       <Stack space={2}>
         <Heading size="md" ml="-1">
-          {username}
+        {profileData.username === null || profileData.username === undefined
+          ? username
+          : profileData.username}
         </Heading>
       </Stack>
       <Text fontWeight="400">
-        {bio === null || bio === undefined ? 'No bio yet.' : bio}
+        {profileData.bio === null || profileData.bio === undefined
+          ? bio
+          : profileData.bio}
       </Text>
       <Box
         flex={1}
@@ -154,10 +158,9 @@ function ProfileScreen({navigation}) {
         <Button
           w="100%"
           colorScheme="blue"
-          variant="outline"
           size="md"
           onPress={() => {
-            navigation.navigate('Edit Profile');
+            navigation.navigate('Edit Profile', profileData);
           }}>
           Edit Profile
         </Button>
