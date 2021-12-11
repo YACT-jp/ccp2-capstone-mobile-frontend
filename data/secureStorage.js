@@ -10,7 +10,7 @@ export async function storeUserSession(token) {
               timestamp: now
           })
       );
-      console.log('secure token stored:', token);
+      console.log('secure token stored');
   } catch (error) {
       // There was an error on the native side
   }
