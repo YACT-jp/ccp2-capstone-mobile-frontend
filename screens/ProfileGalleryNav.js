@@ -6,7 +6,7 @@ import {photosByUser} from '../data/data';
 import {retrieveUserSession} from '../data/secureStorage';
 
 function ProfileGalleryNav(props, item, DATA) {
-  const [singlePhoto, setSinglePhoto] = useState(); // passes only URL
+  const [singlePhoto, setSinglePhoto] = useState(props.singlePhoto); // passes only URL
   const [currentIndex, setCurrentIndex] = useState(props.currentIndex);
   const [singleDescription, setSingleDescription] = useState('No description');
 
@@ -16,14 +16,12 @@ function ProfileGalleryNav(props, item, DATA) {
       setSinglePhoto(props.DATA[`${currentIndex}`]['url']);
       setSingleDescription(props.DATA[`${currentIndex}`]['description']);
       props.setDeleteId(props.DATA[`${currentIndex}`]['_id']);
-      console.log('deleteId', props.deleteId);
     }
   }, [currentIndex]);
 
   const lastPhoto = (event, item) => {
     if (currentIndex === 0) {
       setCurrentIndex(props.DATA.length - 1);
-      setSinglePhoto(props.DATA[`${currentIndex}`]['url']);
     } else {
       setCurrentIndex(currentIndex - 1);
     }
@@ -33,7 +31,6 @@ function ProfileGalleryNav(props, item, DATA) {
   const nextPhoto = (event, item) => {
     if (currentIndex === props.DATA.length - 1) {
       setCurrentIndex(0);
-      setSinglePhoto(props.DATA[0]['url']);
     } else {
       setCurrentIndex(currentIndex + 1);
     }
