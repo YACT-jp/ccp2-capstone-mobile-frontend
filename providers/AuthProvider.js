@@ -1,6 +1,7 @@
 import React, {useContext, useState, useEffect, useRef} from 'react';
 import Realm from 'realm';
 import app from '../realmApp';
+import { removeUserSession } from '../data/secureStorage';
 
 // Create a new Context object that will be provided to descendants of
 // the AuthProvider.
@@ -66,6 +67,8 @@ const AuthProvider = ({children}) => {
     const creds = Realm.Credentials.emailPassword(email, password);
     const newUser = await app.logIn(creds);
     setUser(newUser);
+    //console.log(Object.getOwnPropertyNames(newUser).forEach( (props) => console.log(props)));
+    //console.log('newUser id', newUser.id);
   };
 
   // The signUp function takes an email and password and uses the
@@ -83,6 +86,8 @@ const AuthProvider = ({children}) => {
     }
     user.logOut();
     setUser(null);
+    //Do we want to remove user token on sign out?
+    removeUserSession();
   };
 
   return (
