@@ -64,7 +64,6 @@ function ProfileScreen({navigation}) {
         setProfileData(profData[0]);
       }
       fetchData();
-
       return () => {
         console.log('unmount my profile');
       };
