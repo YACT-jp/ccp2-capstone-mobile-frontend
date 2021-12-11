@@ -1,7 +1,20 @@
 import {retrieveUserSession} from '../data/secureStorage';
+import NetInfo from '@react-native-community/netinfo';
+import {Alert} from 'react-native';
+
+checkConnectivity = () => {
+  NetInfo.fetch().then(state => {
+    if (!state.isInternetReachable) {
+      Alert.alert(
+        'Could not connect to server. Please check your internet connection and try again.',
+      );
+    }
+  });
+};
 
 export const locResultsByMedia = async mediaId => {
   try {
+    checkConnectivity();
     const userToken = await retrieveUserSession();
     const response = await fetch(
       `https://ccp2-capstone-backend-sa-yxiyypij7a-an.a.run.app/api/media/${mediaId}/locations`,
@@ -23,6 +36,7 @@ export const locResultsByMedia = async mediaId => {
 
 export const mediaResultsApi = async () => {
   try {
+    checkConnectivity();
     const userToken = await retrieveUserSession();
     const response = await fetch(
       'https://ccp2-capstone-backend-sa-yxiyypij7a-an.a.run.app/api/media',
@@ -35,6 +49,7 @@ export const mediaResultsApi = async () => {
         // body data type must match "Content-Type" header
       },
     );
+
     const data = await response.json();
     return data;
   } catch (err) {
@@ -44,8 +59,8 @@ export const mediaResultsApi = async () => {
 
 export const savedLocationsApi = async userId => {
   try {
+    checkConnectivity();
     const userToken = await retrieveUserSession();
-    console.log('userToken', userToken);
     const response = await fetch(
       `https://ccp2-capstone-backend-sa-yxiyypij7a-an.a.run.app/api/user/${userId}/bookmarks`,
       {
@@ -66,6 +81,7 @@ export const savedLocationsApi = async userId => {
 
 export const photosByUser = async userId => {
   try {
+    checkConnectivity();
     const userToken = await retrieveUserSession();
     const response = await fetch(
       `https://ccp2-capstone-backend-sa-yxiyypij7a-an.a.run.app/api/user/${userId}/photo`,
@@ -87,6 +103,7 @@ export const photosByUser = async userId => {
 
 export const photosByLocation = async locationId => {
   try {
+    checkConnectivity();
     const userToken = await retrieveUserSession();
     const response = await fetch(
       `https://ccp2-capstone-backend-sa-yxiyypij7a-an.a.run.app/api/location/${locationId}/photo`,
@@ -109,7 +126,10 @@ export const photosByLocation = async locationId => {
 //export default mediaResults;
 export const dynamicSavedLocationsApi = async (userId, inputdata, method) => {
   try {
+    checkConnectivity();
+
     const userToken = await retrieveUserSession();
+
     const response = await fetch(
       `https://ccp2-capstone-backend-sa-yxiyypij7a-an.a.run.app/api/user/${userId}/bookmarks`,
       {
@@ -130,6 +150,7 @@ export const dynamicSavedLocationsApi = async (userId, inputdata, method) => {
 
 export const apiAuth = async (userId, userEmail) => {
   try {
+    checkConnectivity();
     const response = await fetch(
       'https://ccp2-capstone-backend-sa-yxiyypij7a-an.a.run.app/api/auth',
       {
