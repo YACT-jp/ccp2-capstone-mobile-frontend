@@ -27,7 +27,6 @@ export const locResultsByMedia = async mediaId => {
         // body data type must match "Content-Type" header
       },
     );
-
     const data = await response.json();
     return data;
   } catch (err) {
@@ -96,7 +95,6 @@ export const photosByUser = async userId => {
       },
     );
     const data = await response.json();
-
     return data;
   } catch (err) {
     console.log(err);
@@ -119,7 +117,6 @@ export const photosByLocation = async locationId => {
       },
     );
     const data = await response.json();
-
     return data;
   } catch (err) {
     console.log(err);
@@ -139,7 +136,6 @@ export const dynamicSavedLocationsApi = async (userId, inputdata, method) => {
         method: method.toUpperCase(), // *GET, POST, PUT, DELETE, etc.
         headers: {
           'Content-Type': 'application/json',
-
           Authorization: `Bearer ${userToken['token']}`,
         },
         body: JSON.stringify(inputdata), // body data type must match "Content-Type" header
@@ -188,10 +184,26 @@ export const authTest = async () => {
         // body data type must match "Content-Type" header
       },
     );
-
     const data = await response.text();
     return data;
   } catch (err) {
     console.log(err);
   }
+};
+
+/** DELETE request sending imageUri to backend */
+export const deletePhoto = async _id => {
+  const userToken = await retrieveUserSession();
+  const url = `https://ccp2-capstone-backend-sa-yxiyypij7a-an.a.run.app/api/photo/${_id}`;
+  return await fetch(url, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      Authorization: `Bearer ${userToken['token']}`,
+    },
+  })
+    .then(response => response.text())
+    .catch(error => {
+      console.warn(error);
+    });
 };
