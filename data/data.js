@@ -49,7 +49,6 @@ export const mediaResultsApi = async () => {
         // body data type must match "Content-Type" header
       },
     );
-
     const data = await response.json();
     return data;
   } catch (err) {
@@ -188,6 +187,9 @@ export const authTest = async () => {
     return data;
   } catch (err) {
     console.log(err);
+  }
+};
+
 //export default mediaResults;
 export const updateProfile = async (userId, inputdata) => {
   try {
