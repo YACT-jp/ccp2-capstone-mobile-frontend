@@ -112,13 +112,6 @@ function SavedScreen({navigation}) {
           backgroundColor: isDarkMode ? '#000' : '#fff',
           paddingBottom: 90,
         }}>
-        <Button
-          margin="2"
-          mb="1"
-          colorScheme="blue"
-          onPress={() => setRefresh(!refresh)}>
-          Refresh
-        </Button>
         <FlatList
           ListFooterComponent={() => _renderFooter()}
           data={DATA}
