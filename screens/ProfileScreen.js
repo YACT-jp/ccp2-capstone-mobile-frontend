@@ -22,12 +22,29 @@ import {
 } from 'native-base';
 import {useAuth, AuthProvider} from '../providers/AuthProvider';
 import {photosByUser} from '../data/data';
+import {retrieveUserSession} from '../data/secureStorage';
 
 function ProfileScreen({navigation}) {
   const {user, signUp, signOut} = useAuth();
   //Find additional functions on the user object
   //console.log(Object.getOwnPropertyNames(user).forEach( (props) => console.log(props)));
   const userInfo = JSON.parse(user._customData);
+  //console.log(user.identities);
+
+  useEffect(() => {
+    testUserToken();
+  }, [])
+
+  const testUserToken = async () => {
+    const userData = await retrieveUserSession();
+    console.log('SECURE STORAGE:', userData);
+    const nowTime = new Date();
+    const thenTime = new Date(userData["timestamp"]);
+    const maxDiff = 86400000 * 0.5; //Days in milliseconds * number of days to refresh token
+    if (nowTime.getTime() - thenTime.getTime() > maxDiff) {
+      console.log ('====== NEED TO REFRESH TOKEN AFTER HALF DAY ======');
+    }
+  }
 
   const [DATA, setDATA] = useState([]);
   const [refresh, setRefresh] = useState(false);
