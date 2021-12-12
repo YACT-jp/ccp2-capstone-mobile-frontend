@@ -10,6 +10,7 @@
     "lint": "eslint .",
     "npxa": "npx react-native run-android",
     "npxi": "react-native run-ios",
+    "android-temp-build": "cd android && ./gradlew bundleRelease",
     "android-build": "react-native-version && cd android && ./gradlew bundleRelease",
     "test-android-build": "npx react-native run-android --variant=release --port=8080"
   },
