@@ -49,7 +49,6 @@ export const mediaResultsApi = async () => {
         // body data type must match "Content-Type" header
       },
     );
-
     const data = await response.json();
     return data;
   } catch (err) {
@@ -188,6 +187,51 @@ export const authTest = async () => {
     return data;
   } catch (err) {
     console.log(err);
+  }
+};
+
+export const getProfile = async (userId) => {
+  try {
+    const userToken = await retrieveUserSession();
+    //console.log('userToken pure:', userToken['token']);
+    const response = await fetch(
+      `https://ccp2-capstone-backend-sa-yxiyypij7a-an.a.run.app/api/user/${userId}/profile`,
+      {
+        method: "GET",
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userToken['token']}`,
+        },
+      },
+    );
+    const data = await response.json();
+    console.log('getProfile', typeof data)
+    return data;
+  } catch (err) {
+    console.log('error', err);
+  }
+};
+
+export const updateProfile = async (userId, inputdata) => {
+  try {
+    const userToken = await retrieveUserSession();
+    //console.log('userToken pure:', userToken['token']);
+    const response = await fetch(
+      `https://ccp2-capstone-backend-sa-yxiyypij7a-an.a.run.app/api/user/${userId}/profile`,
+      {
+        method: "PATCH",
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userToken['token']}`,
+        },
+        // body data type must match "Content-Type" header
+        body: JSON.stringify(inputdata), // body data type must match "Content-Type" header
+      },
+    );
+    const data = await response.text();
+    return data;
+  } catch (err) {
+    console.log('error', err);
   }
 };
 
