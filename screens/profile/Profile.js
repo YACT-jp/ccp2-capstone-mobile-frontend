@@ -11,8 +11,6 @@ import {
   Modal,
   HStack,
   Pressable,
-  ArrowBackIcon,
-  ArrowForwardIcon,
 } from 'native-base';
 import {useFocusEffect} from '@react-navigation/core';
 import {useAuth} from '../../providers/AuthProvider';
