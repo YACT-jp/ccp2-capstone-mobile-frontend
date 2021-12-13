@@ -12,16 +12,17 @@ import {locResultsByMedia} from '../data/data';
 
 function LocResultsScreen({route, navigation}) {
   /*Get the params */
-  const {name, mediaId} = route.params;
+  const {name, mediaId, description} = route.params;
   const isDarkMode = useColorScheme() === 'dark';
 
   const [DATA, setDATA] = useState([]);
 
+  async function fetchData() {
+    const data = await locResultsByMedia(mediaId);
+    setDATA(data);
+  }
+
   useEffect(() => {
-    async function fetchData() {
-      const data = await locResultsByMedia(mediaId);
-      setDATA(data);
-    }
     fetchData();
   }, []);
 
@@ -72,24 +73,35 @@ function LocResultsScreen({route, navigation}) {
     <Item name={item.name} fullItem={item} />
   );
 
+  const renderHeader = () => (
+    <View style={styles.media} rounded="xl">
+      <Text
+        fontSize="2xl"
+        isTruncated
+        margin="1"
+        textAlign="left"
+        multiline={true}
+        numberOfLines={3}>
+        <Text bold>{name}</Text>
+      </Text>
+      <Text>
+        {description}
+      </Text>
+    </View>
+  );
+
   return (
     <View
       style={styles.container}
       style={{
         backgroundColor: isDarkMode ? '#000' : '#fff',
         flex: 1,
-      }}>
-      <Text
-        fontSize="2xl"
-        isTruncated
-        margin="1"
-        textAlign="center"
-        multiline={true}
-        numberOfLines={3}>
-        Locations from: <Text bold>{name}</Text>
-      </Text>
-      <FlatList data={DATA} renderItem={renderItem}></FlatList>
-      {/* <Button title="Go back" onPress={() => navigation.goBack()} /> */}
+      }}>  
+      <FlatList
+        data={DATA}
+        ListHeaderComponent={renderHeader} 
+        renderItem={renderItem}>
+      </FlatList>
     </View>
   );
 }
@@ -101,6 +113,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flex: 1,
+  },
+  media: {
+    backgroundColor: '#e6e9ed',
+    padding: 20,
+    marginVertical: 2,
+    marginHorizontal: 16,
   },
   item: {
     backgroundColor: '#3b81f6',
