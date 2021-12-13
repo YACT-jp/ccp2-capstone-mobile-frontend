@@ -22,7 +22,6 @@ import {
 } from 'native-base';
 import {View, StyleSheet} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {useAuth} from '../providers/AuthProvider';
 import {
   getAsyncSavedLocations,
@@ -31,6 +30,8 @@ import {
 import {dynamicSavedLocationsApi, photosByLocation} from '../data/data';
 import {cloneNode} from '@babel/types';
 import {retrieveUserSession} from '../data/secureStorage';
+import LocationPhotoUpload from './LocationPhotoUpload';
+import LocationGalleryNav from './LocationGalleryNav';
 
 function Location({route, navigation}) {
   /*Get the params */
@@ -40,8 +41,6 @@ function Location({route, navigation}) {
   const coordsObj = eval('(' + fullItem['coordinates'] + ')');
   const {user} = useAuth();
   const [isLocationSaved, setIsLocationSaved] = useState(false);
-  const [imageUri, setImageUri] = useState();
-  const [dispImageUri, setDispImageUri] = useState();
   const [showModal, setShowModal] = useState(false);
   const [photoData, setPhotoData] = useState([]);
   const [refresh, setRefresh] = useState(false);
@@ -50,7 +49,6 @@ function Location({route, navigation}) {
   const [singlePhoto, setSinglePhoto] = useState();
   const [singleDescription, setSingleDescription] = useState();
   const [currentIndex, setCurrentIndex] = useState();
-  const [photoDescription, setPhotoDescription] = useState('No description');
 
   /** onClick function that saves location */
   const onSaveClick = () => {
@@ -106,39 +104,11 @@ function Location({route, navigation}) {
   }, [galleryRefresh]);
 
   /** update photo url for singlePhoto modal */
-  useEffect(() => {
-    if (currentIndex !== undefined) {
-      setSinglePhoto(photoData[`${currentIndex}`]['url']);
-      setSingleDescription(photoData[`${currentIndex}`]['description']);
-    }
-  }, [currentIndex]);
-
-  /** update photo url for singlePhoto modal */
   const handleClick = (event, url, item) => {
     setShowSinglePhoto(true);
     setSinglePhoto(url);
     let index = photoData.findIndex(x => x._id === item._id);
     setCurrentIndex(index);
-    event.preventDefault();
-  };
-
-  const lastPhoto = (event, item) => {
-    if (currentIndex === 0) {
-      setCurrentIndex(photoData.length - 1);
-      setSinglePhoto(photoData[`${currentIndex}`]['url']);
-    } else {
-      setCurrentIndex(currentIndex - 1);
-    }
-    event.preventDefault();
-  };
-
-  const nextPhoto = (event, item) => {
-    if (currentIndex === photoData.length - 1) {
-      setCurrentIndex(0);
-      setSinglePhoto(photoData[0]['url']);
-    } else {
-      setCurrentIndex(currentIndex + 1);
-    }
     event.preventDefault();
   };
 
@@ -256,240 +226,17 @@ function Location({route, navigation}) {
               Add Photo
             </Button>
             <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
-              <Modal.Content size="xs">
-                <Modal.CloseButton />
-                <Modal.Header>New Post</Modal.Header>
-                <Modal.Body>
-                  <HStack space={5} alignItems="center" justifyContent="center">
-                    {dispImageUri ? (
-                      <Image
-                        border={1}
-                        borderWidth={5}
-                        borderColor="white"
-                        source={{
-                          uri: dispImageUri,
-                        }}
-                        alt="Alternate Text"
-                        size="xl"
-                      />
-                    ) : (
-                      <Image
-                        border={1}
-                        borderWidth={5}
-                        borderColor="white"
-                        source={{
-                          uri: dispImageUri,
-                        }}
-                        alt="Alternate Text"
-                        size="xl"
-                      />
-                    )}
-                    <VStack space={5}>
-                      <Button
-                        colorScheme="blue"
-                        size="md"
-                        onPress={() => {
-                          openCamera();
-                        }}>
-                        Take Photo
-                      </Button>
-                      <Button
-                        colorScheme="blue"
-                        size="md"
-                        onPress={() => {
-                          openLibrary();
-                        }}>
-                        Choose From Library
-                      </Button>
-                    </VStack>
-                  </HStack>
-                  <Input
-                    onChangeText={text => setPhotoDescription(text)}
-                    value={photoDescription}
-                    height="30%"
-                    placeholder="Add a description..."
-                    mt="2"
-                    paddingLeft="3"
-                    rounded="lg"
-                    borderWidth="5"
-                    style={{borderColor: '#3b81f6', fontSize: 15}}
-                  />
-                </Modal.Body>
-                <Modal.Footer>
-                  <Button.Group space={2}>
-                    <Button
-                      variant="ghost"
-                      colorScheme="blueGray"
-                      onPress={() => {
-                        setShowModal(false);
-                      }}>
-                      Cancel
-                    </Button>
-                    <Button
-                      colorScheme="blue"
-                      onPress={() => {
-                        setShowModal(false),
-                          // setPhotoDescription(photoDescription),
-                          console.log('photoDescription', photoDescription),
-                          postImage(imageUri, photoDescription),
-                          setTimeout(() => {
-                            setGalleryRefresh(!galleryRefresh);
-                          }, 1000);
-                      }}>
-                      Post
-                    </Button>
-                  </Button.Group>
-                </Modal.Footer>
-              </Modal.Content>
+              <LocationPhotoUpload
+                setShowModal={setShowModal}
+                galleryRefresh={galleryRefresh}
+                setGalleryRefresh={setGalleryRefresh}
+                locationId={locationId}
+              />
             </Modal>
           </Stack>
         </Box>
       </VStack>
     </ScrollView>
-  );
-
-  /** Image Picker via camera access */
-  const openCamera = () => {
-    const options = {
-      storageOptions: {
-        path: 'images',
-        mediaType: 'photo',
-        cameraType: 'back',
-        allowsEditing: true,
-        noData: true,
-      },
-      includeBase64: true,
-    };
-
-    launchCamera(options, response => {
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
-      } else {
-        const uri = response.assets[0].uri;
-        setImageUri(response.assets[0].uri);
-        setDispImageUri(response.assets[0].uri);
-      }
-    });
-  };
-
-  /** Image Picker via library access */
-  const openLibrary = () => {
-    const options = {
-      storageOptions: {
-        quality: 1,
-        mediaType: 'photo',
-        cameraType: 'back',
-        allowsEditing: true,
-        noData: true,
-        maxWidth: 8000,
-        maxHeight: 8000,
-      },
-    };
-
-    launchImageLibrary(options, response => {
-      // console.log('response: ', response);
-      // console.log('response latitude: ', response.latitude);
-      // console.log('response longitude: ', response.longitude);
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
-      } else {
-        const uri = response.assets[0].uri;
-        setImageUri(response.assets[0].uri);
-        setDispImageUri(response.assets[0].uri);
-      }
-    });
-  };
-
-  /** POST request sending imageUri to backend */
-  const postImage = async (imageUri, photoDescription) => {
-    const userToken = await retrieveUserSession();
-    const url = `https://ccp2-capstone-backend-sa-yxiyypij7a-an.a.run.app/api/user/${user.id}/location/${locationId}/photo`;
-    let formData = new FormData();
-    formData.append('file', {
-      uri: imageUri,
-      name: 'image.jpg',
-      type: 'image/jpeg',
-    });
-    formData.append('description', photoDescription);
-    try {
-        return await fetch(url, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            'Authorization': `Bearer ${userToken['token']}`
-          },
-          body: formData,
-        });
-      } catch (error) {
-        console.warn(error);
-      }
-  };
-
-  const SinglePhoto = (item, photoData) => (
-    <Modal isOpen={showSinglePhoto} onClose={() => setShowSinglePhoto(false)}>
-      <Modal.Content size="lg">
-        <Modal.CloseButton />
-        <Modal.Header>
-          <Heading size="sm" multiline={true}>
-            {name} Image Gallery
-          </Heading>
-        </Modal.Header>
-        <Modal.Body space={5} alignItems="center">
-          <HStack space={5} alignItems="center" justifyContent="center">
-            <ArrowBackIcon onPress={(event, item) => lastPhoto(event, item)} />
-            <Image
-              border={1}
-              borderWidth={5}
-              borderColor="white"
-              source={{
-                uri: singlePhoto,
-              }}
-              alt="Alternate Text"
-              size="2xl"
-            />
-            <ArrowForwardIcon
-              onPress={(event, item) => nextPhoto(event, item)}
-            />
-          </HStack>
-          {singleDescription ? (
-            <Text>{singleDescription}</Text>
-          ) : (
-            <Text>No description</Text>
-          )}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button.Group space={2}>
-            <Button
-              variant="ghost"
-              colorScheme="blueGray"
-              onPress={() => {
-                setShowSinglePhoto(false);
-              }}>
-              Back
-            </Button>
-            <Button
-              colorScheme="blue"
-              onPress={() => {
-                setShowSinglePhoto(false);
-                // postImage(imageUri),
-                // setTimeout(() => {
-                //   setGalleryRefresh(!galleryRefresh);
-                // }, 1000);
-              }}>
-              Edit
-            </Button>
-          </Button.Group>
-        </Modal.Footer>
-      </Modal.Content>
-    </Modal>
   );
 
   return (
@@ -503,7 +250,38 @@ function Location({route, navigation}) {
             data={photoData}
             renderItem={renderItem}
             style={{width: '100%'}}></FlatList>
-          <SinglePhoto />
+          <Modal
+            isOpen={showSinglePhoto}
+            onClose={() => setShowSinglePhoto(false)}>
+            <Modal.Content size="lg">
+              <Modal.CloseButton />
+              <Modal.Header>
+                <Heading size="sm" multiline={true}>
+                  {name} Image Gallery
+                </Heading>
+              </Modal.Header>
+              <Modal.Body space={5} alignItems="center">
+                <LocationGalleryNav
+                  DATA={photoData}
+                  showModalInit={showModal}
+                  singlePhoto={singlePhoto}
+                  currentIndex={currentIndex}
+                />
+              </Modal.Body>
+              <Modal.Footer>
+                <Button.Group space={2}>
+                  <Button
+                    variant="ghost"
+                    colorScheme="blueGray"
+                    onPress={() => {
+                      setShowSinglePhoto(false);
+                    }}>
+                    Back
+                  </Button>
+                </Button.Group>
+              </Modal.Footer>
+            </Modal.Content>
+          </Modal>
         </Box>
       </Center>
     </NativeBaseProvider>
