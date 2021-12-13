@@ -1,8 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {Text} from 'react-native';
 import {Image, HStack, ArrowBackIcon, ArrowForwardIcon} from 'native-base';
-import {useAuth, AuthProvider} from '../providers/AuthProvider';
-import {photosByUser} from '../data/data';
 import {retrieveUserSession} from '../data/secureStorage';
 
 function LocationGalleryNav(props) {
