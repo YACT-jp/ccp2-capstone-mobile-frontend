@@ -155,7 +155,6 @@ function ProfileScreen({navigation}) {
             <Modal.Body space={5} alignItems="center">
               <ProfileGalleryNav
                 DATA={DATA}
-                item={singlePhoto}
                 showModalInit={showModal}
                 singlePhoto={singlePhoto}
                 currentIndex={currentIndex}

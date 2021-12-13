@@ -31,6 +31,7 @@ import {
 import {dynamicSavedLocationsApi, photosByLocation} from '../data/data';
 import {cloneNode} from '@babel/types';
 import {retrieveUserSession} from '../data/secureStorage';
+import LocationGalleryNav from './LocationGalleryNav';
 
 function Location({route, navigation}) {
   /*Get the params */
@@ -106,39 +107,18 @@ function Location({route, navigation}) {
   }, [galleryRefresh]);
 
   /** update photo url for singlePhoto modal */
-  useEffect(() => {
-    if (currentIndex !== undefined) {
-      setSinglePhoto(photoData[`${currentIndex}`]['url']);
-      setSingleDescription(photoData[`${currentIndex}`]['description']);
-    }
-  }, [currentIndex]);
-
-  /** update photo url for singlePhoto modal */
   const handleClick = (event, url, item) => {
     setShowSinglePhoto(true);
     setSinglePhoto(url);
+    // setCurrentIndex(photoData.indexOf(item));
     let index = photoData.findIndex(x => x._id === item._id);
+    // console.log('photodata', photoData);
     setCurrentIndex(index);
-    event.preventDefault();
-  };
-
-  const lastPhoto = (event, item) => {
-    if (currentIndex === 0) {
-      setCurrentIndex(photoData.length - 1);
-      setSinglePhoto(photoData[`${currentIndex}`]['url']);
-    } else {
-      setCurrentIndex(currentIndex - 1);
-    }
-    event.preventDefault();
-  };
-
-  const nextPhoto = (event, item) => {
-    if (currentIndex === photoData.length - 1) {
-      setCurrentIndex(0);
-      setSinglePhoto(photoData[0]['url']);
-    } else {
-      setCurrentIndex(currentIndex + 1);
-    }
+    // console.log('item', item);
+    console.log('currentIndex', currentIndex);
+    console.log('typeof', Array.isArray(photoData));
+    console.log('typeof data item', typeof photoData[0]);
+    console.log(photoData[0]);
     event.preventDefault();
   };
 
@@ -420,20 +400,20 @@ function Location({route, navigation}) {
     });
     formData.append('description', photoDescription);
     try {
-        return await fetch(url, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            'Authorization': `Bearer ${userToken['token']}`
-          },
-          body: formData,
-        });
-      } catch (error) {
-        console.warn(error);
-      }
+      return await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${userToken['token']}`,
+        },
+        body: formData,
+      });
+    } catch (error) {
+      console.warn(error);
+    }
   };
 
-  const SinglePhoto = (item, photoData) => (
+  const SinglePhoto = (item, photoData, currentIndex) => (
     <Modal isOpen={showSinglePhoto} onClose={() => setShowSinglePhoto(false)}>
       <Modal.Content size="lg">
         <Modal.CloseButton />
@@ -443,27 +423,12 @@ function Location({route, navigation}) {
           </Heading>
         </Modal.Header>
         <Modal.Body space={5} alignItems="center">
-          <HStack space={5} alignItems="center" justifyContent="center">
-            <ArrowBackIcon onPress={(event, item) => lastPhoto(event, item)} />
-            <Image
-              border={1}
-              borderWidth={5}
-              borderColor="white"
-              source={{
-                uri: singlePhoto,
-              }}
-              alt="Alternate Text"
-              size="2xl"
-            />
-            <ArrowForwardIcon
-              onPress={(event, item) => nextPhoto(event, item)}
-            />
-          </HStack>
-          {singleDescription ? (
-            <Text>{singleDescription}</Text>
-          ) : (
-            <Text>No description</Text>
-          )}
+          <LocationGalleryNav
+            DATA={photoData}
+            showModalInit={showModal}
+            singlePhoto={singlePhoto}
+            currentIndex={currentIndex}
+          />
         </Modal.Body>
         <Modal.Footer>
           <Button.Group space={2}>
