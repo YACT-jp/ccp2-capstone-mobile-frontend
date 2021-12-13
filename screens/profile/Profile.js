@@ -16,7 +16,7 @@ import {useFocusEffect} from '@react-navigation/core';
 import {useAuth} from '../../providers/AuthProvider';
 import {photosByUser, getProfile, deletePhoto} from '../../data/data';
 import {retrieveUserSession} from '../../data/secureStorage';
-import ProfileGalleryNav from '../ProfileGalleryNav';
+import ProfileGalleryNav from './ProfileGalleryNav';
 
 function ProfileScreen({navigation}) {
   //Find additional functions on the user object
@@ -155,7 +155,6 @@ function ProfileScreen({navigation}) {
             <Modal.Body space={5} alignItems="center">
               <ProfileGalleryNav
                 DATA={DATA}
-                item={singlePhoto}
                 showModalInit={showModal}
                 singlePhoto={singlePhoto}
                 currentIndex={currentIndex}
