@@ -62,4 +62,3 @@ buck-out/
 
 #local env
 .env
-realmApp.js
