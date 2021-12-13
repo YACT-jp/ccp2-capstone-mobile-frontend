@@ -10,12 +10,14 @@ import {
   Image,
   NativeBaseProvider,
 } from 'native-base';
+import { TextInput } from 'react-native';
 
 import {searchContext} from '../providers/SearchProvider';
 import {mediaResultsApi} from '../data/data';
 
 function ResultsScreen({navigation}) {
   const isDarkMode = useColorScheme() === 'dark';
+  const [text, setText] = useState('');
   const [queryString, setQueryString] = React.useContext(searchContext);
   const [DATA, setDATA] = useState([]);
 
@@ -95,6 +97,15 @@ function ResultsScreen({navigation}) {
         backgroundColor: isDarkMode ? '#000' : '#fff',
         flex: 1,
       }}>
+        <TextInput
+          value={text}
+          style={{fontSize: 36, color: 'steelblue'}}
+          placeholder="Search Again..."
+          onChangeText={text => {
+            setText(text);
+            setQueryString(text);
+          }}
+        />
       <>
         {queryString === '' ? 
           (<Text></Text>)
