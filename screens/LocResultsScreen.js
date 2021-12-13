@@ -39,23 +39,23 @@ function LocResultsScreen({route, navigation}) {
             justifyContent="space-between">
             <Image
               border={1}
-              borderWidth={5}
+              borderWidth={3}
               borderColor="white"
-              height={150}
-              borderRadius={150}
+              height={100}
+              borderRadius={100}
               source={{
                 uri: fullItem.location_pic,
               }}
-              alt="Alternate Text"
-              size="xl"
-              ml="5"
+              alt="Media Image"
+              size="md"
+              ml="2.5"
             />
             <Text
-              fontSize="4xl"
+              fontSize="2xl"
               lineHeight="sm"
               color="white"
               isTruncated
-              maxW="180"
+              maxW="200"
               w="80%"
               multiline={true}
               numberOfLines={3}>
@@ -76,15 +76,16 @@ function LocResultsScreen({route, navigation}) {
   const renderHeader = () => (
     <View style={styles.media} rounded="xl">
       <Text
-        fontSize="2xl"
+        fontSize="3xl"
         isTruncated
-        margin="1"
         textAlign="left"
         multiline={true}
         numberOfLines={3}>
         <Text bold>{name}</Text>
       </Text>
-      <Text>
+      <Text
+        fontSize="lg"
+        textAlign="justify">
         {description}
       </Text>
     </View>
@@ -125,8 +126,5 @@ const styles = StyleSheet.create({
     padding: 20,
     marginVertical: 2,
     marginHorizontal: 16,
-  },
-  name: {
-    fontSize: 32,
   },
 });
