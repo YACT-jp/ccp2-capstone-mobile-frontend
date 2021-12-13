@@ -14,7 +14,7 @@ import {
 } from 'native-base';
 import {useFocusEffect} from '@react-navigation/core';
 import {useAuth} from '../../providers/AuthProvider';
-import {photosByUser, getProfile, deletePhoto} from '../../data/data';
+import {photosByUser, getProfile} from '../../data/data';
 import {retrieveUserSession} from '../../data/secureStorage';
 import ProfileGalleryNav from './ProfileGalleryNav';
 
@@ -52,8 +52,8 @@ function ProfileScreen({navigation}) {
   const [showModal, setShowModal] = useState(false);
   const [singlePhoto, setSinglePhoto] = useState(); // passes only URL
   const [currentIndex, setCurrentIndex] = useState();
-  const [deleteId, setDeleteId] = useState(); // passes photo object id to delete
   const [refresh, setRefresh] = useState(false);
+  const [initialDeleteId, setInitialDeleteId] = useState();
 
   useFocusEffect(
     useCallback(() => {
@@ -74,8 +74,8 @@ function ProfileScreen({navigation}) {
   const handleClick = (event, url, item) => {
     setShowModal(true);
     setSinglePhoto(url);
-    setDeleteId(item._id);
     setCurrentIndex(DATA.indexOf(item));
+    setInitialDeleteId(item.id);
     event.preventDefault();
   };
 
@@ -149,42 +149,16 @@ function ProfileScreen({navigation}) {
           renderItem={renderItem}
           style={{paddingHorizontal: 4, width: '100%'}}></FlatList>
         <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
-          <Modal.Content size="lg">
-            <Modal.CloseButton />
-            <Modal.Header>Your Image Gallery</Modal.Header>
-            <Modal.Body space={5} alignItems="center">
-              <ProfileGalleryNav
-                DATA={DATA}
-                showModalInit={showModal}
-                singlePhoto={singlePhoto}
-                currentIndex={currentIndex}
-                deleteId={deleteId}
-                setDeleteId={setDeleteId}
-              />
-            </Modal.Body>
-            <Modal.Footer>
-              <Button.Group space={2}>
-                <Button
-                  variant="ghost"
-                  colorScheme="blueGray"
-                  onPress={() => {
-                    setShowModal(false);
-                  }}>
-                  Back
-                </Button>
-                <Button
-                  colorScheme="blue"
-                  onPress={async () => {
-                    setShowModal(false);
-                    let results = await deletePhoto(deleteId);
-                    console.log(results);
-                    setRefresh(!refresh);
-                  }}>
-                  Delete
-                </Button>
-              </Button.Group>
-            </Modal.Footer>
-          </Modal.Content>
+          <ProfileGalleryNav
+            DATA={DATA}
+            showModalInit={showModal}
+            singlePhoto={singlePhoto}
+            currentIndex={currentIndex}
+            setShowModal={setShowModal}
+            refresh={refresh}
+            setRefresh={setRefresh}
+            initialDeleteId={initialDeleteId}
+          />
         </Modal>
       </Center>
     </NativeBaseProvider>
