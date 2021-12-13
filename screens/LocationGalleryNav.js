@@ -5,7 +5,7 @@ import {useAuth, AuthProvider} from '../providers/AuthProvider';
 import {photosByUser} from '../data/data';
 import {retrieveUserSession} from '../data/secureStorage';
 
-function ProfileGalleryNav(props, item, DATA) {
+function LocationGalleryNav(props) {
   const [singlePhoto, setSinglePhoto] = useState(props.singlePhoto); // passes only URL
   const [currentIndex, setCurrentIndex] = useState(props.currentIndex);
   const [singleDescription, setSingleDescription] = useState('No description');
@@ -15,11 +15,10 @@ function ProfileGalleryNav(props, item, DATA) {
     if (currentIndex !== undefined) {
       setSinglePhoto(props.DATA[`${currentIndex}`]['url']);
       setSingleDescription(props.DATA[`${currentIndex}`]['description']);
-      props.setDeleteId(props.DATA[`${currentIndex}`]['_id']);
     }
   }, [currentIndex]);
 
-  const lastPhoto = (event, item) => {
+  const lastPhoto = event => {
     if (currentIndex === 0) {
       setCurrentIndex(props.DATA.length - 1);
     } else {
@@ -28,7 +27,7 @@ function ProfileGalleryNav(props, item, DATA) {
     event.preventDefault();
   };
 
-  const nextPhoto = (event, item) => {
+  const nextPhoto = event => {
     if (currentIndex === props.DATA.length - 1) {
       setCurrentIndex(0);
     } else {
@@ -40,7 +39,7 @@ function ProfileGalleryNav(props, item, DATA) {
   return (
     <>
       <HStack space={5} alignItems="center" justifyContent="center">
-        <ArrowBackIcon onPress={(event, item) => lastPhoto(event, item)} />
+        <ArrowBackIcon onPress={event => lastPhoto(event)} />
         <Image
           border={1}
           borderWidth={5}
@@ -52,7 +51,7 @@ function ProfileGalleryNav(props, item, DATA) {
           alt="Alternate Text"
           size="2xl"
         />
-        <ArrowForwardIcon onPress={(event, item) => nextPhoto(event, item)} />
+        <ArrowForwardIcon onPress={event => nextPhoto(event)} />
       </HStack>
       {singleDescription ? (
         <Text>{singleDescription}</Text>
@@ -63,4 +62,4 @@ function ProfileGalleryNav(props, item, DATA) {
   );
 }
 
-export default ProfileGalleryNav;
+export default LocationGalleryNav;
