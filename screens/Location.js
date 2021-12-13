@@ -110,15 +110,8 @@ function Location({route, navigation}) {
   const handleClick = (event, url, item) => {
     setShowSinglePhoto(true);
     setSinglePhoto(url);
-    // setCurrentIndex(photoData.indexOf(item));
     let index = photoData.findIndex(x => x._id === item._id);
-    // console.log('photodata', photoData);
     setCurrentIndex(index);
-    // console.log('item', item);
-    console.log('currentIndex', currentIndex);
-    console.log('typeof', Array.isArray(photoData));
-    console.log('typeof data item', typeof photoData[0]);
-    console.log(photoData[0]);
     event.preventDefault();
   };
 
@@ -413,50 +406,6 @@ function Location({route, navigation}) {
     }
   };
 
-  const SinglePhoto = (item, photoData, currentIndex) => (
-    <Modal isOpen={showSinglePhoto} onClose={() => setShowSinglePhoto(false)}>
-      <Modal.Content size="lg">
-        <Modal.CloseButton />
-        <Modal.Header>
-          <Heading size="sm" multiline={true}>
-            {name} Image Gallery
-          </Heading>
-        </Modal.Header>
-        <Modal.Body space={5} alignItems="center">
-          <LocationGalleryNav
-            DATA={photoData}
-            showModalInit={showModal}
-            singlePhoto={singlePhoto}
-            currentIndex={currentIndex}
-          />
-        </Modal.Body>
-        <Modal.Footer>
-          <Button.Group space={2}>
-            <Button
-              variant="ghost"
-              colorScheme="blueGray"
-              onPress={() => {
-                setShowSinglePhoto(false);
-              }}>
-              Back
-            </Button>
-            <Button
-              colorScheme="blue"
-              onPress={() => {
-                setShowSinglePhoto(false);
-                // postImage(imageUri),
-                // setTimeout(() => {
-                //   setGalleryRefresh(!galleryRefresh);
-                // }, 1000);
-              }}>
-              Edit
-            </Button>
-          </Button.Group>
-        </Modal.Footer>
-      </Modal.Content>
-    </Modal>
-  );
-
   return (
     <NativeBaseProvider>
       <Center flex={1}>
@@ -468,7 +417,49 @@ function Location({route, navigation}) {
             data={photoData}
             renderItem={renderItem}
             style={{width: '100%'}}></FlatList>
-          <SinglePhoto />
+          <Modal
+            isOpen={showSinglePhoto}
+            onClose={() => setShowSinglePhoto(false)}>
+            <Modal.Content size="lg">
+              <Modal.CloseButton />
+              <Modal.Header>
+                <Heading size="sm" multiline={true}>
+                  {name} Image Gallery
+                </Heading>
+              </Modal.Header>
+              <Modal.Body space={5} alignItems="center">
+                <LocationGalleryNav
+                  DATA={photoData}
+                  showModalInit={showModal}
+                  singlePhoto={singlePhoto}
+                  currentIndex={currentIndex}
+                />
+              </Modal.Body>
+              <Modal.Footer>
+                <Button.Group space={2}>
+                  <Button
+                    variant="ghost"
+                    colorScheme="blueGray"
+                    onPress={() => {
+                      setShowSinglePhoto(false);
+                    }}>
+                    Back
+                  </Button>
+                  <Button
+                    colorScheme="blue"
+                    onPress={() => {
+                      setShowSinglePhoto(false);
+                      // postImage(imageUri),
+                      // setTimeout(() => {
+                      //   setGalleryRefresh(!galleryRefresh);
+                      // }, 1000);
+                    }}>
+                    Edit
+                  </Button>
+                </Button.Group>
+              </Modal.Footer>
+            </Modal.Content>
+          </Modal>
         </Box>
       </Center>
     </NativeBaseProvider>
