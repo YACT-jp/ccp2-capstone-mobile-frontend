@@ -36,7 +36,7 @@ function ResultsScreen({navigation}) {
         <Pressable
           rounded="lg"
           onPress={() =>
-            navigation.navigate('Location Results', {name, mediaId})
+            navigation.navigate('Location Results', {name, mediaId, description})
           }>
           <HStack style={styles.container} space={5}>
             <Image
