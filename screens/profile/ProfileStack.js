@@ -19,7 +19,8 @@ function ProfileStack() {
         options={{
           headerRight: () => (
             <Button
-              colorScheme="blue"
+              colorScheme="lightBlue"
+              rounded="md"
               size="sm"
               variant="outline"
               onPress={() => {
