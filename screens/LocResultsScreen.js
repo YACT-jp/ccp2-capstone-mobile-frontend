@@ -16,13 +16,12 @@ function LocResultsScreen({route, navigation}) {
   const isDarkMode = useColorScheme() === 'dark';
 
   const [DATA, setDATA] = useState([]);
-
-  async function fetchData() {
-    const data = await locResultsByMedia(mediaId);
-    setDATA(data);
-  }
-
+  
   useEffect(() => {
+    async function fetchData() {
+      const data = await locResultsByMedia(mediaId);
+      setDATA(data);
+    }
     fetchData();
   }, []);
 
