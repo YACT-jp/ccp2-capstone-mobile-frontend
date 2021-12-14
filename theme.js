@@ -45,16 +45,12 @@ export default extendTheme({
     },
   },
   fonts: {
-    heading: 'FredokaOne',
-    body: 'Montserrat',
-    mono: 'Montserrat',
+    heading: 'Montserrat',
   },
   components: {
     Center: {
-      baseStyle: props => {
-        return {
-          bg: themeTools.mode('muted.50', 'muted.900')(props),
-        };
+      defaultProps: {
+        bg: 'muted.50',
       },
     },
     Heading: {
@@ -69,7 +65,6 @@ export default extendTheme({
       baseStyle: props => {
         return {
           color: themeTools.mode('muted.800', 'muted.100')(props),
-          fontFamily: 'body',
         };
       },
     },
