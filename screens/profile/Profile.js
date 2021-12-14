@@ -1,5 +1,6 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import {Text, FlatList, StyleSheet} from 'react-native';
+import {FlatList, StyleSheet} from 'react-native';
+import theme from '../../theme';
 import {
   NativeBaseProvider,
   Center,
@@ -11,6 +12,7 @@ import {
   Modal,
   HStack,
   Pressable,
+  Text,
 } from 'native-base';
 import {useFocusEffect} from '@react-navigation/core';
 import {useAuth} from '../../providers/AuthProvider';
@@ -84,38 +86,38 @@ function ProfileScreen({navigation}) {
 
   // Header element for the scrolling Flatlist
   const _renderHeader = () => (
-    <Stack p="8" space={3}>
-      <Stack space={2}>
-        <Heading size="md" ml="-1">
-          {profileData.username === null || profileData.username === undefined
-            ? username
-            : profileData.username}
-        </Heading>
-      </Stack>
-      <Text fontWeight="400">
-        {profileData.bio === null || profileData.bio === undefined
-          ? bio
-          : profileData.bio}
-      </Text>
-      <Box
-        flex={1}
-        justifyContent="flex-end"
-        rounded="lg"
-        overflow="hidden"
-        alignItems="center"
-        justifyContent="center"></Box>
-      <HStack>
-        <Button
-          w="100%"
-          colorScheme="blue"
-          size="md"
-          onPress={() => {
-            navigation.navigate('Edit Profile', profileData);
-          }}>
-          Edit Profile
-        </Button>
-      </HStack>
-    </Stack>
+        <Stack p="8" space={3}>
+          <Stack space={2}>
+            <Heading>
+              {profileData.username === null ||
+              profileData.username === undefined
+                ? username
+                : profileData.username}
+            </Heading>
+          </Stack>
+          <Text>
+            {profileData.bio === null || profileData.bio === undefined
+              ? bio
+              : profileData.bio}
+          </Text>
+          <Box
+            flex={1}
+            justifyContent="flex-end"
+            rounded="lg"
+            overflow="hidden"
+            alignItems="center"
+            justifyContent="center"></Box>
+          <HStack>
+            <Button
+              w="100%"
+              size="md"
+              onPress={() => {
+                navigation.navigate('Edit Profile', profileData);
+              }}>
+              Edit Profile
+            </Button>
+          </HStack>
+        </Stack>
   );
 
   //List Item Component
@@ -139,7 +141,7 @@ function ProfileScreen({navigation}) {
   );
 
   return (
-    <NativeBaseProvider>
+    <NativeBaseProvider theme={theme}>
       <Center flex={1}>
         <FlatList
           ListHeaderComponent={() => _renderHeader()}
