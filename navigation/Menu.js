@@ -77,6 +77,7 @@ const Menu = ({queryString, setQueryString}) => {
         <Tab.Navigator
           screenOptions={({route}) => ({
             headerShown: false,
+            initialRouteName: "Home",
             tabBarIcon: ({focused, color, size}) => {
               let iconName;
 
