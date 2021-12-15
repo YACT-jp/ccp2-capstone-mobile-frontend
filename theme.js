@@ -51,6 +51,7 @@ export default extendTheme({
     Center: {
       defaultProps: {
         bg: 'muted.50',
+        maxW: '100%'
       },
     },
     Heading: {
