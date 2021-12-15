@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {StyleSheet, useColorScheme, FlatList} from 'react-native';
 import {
   Button,
@@ -14,6 +14,7 @@ import { TextInput } from 'react-native';
 
 import {searchContext} from '../providers/SearchProvider';
 import {mediaResultsApi} from '../data/data';
+import {useFocusEffect} from '@react-navigation/core';
 
 function ResultsScreen({navigation}) {
   const isDarkMode = useColorScheme() === 'dark';
@@ -21,13 +22,32 @@ function ResultsScreen({navigation}) {
   const [queryString, setQueryString] = React.useContext(searchContext);
   const [DATA, setDATA] = useState([]);
 
-  useEffect(() => {
-    async function fetchData() {
-      const data = await mediaResultsApi();
-      setDATA(data);
-    }
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     const data = await mediaResultsApi();
+  //     setDATA(data);
+  //   }
+  //   fetchData();
+  // }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      async function fetchData() {
+        try {
+          const res = await mediaResultsApi();
+          setDATA(res);
+          return res;
+        } catch (error) {
+          throw error;
+        }
+      }
+      fetchData();
+      // this function runs on "screen unfocus/unmount"
+      return () => {
+        console.log('unmount Results Screen');
+      };
+    }, []),
+  );
 
   //List Item Component
   const Item = ({name, path, description, mediaId}) => (
