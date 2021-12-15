@@ -1,15 +1,34 @@
 import {retrieveUserSession} from '../data/secureStorage';
 import NetInfo from '@react-native-community/netinfo';
-import {Alert} from 'react-native';
+import {Toast} from 'native-base';
+import { useNavigation } from '@react-navigation/native';
+
 
 checkConnectivity = () => {
-  NetInfo.fetch().then(state => {
-    if (!state.isInternetReachable) {
-      Alert.alert(
-        'Could not connect to server. Please check your internet connection and try again.',
-      );
+  try {
+    NetInfo.fetch().then(state => {
+      if (!state.isInternetReachable) {
+        const id = "conn-toast"
+       if (!Toast.isActive(id)) {
+        Toast.show({
+          title: "You are currently offline.",
+          description: "You still have access to your saved locations.",
+          status: "error",
+          duration: null,
+           id:"conn-toast",
+           onCloseComplete: () => {
+            //navigation.navigate("Home") 
+            console.log("closed")}
+        })
+      }
+    } else {
+       Toast.closeAll()
     }
-  });
+    });
+
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 export const locResultsByMedia = async mediaId => {
