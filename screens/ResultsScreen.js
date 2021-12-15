@@ -5,10 +5,8 @@ import {
   Heading,
   Input,
   IconButton,
-  Button,
   HStack,
   VStack,
-  View,
   Pressable,
   Text,
   Image,
@@ -23,17 +21,8 @@ import {useFocusEffect} from '@react-navigation/core';
 
 function ResultsScreen({navigation}) {
   const isDarkMode = useColorScheme() === 'dark';
-  const [text, setText] = useState('');
   const [queryString, setQueryString] = React.useContext(searchContext);
   const [DATA, setDATA] = useState([]);
-
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     const data = await mediaResultsApi();
-  //     setDATA(data);
-  //   }
-  //   fetchData();
-  // }, []);
 
   useFocusEffect(
     useCallback(() => {
@@ -122,10 +111,9 @@ function ResultsScreen({navigation}) {
     <NativeBaseProvider theme={theme}>
       <Center>
         <Input
-          value={text}
-          onChangeText={text => {
-            setText(text);
-            setQueryString(text);
+          value={queryString}
+          onChangeText={input => {
+            setQueryString(input);
           }}
           placeholder="Search anime, novels, &amp; movies"
           bg="#fff"

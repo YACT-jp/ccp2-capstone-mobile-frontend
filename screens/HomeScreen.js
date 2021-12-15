@@ -12,8 +12,6 @@ import {searchContext} from '../providers/SearchProvider';
 
 function HomeScreen({navigation}) {
   const isDarkMode = useColorScheme() === 'dark';
-
-  const [text, setText] = useState('');
   const [queryString, setQueryString] = React.useContext(searchContext);
 
   return (
@@ -27,17 +25,13 @@ function HomeScreen({navigation}) {
         }}>
         <Text style={styles.text}>Home Page</Text>
         <TextInput
-          value={text}
+          value={queryString}
           style={{fontSize: 42, color: 'steelblue'}}
           placeholder="Type here..."
-          onChangeText={text => {
-            setText(text);
-            setQueryString(text);
+          onChangeText={input => {
+            setQueryString(input);
           }}
         />
-        <Text style={{fontSize: 24}}>
-          {'\n'}You entered: {text}
-        </Text>
         <Button
           margin="2"
           colorScheme="blue"
