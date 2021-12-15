@@ -6,29 +6,33 @@ import {
   SafeAreaView,
   FlatList
 } from 'react-native';
-import {Button, Text, HStack, View, VStack, Pressable, Image, NativeBaseProvider} from 'native-base';
+import { Button, Text, HStack, View, VStack, Pressable, Image, NativeBaseProvider, ScrollView} from 'native-base';
 import { searchContext } from '../providers/SearchProvider';
-import { mediaResultsApi } from '../data/data';
+import { mediaResultsApi, locationResultApi } from '../data/data';
 
 function HomeScreen({navigation}) {
   const isDarkMode = useColorScheme() === 'dark';
 
   const [text, setText] = useState('');
   const [queryString, setQueryString] = React.useContext(searchContext);
-  const [threeRandomMedia, setThreeRandomMedia] = useState([]);
+  const [threeRandomMedias, setThreeRandomMedia] = useState([]);
+  const [threeRandomLocations, setThreeRandomLocations] = useState([]);
 
   //Hook
   useEffect(async () => {
-    const fetchedThreeMedia = await fetchThreeRandomData();
-    setThreeRandomMedia(fetchedThreeMedia);
+    const mediaData = await mediaResultsApi();
+    const fetchedThreeMedias = fetchThreeRandomData(mediaData);
+    setThreeRandomMedia(fetchedThreeMedias);
+
+    const locationData = await locationResultApi();
+    const fetchedThreeLocations = fetchThreeRandomData(locationData);
+    setThreeRandomLocations(fetchedThreeLocations);
   },[]);
 
   //Hanlder
-  async function fetchThreeRandomData() {
-    const data = await mediaResultsApi();
-
+  function fetchThreeRandomData(data) {
     const randomThree = [];
-    while(randomThree.length < 3){
+    while(randomThree.length < 3 ){
       let randomIndex = Math.floor(Math.random() * data.length);
       
       if(!randomThree.includes(randomIndex)){
@@ -38,18 +42,23 @@ function HomeScreen({navigation}) {
     return randomThree.map(index => data[index]);
   }
 
-  const renderItem = ({item}) =>
+  const renderMediaItem = ({item}) =>
   item.name.toLowerCase().includes(queryString.toLowerCase()) ? (
-    <Item
+    <MediaItem
       name={item.name}
       path={item['poster_path']}
       description={item['overview']}
-      mediaId={item['id']}
+      id={item['id']}
     />
   ) : null;
 
-  //Rendering function
-  const Item = ({name, path, description, mediaId}) => (
+  const renderLocationItem = ({item}) => (
+    //JSON.parse(item['Media id']).includes(mediaId) ? <Item name={item.Name} fullItem={item} /> : null
+    <LocationItem name={item.name} fullItem={item} />
+  );
+
+
+  const MediaItem = ({name, path, description, mediaId}) => (
     <NativeBaseProvider>
       <View style={styles.item} rounded="lg">
         <Pressable
@@ -98,6 +107,50 @@ function HomeScreen({navigation}) {
     </NativeBaseProvider>
   );
 
+  const LocationItem = ({name, fullItem}) => (
+    <NativeBaseProvider>
+      <View style={styles.item} rounded="xl">
+        <Pressable
+          rounded="xl"
+          onPress={() => navigation.navigate('Location', {fullItem})}>
+          <HStack
+            style={styles.container}
+            space={5}
+            justifyContent="space-between">
+            <Image
+              border={1}
+              borderWidth={5}
+              borderColor="white"
+              height={150}
+              borderRadius={150}
+              source={{
+                uri: fullItem.location_pic,
+              }}
+              alt="Alternate Text"
+              size="xl"
+              ml="5"
+            />
+            <Text
+              fontSize="4xl"
+              lineHeight="sm"
+              color="white"
+              isTruncated
+              maxW="180"
+              w="80%"
+              multiline={true}
+              numberOfLines={3}>
+              {name}
+            </Text>
+            <Text>
+              {console.log(fullItem)}
+            </Text>
+          </HStack>
+        </Pressable>
+      </View>
+    </NativeBaseProvider>
+  );
+
+
   const styles = StyleSheet.create({
     container: {
       justifyContent: 'center',
@@ -120,7 +173,7 @@ function HomeScreen({navigation}) {
       style={{
         backgroundColor: isDarkMode ? '#000' : '#fff',
       }}>
-      <View
+      <ScrollView
         style={styles.container}
         style={{
           backgroundColor: isDarkMode ? '#000' : '#fff',
@@ -138,7 +191,8 @@ function HomeScreen({navigation}) {
         <Text style={{fontSize: 24}}>
           {'\n'}You entered: {text}
         </Text>
-        <FlatList data={threeRandomMedia} renderItem={renderItem}></FlatList>
+        <FlatList data={threeRandomMedias} renderItem={renderMediaItem}></FlatList>
+        <FlatList data={threeRandomLocations} renderItem={renderLocationItem}></FlatList>
         <Button
           margin="2"
           colorScheme="blue"
@@ -147,7 +201,7 @@ function HomeScreen({navigation}) {
           }>
           Go to Results
         </Button>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
