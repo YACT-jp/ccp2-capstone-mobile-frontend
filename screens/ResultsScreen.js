@@ -11,6 +11,7 @@ import {
   Text,
   Image,
   NativeBaseProvider,
+  ScrollView,
   SearchIcon,
 } from 'native-base';
 import {TextInput} from 'react-native';
@@ -74,18 +75,13 @@ function ResultsScreen({navigation}) {
           size="md"
         />
         <VStack w="225" maxW="225" ml="4">
-          <Heading
-            fontSize="xl"
-            color="white"
-            // maxW="225"
-          >
+          <Heading fontSize="xl" color="white">
             {name}
           </Heading>
           <Text
             fontSize="xs"
             color="white"
             isTruncated
-            // maxW="225"
             fontWeight="500"
             multiline={true}
             numberOfLines={2}>
@@ -109,37 +105,37 @@ function ResultsScreen({navigation}) {
 
   return (
     <NativeBaseProvider theme={theme}>
-      <Center>
-        <Input
-          value={queryString}
-          onChangeText={input => {
-            setQueryString(input);
-          }}
-          placeholder="Search anime, novels, &amp; movies"
-          bg="#fff"
-          width="100%"
-          borderRadius="4"
-          py="3"
-          px="1"
-          fontSize="14"
-          _web={{
-            _focus: {borderColor: 'muted.300', style: {boxShadow: 'none'}},
-          }}
-          InputLeftElement={
-            <IconButton
-              m="2"
-              ml="3"
-              size="6"
-              color="gray.400"
-              icon={<SearchIcon />}
-              _icon={{
-                color: '#3c83f3ff',
-                size: 'sm',
-              }}
-            />
-          }
-        />
-        <FlatList data={DATA} renderItem={renderItem}></FlatList>
+      <Input
+        value={queryString}
+        onChangeText={input => {
+          setQueryString(input);
+        }}
+        placeholder="Search anime, novels, &amp; movies"
+        bg="#fff"
+        width="100%"
+        borderRadius="4"
+        py="3"
+        px="1"
+        fontSize="14"
+        _web={{
+          _focus: {borderColor: 'muted.300', style: {boxShadow: 'none'}},
+        }}
+        InputLeftElement={
+          <IconButton
+            m="2"
+            ml="3"
+            size="6"
+            color="gray.400"
+            icon={<SearchIcon />}
+            _icon={{
+              color: '#3c83f3ff',
+              size: 'sm',
+            }}
+          />
+        }
+      />
+      <Center mb="20">
+        <FlatList data={DATA} renderItem={renderItem} />
       </Center>
     </NativeBaseProvider>
   );
