@@ -1,6 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, useColorScheme, FlatList} from 'react-native';
 import {
+  Center,
+  Heading,
+  Input,
+  IconButton,
   Button,
   HStack,
   VStack,
@@ -9,9 +13,10 @@ import {
   Text,
   Image,
   NativeBaseProvider,
+  SearchIcon,
 } from 'native-base';
-import { TextInput } from 'react-native';
-
+import {TextInput} from 'react-native';
+import theme from '../theme';
 import {searchContext} from '../providers/SearchProvider';
 import {mediaResultsApi} from '../data/data';
 
@@ -31,52 +36,55 @@ function ResultsScreen({navigation}) {
 
   //List Item Component
   const Item = ({name, path, description, mediaId}) => (
-    <NativeBaseProvider>
-      <View style={styles.item} rounded="lg">
-        <Pressable
-          rounded="lg"
-          onPress={() =>
-            navigation.navigate('Location Results', {name, mediaId, description})
-          }>
-          <HStack style={styles.container} space={5}>
-            <Image
-              border={1}
-              borderWidth={2}
-              borderColor="white"
-              height={150}
-              borderRadius={150}
-              source={{
-                uri: 'https://image.tmdb.org/t/p/w500' + path,
-              }}
-              alt={`${name} poster`}
-              size="md"
-              ml="2"
-            />
-            <VStack>
-              <Text
-                fontSize="xl"
-                color="white"
-                isTruncated
-                maxW="225"
-                lineHeight="xs">
-                {name}
-              </Text>
-              <Text
-                mt="1"
-                fontSize="2xs"
-                color="white"
-                isTruncated
-                maxW="225"
-                fontWeight="500"
-                multiline={true}
-                numberOfLines={3}>
-                {description}
-              </Text>
-            </VStack>
-          </HStack>
-        </Pressable>
-      </View>
-    </NativeBaseProvider>
+    <Pressable
+      rounded="lg"
+      onPress={() =>
+        navigation.navigate('Location Results', {
+          name,
+          mediaId,
+          description,
+        })
+      }>
+      <HStack
+        bgColor="#d5524aff"
+        rounded="lg"
+        my="2"
+        px="4"
+        py="2"
+        alignItems="center">
+        <Image
+          border={1}
+          borderWidth={2}
+          borderColor="white"
+          height={150}
+          borderRadius={150}
+          source={{
+            uri: 'https://image.tmdb.org/t/p/w500' + path,
+          }}
+          alt={`${name} poster`}
+          size="md"
+        />
+        <VStack w="225" maxW="225" ml="4">
+          <Heading
+            fontSize="xl"
+            color="white"
+            // maxW="225"
+          >
+            {name}
+          </Heading>
+          <Text
+            fontSize="xs"
+            color="white"
+            isTruncated
+            // maxW="225"
+            fontWeight="500"
+            multiline={true}
+            numberOfLines={2}>
+            {description}
+          </Text>
+        </VStack>
+      </HStack>
+    </Pressable>
   );
 
   //Process each item of the data array
@@ -91,32 +99,41 @@ function ResultsScreen({navigation}) {
     ) : null;
 
   return (
-    <View
-      style={styles.container}
-      style={{
-        backgroundColor: isDarkMode ? '#000' : '#fff',
-        flex: 1,
-      }}>
-        <TextInput
+    <NativeBaseProvider theme={theme}>
+      <Center>
+        <Input
           value={text}
-          style={{fontSize: 36, color: 'steelblue'}}
-          placeholder="Search Again..."
           onChangeText={text => {
             setText(text);
             setQueryString(text);
           }}
+          placeholder="Search anime, novels, &amp; movies"
+          bg="#fff"
+          width="100%"
+          borderRadius="4"
+          py="3"
+          px="1"
+          fontSize="14"
+          _web={{
+            _focus: {borderColor: 'muted.300', style: {boxShadow: 'none'}},
+          }}
+          InputLeftElement={
+            <IconButton
+              m="2"
+              ml="3"
+              size="6"
+              color="gray.400"
+              icon={<SearchIcon />}
+              _icon={{
+                color: '#3c83f3ff',
+                size: 'sm',
+              }}
+            />
+          }
         />
-      <>
-        {queryString === '' ? 
-          (<Text></Text>)
-        : (
-          <Text fontSize="xl" textAlign="center">
-            Results for: <Text bold>{queryString}</Text>
-          </Text>
-        )}
-      </>
-      <FlatList data={DATA} renderItem={renderItem}></FlatList>
-    </View>
+        <FlatList data={DATA} renderItem={renderItem}></FlatList>
+      </Center>
+    </NativeBaseProvider>
   );
 }
 
