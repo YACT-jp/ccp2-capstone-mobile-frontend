@@ -74,7 +74,7 @@ function ProfileGalleryNav(props) {
   return (
     <Modal.Content size="lg">
       <Modal.CloseButton />
-      <Modal.Header>Your Image Gallery</Modal.Header>
+      <Modal.Header>My Image Gallery</Modal.Header>
       <Modal.Body>
         <HStack space={5} alignItems="center" justifyContent="center">
           <ArrowBackIcon onPress={event => lastPhoto(event)} />
