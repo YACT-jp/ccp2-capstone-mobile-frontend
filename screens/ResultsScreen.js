@@ -131,20 +131,3 @@ function ResultsScreen({navigation}) {
 }
 
 export default ResultsScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    flex: 1,
-  },
-  item: {
-    backgroundColor: '#3b81f6',
-    padding: 10,
-    marginVertical: 2,
-    marginHorizontal: 16,
-  },
-  name: {
-    fontSize: 32,
-  },
-});
