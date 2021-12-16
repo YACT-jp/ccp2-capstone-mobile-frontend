@@ -89,9 +89,9 @@ function Location({route, navigation}) {
         headerRight: () => (
           <>
           {isLocationSaved ? (
-                <MatIcon name="bookmark-check" size={40} color="#ff0000" onPress={onDeleteClick} />
+                <MatIcon name="bookmark-check" style={{ position: 'absolute', right: -15}} size={40} color="#ff0000" onPress={onDeleteClick} />
             ) : (
-                <MatIcon name="bookmark-off-outline" size={40} color="#dddddd"  onPress={onSaveClick} />
+                <MatIcon name="bookmark-off-outline" style={{ position: 'absolute', right: -15}} size={40} color="#dddddd"  onPress={onSaveClick} />
             )}
           </>
         )
