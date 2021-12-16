@@ -1,28 +1,19 @@
 import React, {useState, useCallback} from 'react';
 import {
-  StyleSheet,
-  useColorScheme,
   FlatList,
-  SafeAreaView,
-} from 'react-native';
-import {
-  Button,
+  Center,
   HStack,
-  View,
   Pressable,
-  Text,
+  Heading,
   Image,
   NativeBaseProvider,
 } from 'native-base';
-
+import theme from '../theme';
 import {getAsyncSavedLocations} from '../data/asyncSavedLocations';
 import {useFocusEffect} from '@react-navigation/core';
 
 function SavedScreen({navigation}) {
-  const isDarkMode = useColorScheme() === 'dark';
-
   const [DATA, setDATA] = useState([]);
-  const [refresh, setRefresh] = useState(false);
 
   // load Saved Locations from AsyncStorage
   useFocusEffect(
@@ -39,100 +30,50 @@ function SavedScreen({navigation}) {
       fetchData();
       // this function runs on "screen unfocus/unmount"
       return () => {
-        console.log('hello world');
+        console.log('unmount Saved Screeen');
       };
     }, []),
   );
 
   //List Item Component
   const Item = ({name, fullItem}) => (
-    <NativeBaseProvider>
-      <View style={styles.item} rounded="xl">
-        <Pressable
-          rounded="xl"
-          onPress={() => navigation.navigate('Saved Location', {fullItem})}>
-          <HStack
-            style={styles.container}
-            space={5}
-            justifyContent="space-between">
-            <Image
-              border={1}
-              borderWidth={5}
-              borderColor="white"
-              height={150}
-              borderRadius={150}
-              source={{
-                uri: fullItem.location_pic,
-              }}
-              alt="Alternate Text"
-              size="xl"
-              ml="5"
-            />
-            <Text
-              fontSize="4xl"
-              lineHeight="sm"
-              color="white"
-              isTruncated
-              maxW="180"
-              w="80%"
-              multiline={true}
-              numberOfLines={3}>
-              {name}
-            </Text>
-          </HStack>
-        </Pressable>
-      </View>
-    </NativeBaseProvider>
+    <Pressable
+      onPress={() => navigation.navigate('Saved Location', {fullItem})}>
+      <HStack bgColor="#3c83f3ff" rounded="lg" my="2" px="4" py="2" alignItems="center">
+        <Image
+          border={1}
+          borderWidth={5}
+          borderColor="white"
+          height={150}
+          borderRadius={150}
+          source={{
+            uri: fullItem.location_pic,
+          }}
+          alt="No image"
+          size="xl"
+        />
+        <Heading
+          ml="4"
+          fontSize="xl"
+          color="white"
+          maxW="50%"
+          >
+          {name}
+        </Heading>
+      </HStack>
+    </Pressable>
   );
 
   //Process each item of the data array
   const renderItem = ({item}) => <Item name={item.name} fullItem={item} />;
 
-  const _renderFooter = () => (
-    <View style={{paddingVertical: 4}}>
-      <Button
-        mt="1"
-        margin="2"
-        colorScheme="blue"
-        onPress={() =>
-          navigation.navigate('Search', {screen: 'Media Results'})
-        }>
-        Back to results
-      </Button>
-    </View>
-  );
-
   return (
-    <SafeAreaView
-      style={{
-        backgroundColor: isDarkMode ? '#000' : '#fff',
-      }}>
-      <View
-        style={{
-          backgroundColor: isDarkMode ? '#000' : '#fff',
-          paddingBottom: 90,
-        }}>
-        <FlatList
-          ListFooterComponent={() => _renderFooter()}
-          data={DATA}
-          renderItem={renderItem}></FlatList>
-      </View>
-    </SafeAreaView>
+    <NativeBaseProvider theme={theme}>
+      <Center>
+        <FlatList data={DATA} renderItem={renderItem}></FlatList>
+      </Center>
+    </NativeBaseProvider>
   );
 }
 
 export default SavedScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    flex: 1,
-  },
-  item: {
-    backgroundColor: '#3b81f6',
-    padding: 20,
-    marginVertical: 2,
-    marginHorizontal: 16,
-  },
-});
