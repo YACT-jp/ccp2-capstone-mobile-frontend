@@ -123,7 +123,7 @@ function ResultsScreen({navigation}) {
           <SearchIcon m="2" ml="3" size="6" color="gray.400" size="sm" />
         }
       />
-      <Center>
+      <Center mb="20">
         <FlatList data={DATA} renderItem={renderItem} />
       </Center>
     </NativeBaseProvider>

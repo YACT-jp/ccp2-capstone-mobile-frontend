@@ -187,6 +187,7 @@ function HomeScreen({navigation}) {
       />
       <Center>
         <SectionList
+          mb="20"
           sections={randomizedData}
           keyExtractor={(item, index) => item + index}
           renderItem={renderItem}
@@ -196,7 +197,6 @@ function HomeScreen({navigation}) {
             </Heading>
           )}
         />
-        <Box py="15" />
       </Center>
     </NativeBaseProvider>
   );
