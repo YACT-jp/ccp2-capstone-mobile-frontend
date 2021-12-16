@@ -31,45 +31,47 @@ function LocResultsScreen({route, navigation}) {
 
   //List Item Component
   const Item = ({name, fullItem}) => (
-    <Pressable
-      rounded="lg"
-      onPress={() => navigation.navigate('Location', {fullItem})}>
-      <HStack
-        bgColor="#3c83f3ff"
+    <Center>
+      <Pressable
         rounded="lg"
-        my="2"
-        px="4"
-        py="2"
-        alignItems="center"
-        justifyContent="space-between">
-        <Image
-          border={1}
-          borderWidth={3}
-          borderColor="white"
-          height={100}
-          borderRadius={100}
-          source={{
-            uri: fullItem.location_pic,
-          }}
-          alt="Media Image"
-          size="md"
-          ml="2.5"
-        />
-        <VStack w="225" maxW="225" ml="4">
-          <Heading
-            fontSize="xl"
-            lineHeight="sm"
-            color="white"
-            isTruncated
-            maxW="200"
-            w="80%"
-            multiline={true}
-            numberOfLines={3}>
-            {name}
-          </Heading>
-        </VStack>
-      </HStack>
-    </Pressable>
+        onPress={() => navigation.navigate('Location', {fullItem})}>
+        <HStack
+          bgColor="#3c83f3ff"
+          rounded="lg"
+          my="2"
+          px="3"
+          py="2"
+          alignItems="center"
+          justifyContent="space-between">
+          <Image
+            border={1}
+            borderWidth={3}
+            borderColor="white"
+            height={100}
+            borderRadius={100}
+            source={{
+              uri: fullItem.location_pic,
+            }}
+            alt="Media Image"
+            size="md"
+            ml="2.5"
+          />
+          <VStack w="225" maxW="225" ml="4">
+            <Heading
+              fontSize="xl"
+              lineHeight="sm"
+              color="white"
+              isTruncated
+              maxW="200"
+              w="80%"
+              multiline={true}
+              numberOfLines={3}>
+              {name}
+            </Heading>
+          </VStack>
+        </HStack>
+      </Pressable>
+    </Center>
   );
 
   // Process each item of the data array
@@ -79,7 +81,7 @@ function LocResultsScreen({route, navigation}) {
   );
 
   const renderHeader = () => (
-    <View style={styles.media} rounded="xl">
+    <View mt="3" style={styles.media} rounded="xl">
       <Text
         fontSize="3xl"
         isTruncated
@@ -96,12 +98,10 @@ function LocResultsScreen({route, navigation}) {
 
   return (
     <NativeBaseProvider theme={theme}>
-      <Center>
-        <FlatList
-          data={DATA}
-          ListHeaderComponent={renderHeader}
-          renderItem={renderItem}></FlatList>
-      </Center>
+      <FlatList
+        data={DATA}
+        ListHeaderComponent={renderHeader}
+        renderItem={renderItem}></FlatList>
     </NativeBaseProvider>
   );
 }

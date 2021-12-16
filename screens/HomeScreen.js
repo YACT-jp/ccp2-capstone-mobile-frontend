@@ -63,7 +63,7 @@ function HomeScreen({navigation}) {
   const renderLocationItem = ({item}) => (
     <LocationItem
       fullItem={item}
-      media_name={item.media_name}
+      name={item.name}
       description={item.description}
     />
   );
@@ -116,7 +116,7 @@ function HomeScreen({navigation}) {
     </Box>
   );
 
-  const LocationItem = ({fullItem, media_name, description}) => (
+  const LocationItem = ({fullItem, name, description}) => (
     <Box
       rounded="lg"
       // onPress={() =>
@@ -131,7 +131,7 @@ function HomeScreen({navigation}) {
         bgColor="#3c83f3ff"
         rounded="lg"
         my="2"
-        px="4"
+        px="3"
         py="2"
         alignItems="center"
         justifyContent="space-between">
@@ -158,7 +158,7 @@ function HomeScreen({navigation}) {
             w="80%"
             multiline={true}
             numberOfLines={3}>
-            {media_name}
+            {name}
           </Heading>
         </VStack>
       </HStack>
@@ -212,12 +212,14 @@ function HomeScreen({navigation}) {
           }
           InputRightElement={
             <Button
+              mr="5"
+              size="lg"
               margin="2"
               colorScheme="blue"
               onPress={() =>
                 navigation.navigate('Search', {screen: 'Media Results'})
               }>
-              <Heading color="white">Search</Heading>
+              Search
             </Button>
           }
         />
