@@ -1,5 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import MatIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import {searchContext} from '../providers/SearchProvider';
 import {
   NativeBaseProvider,
@@ -7,6 +9,7 @@ import {
   SearchIcon,
   CheckIcon,
   InfoOutlineIcon,
+  Icon,
 } from 'native-base';
 import HomeScreen from '../screens/HomeScreen';
 import SearchStackScreen from '../screens/SearchStackScreen';
@@ -82,17 +85,17 @@ const Menu = ({queryString, setQueryString}) => {
               let iconName;
 
               if (route.name === 'Home') {
-                return <HamburgerIcon size="5" mt="0.5" />;
+                return <Icon as={MatIcon} name="home-variant-outline" size="8" mt="0.5" color={color} />;
               } else if (route.name === 'Search') {
-                return <SearchIcon size="5" mt="0.5" />;
+                return <Icon as={MatIcon} name="magnify" size="8" mt="0.5" color={color} />;
               } else if (route.name === 'Saved') {
-                return <CheckIcon size="5" mt="0.5" />;
+                return <Icon as={MatIcon} name="bookmark-outline" size="8" mt="0.5" color={color} />;
               } else if (route.name === 'Profile') {
-                return <InfoOutlineIcon size="5" mt="0.5" />;
+                return <Icon as={MatIcon} name="account-outline" size="8" mt="0.5" color={color} />;
               }
             },
-            // tabBarActiveTintColor: 'tomato',
-            // tabBarInactiveTintColor: 'gray',
+            //tabBarActiveTintColor: 'tomato',
+            //tabBarInactiveTintColor: 'black',
           })}>
           <Tab.Screen name="Home" component={HomeScreen} />
           <Tab.Screen name="Search" component={SearchStackScreen} />
