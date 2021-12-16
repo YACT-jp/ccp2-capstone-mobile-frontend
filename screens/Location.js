@@ -337,7 +337,7 @@ function Location({route, navigation}) {
                   {name} Image Gallery
                 </Heading>
               </Modal.Header>
-              <Modal.Body space={5} alignItems="center">
+              <Modal.Body>
                 <LocationGalleryNav
                   DATA={photoData}
                   showModalInit={showModal}

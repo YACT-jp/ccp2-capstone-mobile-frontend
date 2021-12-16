@@ -1,18 +1,52 @@
 import React, {useState, useEffect} from 'react';
-import {Text} from 'react-native';
-import {Image, HStack, ArrowBackIcon, ArrowForwardIcon} from 'native-base';
+import {
+  Text,
+  Box,
+  Image,
+  Stack,
+  Heading,
+  HStack,
+  VStack,
+  ArrowBackIcon,
+  ArrowForwardIcon,
+} from 'native-base';
 import {retrieveUserSession} from '../data/secureStorage';
+import {getUser, getLocation} from '../data/data';
+import {getDisplayDate} from '../data/dateUtils';
 
 function LocationGalleryNav(props) {
-  const [singlePhoto, setSinglePhoto] = useState(props.singlePhoto); // passes only URL
   const [currentIndex, setCurrentIndex] = useState(props.currentIndex);
-  const [singleDescription, setSingleDescription] = useState('No description');
+  const [displayPhoto, setDisplayPhoto] = useState(props.displayPhoto);
+  const [displayDescription, setDisplayDescription] =
+    useState('No description');
+  const [displayUsername, setDisplayUsername] = useState();
+  const [displayLocation, setDisplayLocation] = useState();
+  const [displayTimestamp, setDisplayTimestamp] = useState();
 
-  /** update photo url for singlePhoto modal */
+  /** API call for photo user and location */
+  useEffect(() => {
+    async function fetchData() {
+      if (currentIndex !== undefined) {
+        let user = await getUser(props.DATA[`${currentIndex}`]['user_id']);
+        setDisplayUsername(user[0]['username']);
+        let location = await getLocation(
+          props.DATA[`${currentIndex}`]['location_id'],
+        );
+        setDisplayLocation(location[0]['name']);
+        setDisplayTimestamp(
+          getDisplayDate(props.DATA[`${currentIndex}`]['timestamp']),
+        );
+      }
+    }
+    fetchData();
+  }, [currentIndex]);
+
+  /** update photo url for displayPhoto modal */
   useEffect(() => {
     if (currentIndex !== undefined) {
-      setSinglePhoto(props.DATA[`${currentIndex}`]['url']);
-      setSingleDescription(props.DATA[`${currentIndex}`]['description']);
+      console.log(props.DATA[`${currentIndex}`]);
+      setDisplayPhoto(props.DATA[`${currentIndex}`]['url']);
+      setDisplayDescription(props.DATA[`${currentIndex}`]['description']);
     }
   }, [currentIndex]);
 
@@ -35,7 +69,7 @@ function LocationGalleryNav(props) {
   };
 
   return (
-    <>
+    <VStack alignItems="flex-start">
       <HStack space={5} alignItems="center" justifyContent="center">
         <ArrowBackIcon onPress={event => lastPhoto(event)} />
         <Image
@@ -43,20 +77,47 @@ function LocationGalleryNav(props) {
           borderWidth={5}
           borderColor="white"
           source={{
-            uri: singlePhoto,
+            uri: displayPhoto,
           }}
-          key={singlePhoto}
+          key={displayPhoto}
           alt="Alternate Text"
           size="2xl"
         />
         <ArrowForwardIcon onPress={event => nextPhoto(event)} />
       </HStack>
-      {singleDescription ? (
-        <Text>{singleDescription}</Text>
-      ) : (
-        <Text>No description</Text>
-      )}
-    </>
+      <Box
+        ml="15%"
+        color="coolGray.600"
+        _dark={{
+          color: 'warmGray.200',
+        }}
+        fontWeight="400">
+        <Stack p="4" space={3}>
+          <Stack space={2}>
+            <Heading size="md">{displayUsername}</Heading>
+          </Stack>
+          <Text fontWeight="400">
+            {displayDescription ? (
+              <Text>{displayDescription}</Text>
+            ) : (
+              <Text>No description</Text>
+            )}
+          </Text>
+          <HStack alignItems="center" space={4} justifyContent="space-between">
+            <HStack alignItems="center">
+              <Text
+                color="coolGray.600"
+                _dark={{
+                  color: 'warmGray.200',
+                }}
+                fontWeight="400">
+                {displayTimestamp}
+              </Text>
+            </HStack>
+          </HStack>
+        </Stack>
+      </Box>
+    </VStack>
   );
 }
 
