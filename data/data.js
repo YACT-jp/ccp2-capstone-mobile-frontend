@@ -1,15 +1,34 @@
 import {retrieveUserSession} from '../data/secureStorage';
 import NetInfo from '@react-native-community/netinfo';
-import {Alert} from 'react-native';
+import {Toast} from 'native-base';
+import { useNavigation } from '@react-navigation/native';
+
 
 checkConnectivity = () => {
-  NetInfo.fetch().then(state => {
-    if (!state.isInternetReachable) {
-      Alert.alert(
-        'Could not connect to server. Please check your internet connection and try again.',
-      );
+  try {
+    NetInfo.fetch().then(state => {
+      if (!state.isInternetReachable) {
+        const id = "conn-toast"
+       if (!Toast.isActive(id)) {
+        Toast.show({
+          title: "You are currently offline.",
+          description: "You still have access to your saved locations.",
+          status: "error",
+          duration: null,
+           id:"conn-toast",
+           onCloseComplete: () => {
+            //navigation.navigate("Home") 
+            console.log("closed")}
+        })
+      }
+    } else {
+       Toast.closeAll()
     }
-  });
+    });
+
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 export const locResultsByMedia = async mediaId => {
@@ -190,14 +209,14 @@ export const authTest = async () => {
   }
 };
 
-export const getProfile = async (userId) => {
+export const getProfile = async userId => {
   try {
     const userToken = await retrieveUserSession();
     //console.log('userToken pure:', userToken['token']);
     const response = await fetch(
       `https://ccp2-capstone-backend-sa-yxiyypij7a-an.a.run.app/api/user/${userId}/profile`,
       {
-        method: "GET",
+        method: 'GET',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${userToken['token']}`,
@@ -205,7 +224,7 @@ export const getProfile = async (userId) => {
       },
     );
     const data = await response.json();
-    console.log('getProfile', typeof data)
+    console.log('getProfile', typeof data);
     return data;
   } catch (err) {
     console.log('error', err);
@@ -219,7 +238,7 @@ export const updateProfile = async (userId, inputdata) => {
     const response = await fetch(
       `https://ccp2-capstone-backend-sa-yxiyypij7a-an.a.run.app/api/user/${userId}/profile`,
       {
-        method: "PATCH",
+        method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${userToken['token']}`,
@@ -235,7 +254,6 @@ export const updateProfile = async (userId, inputdata) => {
   }
 };
 
-/** DELETE request sending imageUri to backend */
 export const deletePhoto = async _id => {
   const userToken = await retrieveUserSession();
   const url = `https://ccp2-capstone-backend-sa-yxiyypij7a-an.a.run.app/api/photo/${_id}`;
@@ -250,4 +268,48 @@ export const deletePhoto = async _id => {
     .catch(error => {
       console.warn(error);
     });
+};
+
+export const getUser = async userId => {
+  try {
+    const userToken = await retrieveUserSession();
+    //console.log('userToken pure:', userToken['token']);
+    const response = await fetch(
+      `https://ccp2-capstone-backend-sa-yxiyypij7a-an.a.run.app/api/user/${userId}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userToken['token']}`,
+        },
+      },
+    );
+    const data = await response.json();
+    console.log('getProfile', typeof data);
+    return data;
+  } catch (err) {
+    console.log('error', err);
+  }
+};
+
+export const getLocation = async locationId => {
+  try {
+    const userToken = await retrieveUserSession();
+    //console.log('userToken pure:', userToken['token']);
+    const response = await fetch(
+      `https://ccp2-capstone-backend-sa-yxiyypij7a-an.a.run.app/api/locations/${locationId}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userToken['token']}`,
+        },
+      },
+    );
+    const data = await response.json();
+    console.log('getProfile', typeof data);
+    return data;
+  } catch (err) {
+    console.log('error', err);
+  }
 };
