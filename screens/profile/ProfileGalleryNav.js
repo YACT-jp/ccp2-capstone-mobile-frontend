@@ -12,7 +12,6 @@ import {
   ArrowForwardIcon,
 } from 'native-base';
 import {deletePhoto, getUser, getLocation} from '../../data/data';
-import {retrieveUserSession} from '../data/secureStorage';
 import {getDisplayDate} from '../../data/dateUtils';
 
 function ProfileGalleryNav(props) {
