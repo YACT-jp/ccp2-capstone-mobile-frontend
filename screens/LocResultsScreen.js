@@ -1,13 +1,17 @@
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, useColorScheme, FlatList, Button} from 'react-native';
 import {
+  Heading,
+  Center,
   HStack,
+  VStack,
   View,
   Pressable,
   Text,
   Image,
   NativeBaseProvider,
 } from 'native-base';
+import theme from '../theme';
 import {locResultsByMedia} from '../data/data';
 
 function LocResultsScreen({route, navigation}) {
@@ -16,7 +20,7 @@ function LocResultsScreen({route, navigation}) {
   const isDarkMode = useColorScheme() === 'dark';
 
   const [DATA, setDATA] = useState([]);
-  
+
   useEffect(() => {
     async function fetchData() {
       const data = await locResultsByMedia(mediaId);
@@ -27,30 +31,34 @@ function LocResultsScreen({route, navigation}) {
 
   //List Item Component
   const Item = ({name, fullItem}) => (
-    <NativeBaseProvider>
-      <View style={styles.item} rounded="xl">
-        <Pressable
-          rounded="xl"
-          onPress={() => navigation.navigate('Location', {fullItem})}>
-          <HStack
-            style={styles.container}
-            space={5}
-            justifyContent="space-between">
-            <Image
-              border={1}
-              borderWidth={3}
-              borderColor="white"
-              height={100}
-              borderRadius={100}
-              source={{
-                uri: fullItem.location_pic,
-              }}
-              alt="Media Image"
-              size="md"
-              ml="2.5"
-            />
-            <Text
-              fontSize="2xl"
+    <Center>
+      <Pressable
+        rounded="lg"
+        onPress={() => navigation.navigate('Location', {fullItem})}>
+        <HStack
+          bgColor="#3c83f3ff"
+          rounded="lg"
+          my="2"
+          px="3"
+          py="2"
+          alignItems="center"
+          justifyContent="space-between">
+          <Image
+            border={1}
+            borderWidth={3}
+            borderColor="white"
+            height={100}
+            borderRadius={100}
+            source={{
+              uri: fullItem.location_pic,
+            }}
+            alt="Media Image"
+            size="md"
+            ml="2.5"
+          />
+          <VStack w="225" maxW="225" ml="4">
+            <Heading
+              fontSize="xl"
               lineHeight="sm"
               color="white"
               isTruncated
@@ -59,11 +67,11 @@ function LocResultsScreen({route, navigation}) {
               multiline={true}
               numberOfLines={3}>
               {name}
-            </Text>
-          </HStack>
-        </Pressable>
-      </View>
-    </NativeBaseProvider>
+            </Heading>
+          </VStack>
+        </HStack>
+      </Pressable>
+    </Center>
   );
 
   // Process each item of the data array
@@ -73,7 +81,7 @@ function LocResultsScreen({route, navigation}) {
   );
 
   const renderHeader = () => (
-    <View style={styles.media} rounded="xl">
+    <View mt="3" style={styles.media} rounded="xl">
       <Text
         fontSize="3xl"
         isTruncated
@@ -82,27 +90,19 @@ function LocResultsScreen({route, navigation}) {
         numberOfLines={3}>
         <Text bold>{name}</Text>
       </Text>
-      <Text
-        fontSize="lg"
-        textAlign="justify">
+      <Text fontSize="lg" textAlign="justify">
         {description}
       </Text>
     </View>
   );
 
   return (
-    <View
-      style={styles.container}
-      style={{
-        backgroundColor: isDarkMode ? '#000' : '#fff',
-        flex: 1,
-      }}>  
+    <NativeBaseProvider theme={theme}>
       <FlatList
         data={DATA}
-        ListHeaderComponent={renderHeader} 
-        renderItem={renderItem}>
-      </FlatList>
-    </View>
+        ListHeaderComponent={renderHeader}
+        renderItem={renderItem}></FlatList>
+    </NativeBaseProvider>
   );
 }
 

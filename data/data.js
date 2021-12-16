@@ -53,6 +53,26 @@ export const locResultsByMedia = async mediaId => {
   }
 };
 
+export const locationResultApi = async () => {
+  try{
+    const userToken = await retrieveUserSession();
+    const response = await fetch(
+      `https://ccp2-capstone-backend-sa-yxiyypij7a-an.a.run.app/api/locations`,
+      {
+        method: 'GET',
+        headers: {         
+          'Content-Type': 'application/json',   
+          'Authorization': `Bearer ${userToken['token']}`   
+          },
+          // body data type must match "Content-Type" header     
+        });     
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 export const mediaResultsApi = async () => {
   try {
     checkConnectivity();

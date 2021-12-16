@@ -17,8 +17,8 @@ import SavedStackScreen from '../screens/savedStackScreen';
 import ProfileStack from '../screens/profile/ProfileStack';
 import {updateAsyncSavedLocations} from '../data/asyncSavedLocations';
 import {useAuth} from '../providers/AuthProvider';
-import { apiAuth } from '../data/data';
-import { retrieveUserSession, storeUserSession } from '../data/secureStorage';
+import {apiAuth} from '../data/data';
+import {retrieveUserSession, storeUserSession} from '../data/secureStorage';
 
 const Tab = createBottomTabNavigator();
 
@@ -30,20 +30,20 @@ const Menu = ({queryString, setQueryString}) => {
 
   // load to AsyncStorage saved location on application startup
   useEffect(() => {
-    async function fetchToken() { 
+    async function fetchToken() {
       try {
-        // Check if we already have a token in secure storage 
+        // Check if we already have a token in secure storage
         const localToken = await retrieveUserSession();
-        if (localToken && localToken["token"]) {
+        if (localToken && localToken['token']) {
           console.log('getting local token:');
         }
         // Check if local token needs to be refreshed
-        if(localToken && localToken["timestamp"]) {
+        if (localToken && localToken['timestamp']) {
           const nowTime = new Date();
-          const thenTime = new Date(localToken["timestamp"]);
+          const thenTime = new Date(localToken['timestamp']);
           const maxDiff = 86400000 * 24; //Days in milliseconds * number of days to refresh token
           if (nowTime.getTime() - thenTime.getTime() > maxDiff) {
-            console.log ('====== NEED TO REFRESH TOKEN ======');
+            console.log('====== NEED TO REFRESH TOKEN ======');
             console.log('fetchingnew token from api');
             const userData = await apiAuth(user.id, userInfo.email);
             const inMemToken = JSON.parse(userData).data.token;
@@ -55,7 +55,7 @@ const Menu = ({queryString, setQueryString}) => {
         }
 
         // No local token so get a new token from auth api
-        if (!localToken || !localToken["token"]) {         
+        if (!localToken || !localToken['token']) {
           console.log('fetching token from api');
           const userData = await apiAuth(user.id, userInfo.email);
           const inMemToken = JSON.parse(userData).data.token;
@@ -72,7 +72,8 @@ const Menu = ({queryString, setQueryString}) => {
       fetchToken();
       setAppStarted(true);
     }
-  }), [];
+  }),
+    [];
 
   return (
     <NativeBaseProvider>
@@ -80,7 +81,7 @@ const Menu = ({queryString, setQueryString}) => {
         <Tab.Navigator
           screenOptions={({route}) => ({
             headerShown: false,
-            initialRouteName: "Home",
+            initialRouteName: 'Home',
             tabBarIcon: ({focused, color, size}) => {
               let iconName;
 

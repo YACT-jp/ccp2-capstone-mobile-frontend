@@ -39,7 +39,13 @@ function SavedScreen({navigation}) {
   const Item = ({name, fullItem}) => (
     <Pressable
       onPress={() => navigation.navigate('Saved Location', {fullItem})}>
-      <HStack bgColor="#3c83f3ff" rounded="lg" my="2" px="4" py="2" alignItems="center">
+      <HStack
+        bgColor="#3c83f3ff"
+        rounded="lg"
+        my="2"
+        px="4"
+        py="2"
+        alignItems="center">
         <Image
           border={1}
           borderWidth={5}
@@ -52,12 +58,7 @@ function SavedScreen({navigation}) {
           alt="No image"
           size="xl"
         />
-        <Heading
-          ml="4"
-          fontSize="xl"
-          color="white"
-          maxW="50%"
-          >
+        <Heading ml="4" fontSize="2xl" color="white" maxW="50%">
           {name}
         </Heading>
       </HStack>

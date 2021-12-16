@@ -3,8 +3,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Button} from 'native-base';
 import Profile from './Profile';
 import ProfileForm from './ProfileForm';
-import { useAuth } from '../../providers/AuthProvider';
-
+import {useAuth} from '../../providers/AuthProvider';
 
 const Stack = createNativeStackNavigator();
 
@@ -19,7 +18,7 @@ function ProfileStack() {
         options={{
           headerRight: () => (
             <Button
-              colorScheme="lightBlue"
+              colorScheme="blue"
               rounded="md"
               size="sm"
               variant="outline"
