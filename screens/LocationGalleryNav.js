@@ -97,10 +97,12 @@ function LocationGalleryNav(props) {
             <Heading size="md">{displayUsername}</Heading>
           </Stack>
           <Text fontWeight="400">
-            {displayDescription ? (
-              <Text>{displayDescription}</Text>
-            ) : (
+            {displayDescription === '' ||
+            displayDescription === null ||
+            displayDescription === 'undefined' ? (
               <Text>No description</Text>
+            ) : (
+              <Text>{displayDescription}</Text>
             )}
           </Text>
           <HStack alignItems="center" space={4} justifyContent="space-between">

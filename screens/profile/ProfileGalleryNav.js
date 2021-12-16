@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
-import {Text} from 'react-native';
 import {
+  Text,
   Box,
   Heading,
   Stack,
@@ -103,11 +103,15 @@ function ProfileGalleryNav(props) {
               <Heading size="md">{displayLocation}</Heading>
             </Stack>
             <Text fontWeight="400">
-              {displayDescription ? (
-                <Text>{displayDescription}</Text>
-              ) : (
-                <Text>No description</Text>
-              )}
+              <Text fontWeight="400">
+                {displayDescription === '' ||
+                displayDescription === null ||
+                displayDescription === 'undefined' ? (
+                  <Text>No description</Text>
+                ) : (
+                  <Text>{displayDescription}</Text>
+                )}
+              </Text>
             </Text>
             <Text
               color="coolGray.600"
