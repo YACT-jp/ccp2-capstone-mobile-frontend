@@ -19,9 +19,13 @@ import {
   Pressable,
   ArrowBackIcon,
   ArrowForwardIcon,
+  Icon,
 } from 'native-base';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, ImageBackground} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
+import { getHeaderTitle } from '@react-navigation/elements';
+import MatIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import {useAuth} from '../providers/AuthProvider';
 import {
   getAsyncSavedLocations,
@@ -73,6 +77,26 @@ function Location({route, navigation}) {
     setRefresh(!refresh);
     fetchDelData();
   };
+
+  /** Style the header with data */
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitle: () =>
+        <View>
+            <Text fontWeight="bold" fontSize="lg">{name}</Text>
+            <Text>{fullItem.media_name || ''}</Text>
+        </View>,
+        headerRight: () => (
+          <>
+          {isLocationSaved ? (
+                <MatIcon name="bookmark-check" size={40} color="#ff0000" onPress={onDeleteClick} />
+            ) : (
+                <MatIcon name="bookmark-off-outline" size={40} color="#dddddd"  onPress={onSaveClick} />
+            )}
+          </>
+        )
+    });
+  }, [navigation, isLocationSaved]);
 
   /** load SavedLocations from AsyncStorage */
   useEffect(() => {
@@ -138,30 +162,72 @@ function Location({route, navigation}) {
   // Header element for the scrolling Flatlist
   const _renderHeader = () => (
     <ScrollView>
-      <VStack mb="4" space={4} alignItems="center">
+      <VStack mb="4" alignItems="center">
         <AspectRatio w="100%" ratio={16 / 9}>
           {location_pic === '' || location_pic === null ? (
             <Center flex="1">
               <Text fontWeight="400">No Image yet</Text>
             </Center>
           ) : (
-            <Image
+            <ImageBackground
               source={{
                 uri: location_pic,
               }}
-              alt="image"
-            />
+              alt="image">
+                <Button colorScheme="blue" position="absolute" right="2" top="2" onPress={() => setShowModal(true)}>
+                  <MatIcon name="camera-plus" size={25} color="#ffffff" />
+                </Button>
+              </ImageBackground>
           )}
         </AspectRatio>
         <Box
+        safeArea
+        w="100%"
+        mt="0"
+        mb="4"
+        borderColor="coolGray.200"
+        borderWidth="1"
+        p="2"
+        shadow="3"
+        _dark={{
+          borderColor: 'coolGray.600',
+          backgroundColor: 'gray.700',
+        }}
+        _web={{
+          shadow: 2,
+          borderWidth: 0,
+        }}
+        _light={{
+          backgroundColor: 'gray.50',
+        }}>
+          <Text fontWeight="400" mb="1">
+            {description === '' || description === null
+              ? 'No description yet.'
+              : description}
+          </Text>
+          <>
+          {fullItem.media_pics !== undefined && fullItem.media_pics.length > 0 && (
+              <AspectRatio w="100%" ratio={16 / 9}>
+                <Image
+                  source={{
+                    uri: fullItem.media_pics[0],
+                  }}
+                  alt={`Media pic from ${fullItem.media_name}`}
+                />
+              </AspectRatio>
+            )}
+          </>
+        </Box>
+        <Box
           safeArea
-          w="80"
-          maxW="80"
+          w="90%"
+          maxW="90%"
           rounded="lg"
           overflow="hidden"
           borderColor="coolGray.200"
           borderWidth="1"
           p="2"
+          pb="1"
           _dark={{
             borderColor: 'coolGray.600',
             backgroundColor: 'gray.700',
@@ -173,17 +239,7 @@ function Location({route, navigation}) {
           _light={{
             backgroundColor: 'gray.50',
           }}>
-          <Stack p="4" space={3}>
-            <Stack space={2}>
-              <Heading size="md" ml="-1">
-                {name}
-              </Heading>
-            </Stack>
-            <Text fontWeight="400">
-              {description === '' || description === null
-                ? 'No description yet.'
-                : description}
-            </Text>
+          <Stack p="2" space={3}>
             <Box
               flex={1}
               justifyContent="flex-end"
@@ -214,17 +270,24 @@ function Location({route, navigation}) {
               </AspectRatio>
             </Box>
             {isLocationSaved ? (
-              <Button colorScheme="blue" size="md" onPress={onDeleteClick}>
-                Remove Location
+              <Button colorScheme="blue" size="md" onPress={onDeleteClick} 
+                leftIcon={<Icon as={MatIcon} name="bookmark-minus"
+                  _dark={{
+                    color: "warmGray.50",
+                  }}
+                />}>
+                 Remove Location         
               </Button>
             ) : (
-              <Button colorScheme="blue" size="md" onPress={onSaveClick}>
+              <Button colorScheme="blue" size="md" onPress={onSaveClick}
+              leftIcon={<Icon as={MatIcon} name="bookmark-plus-outline"
+                  _dark={{
+                    color: "warmGray.50",
+                  }}
+                />}>
                 Save Location
               </Button>
             )}
-            <Button colorScheme="blue" onPress={() => setShowModal(true)}>
-              Add Photo
-            </Button>
             <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
               <LocationPhotoUpload
                 setShowModal={setShowModal}
@@ -236,7 +299,20 @@ function Location({route, navigation}) {
           </Stack>
         </Box>
       </VStack>
+      { photoData.length > 0 && <Heading><MatIcon name="image-multiple-outline" size={30} /> User Photo Gallery</Heading> }
     </ScrollView>
+  );
+
+  // Footer element for the scrolling Flatlist
+  const _renderFooter = () => (
+    <Button colorScheme="blue" w="90%" mx="5" my="2" onPress={() => setShowModal(true)}
+      leftIcon={<Icon as={MatIcon} name="camera-plus"
+          _dark={{
+            color: "warmGray.50",
+          }}
+        />}>
+      Add Your Own Photo
+    </Button>
   );
 
   return (
@@ -245,6 +321,7 @@ function Location({route, navigation}) {
         <Box flex="1" safeAreaTop>
           <FlatList
             ListHeaderComponent={() => _renderHeader()}
+            ListFooterComponent={() => _renderFooter()}
             numColumns={4}
             key={4}
             data={photoData}
