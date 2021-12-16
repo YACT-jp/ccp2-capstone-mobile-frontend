@@ -26,15 +26,14 @@ function HomeScreen({navigation}) {
     async function fetchData() {
       try {
         const mediaData = await mediaResultsApi();
-        const fetchedThreeMedias = fetchThreeRandomData(mediaData);
-
         const locationData = await locationResultApi();
-        const fetchedThreeLocations = fetchThreeRandomData(locationData);
 
-        setRandomizedData([
-          {title: 'Top Media', data: fetchedThreeMedias},
-          {title: 'Top Locations', data: fetchedThreeLocations},
-        ]);
+        if (mediaData !== undefined && locationData !== undefined) {
+          setRandomizedData([
+            {title: 'Top Media', data: fetchThreeRandomData(mediaData)},
+            {title: 'Top Locations', data: fetchThreeRandomData(locationData)},
+          ]);
+        }
       } catch (error) {
         throw error;
       }
