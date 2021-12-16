@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
-import {Text} from 'react-native';
 import {
+  Text,
   Box,
   Heading,
   Stack,
@@ -12,7 +12,6 @@ import {
   ArrowForwardIcon,
 } from 'native-base';
 import {deletePhoto, getUser, getLocation} from '../../data/data';
-import {retrieveUserSession} from '../data/secureStorage';
 import {getDisplayDate} from '../../data/dateUtils';
 
 function ProfileGalleryNav(props) {
@@ -103,11 +102,15 @@ function ProfileGalleryNav(props) {
               <Heading size="md">{displayLocation}</Heading>
             </Stack>
             <Text fontWeight="400">
-              {displayDescription ? (
-                <Text>{displayDescription}</Text>
-              ) : (
-                <Text>No description</Text>
-              )}
+              <Text fontWeight="400">
+                {displayDescription === '' ||
+                displayDescription === null ||
+                displayDescription === 'undefined' ? (
+                  <Text>No description</Text>
+                ) : (
+                  <Text>{displayDescription}</Text>
+                )}
+              </Text>
             </Text>
             <Text
               color="coolGray.600"
