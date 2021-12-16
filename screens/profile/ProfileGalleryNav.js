@@ -134,7 +134,7 @@ function ProfileGalleryNav(props) {
             Delete
           </Button>
           <Modal isOpen={deleteModal} onClose={() => setDeleteModal(false)}>
-            <Modal.Content size="2xs" maxW="200" maxH="150">
+            <Modal.Content size="2xs" maxW="250" maxH="130">
               <Box
                 alignItems="center"
                 justifyContent="center"
