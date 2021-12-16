@@ -194,11 +194,11 @@ function HomeScreen({navigation}) {
           }>
           Search
         </Button>
-        <Text style={{fontsize: 18}}>
+        <Text style={{textAlign: 'center'}}>
           You may like these contents?
         </Text>
         <FlatList data={threeRandomMedias} renderItem={renderMediaItem}></FlatList>
-        <Text style={{fontsize: 18}}>
+        <Text style={{textAlign: 'center'}}>
           May be you wanna visit place here?
         </Text>
         <FlatList data={threeRandomLocations} renderItem={renderLocationItem}></FlatList>
