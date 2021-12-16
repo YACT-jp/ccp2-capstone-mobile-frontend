@@ -40,8 +40,7 @@ function HomeScreen({navigation}) {
     }
     setTimeout(() => {
       fetchData();
-    }, 250);
-    
+    }, 500);
   }, []);
 
   //Hanlder
@@ -197,6 +196,7 @@ function HomeScreen({navigation}) {
             </Heading>
           )}
         />
+        <Box py="15" />
       </Center>
     </NativeBaseProvider>
   );
