@@ -38,7 +38,10 @@ function HomeScreen({navigation}) {
         throw error;
       }
     }
-    fetchData();
+    setTimeout(() => {
+      fetchData();
+    }, 250);
+    
   }, []);
 
   //Hanlder
