@@ -123,7 +123,7 @@ function ResultsScreen({navigation}) {
           <SearchIcon m="2" ml="3" size="6" color="gray.400" size="sm" />
         }
       />
-      <Center>
+      <Center mb="20">
         <FlatList data={DATA} renderItem={renderItem} />
       </Center>
     </NativeBaseProvider>
@@ -131,20 +131,3 @@ function ResultsScreen({navigation}) {
 }
 
 export default ResultsScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    flex: 1,
-  },
-  item: {
-    backgroundColor: '#3b81f6',
-    padding: 10,
-    marginVertical: 2,
-    marginHorizontal: 16,
-  },
-  name: {
-    fontSize: 32,
-  },
-});

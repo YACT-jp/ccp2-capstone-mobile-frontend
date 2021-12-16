@@ -1,10 +1,8 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {View, StyleSheet, Image} from 'react-native';
 import appLogo from '../assets/images/emina_logo.png';
 
 const StartUpScreen = () => {
-  useEffect(() => {
-  }, []);
 
   return (
     <View style={styles.container}>

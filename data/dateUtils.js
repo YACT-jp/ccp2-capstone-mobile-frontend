@@ -1,5 +1,6 @@
-import moment from 'moment';
+import moment from 'moment-timezone';
 
 export const getDisplayDate = timestamp => {
-  return moment(timestamp, 'YYYYMMDDHHmmss').fromNow();
+  const string = moment(timestamp, 'YYYYMMDDHHmmss').add(8, 'h')  
+  return string.fromNow();
 };
