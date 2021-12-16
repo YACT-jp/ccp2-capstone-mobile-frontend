@@ -19,10 +19,12 @@ import {
   Pressable,
   ArrowBackIcon,
   ArrowForwardIcon,
+  Icon,
 } from 'native-base';
 import {View, StyleSheet, ImageBackground} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import { getHeaderTitle } from '@react-navigation/elements';
+import MatIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {useAuth} from '../providers/AuthProvider';
 import {
@@ -87,13 +89,9 @@ function Location({route, navigation}) {
         headerRight: () => (
           <>
           {isLocationSaved ? (
-              <Button colorScheme="white" size="md" onPress={onDeleteClick}>
-                *
-              </Button>
+                <MatIcon name="bookmark-check" size={40} color="#ff0000" onPress={onDeleteClick} />
             ) : (
-              <Button colorScheme="blue" size="md" onPress={onSaveClick}>
-                o
-              </Button>
+                <MatIcon name="bookmark-off-outline" size={40} color="#dddddd"  onPress={onSaveClick} />
             )}
           </>
         )
@@ -176,8 +174,8 @@ function Location({route, navigation}) {
                 uri: location_pic,
               }}
               alt="image">
-                <Button colorScheme="blue" w="100" position="absolute" right="2" top="2" onPress={() => setShowModal(true)}>
-                  Add Photo
+                <Button colorScheme="blue" position="absolute" right="2" top="2" onPress={() => setShowModal(true)}>
+                  <MatIcon name="camera-plus" size={25} color="#ffffff" />
                 </Button>
               </ImageBackground>
           )}
@@ -272,11 +270,21 @@ function Location({route, navigation}) {
               </AspectRatio>
             </Box>
             {isLocationSaved ? (
-              <Button colorScheme="blue" size="md" onPress={onDeleteClick}>
-                Remove Location
+              <Button colorScheme="blue" size="md" onPress={onDeleteClick} 
+                leftIcon={<Icon as={MatIcon} name="bookmark-minus"
+                  _dark={{
+                    color: "warmGray.50",
+                  }}
+                />}>
+                 Remove Location         
               </Button>
             ) : (
-              <Button colorScheme="blue" size="md" onPress={onSaveClick}>
+              <Button colorScheme="blue" size="md" onPress={onSaveClick}
+              leftIcon={<Icon as={MatIcon} name="bookmark-plus-outline"
+                  _dark={{
+                    color: "warmGray.50",
+                  }}
+                />}>
                 Save Location
               </Button>
             )}
@@ -291,13 +299,18 @@ function Location({route, navigation}) {
           </Stack>
         </Box>
       </VStack>
-      { photoData.length > 0 && <Heading>User Photo Gallery</Heading> }
+      { photoData.length > 0 && <Heading><MatIcon name="image-multiple-outline" size={30} /> User Photo Gallery</Heading> }
     </ScrollView>
   );
 
   // Footer element for the scrolling Flatlist
   const _renderFooter = () => (
-    <Button colorScheme="blue" w="90%" mx="5" my="2" onPress={() => setShowModal(true)}>
+    <Button colorScheme="blue" w="90%" mx="5" my="2" onPress={() => setShowModal(true)}
+      leftIcon={<Icon as={MatIcon} name="camera-plus"
+          _dark={{
+            color: "warmGray.50",
+          }}
+        />}>
       Add Your Own Photo
     </Button>
   );
