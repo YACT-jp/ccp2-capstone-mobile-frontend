@@ -23,7 +23,7 @@ import {
 } from 'native-base';
 import {View, StyleSheet, ImageBackground} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
-import { getHeaderTitle } from '@react-navigation/elements';
+import {getHeaderTitle} from '@react-navigation/elements';
 import MatIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {useAuth} from '../providers/AuthProvider';
@@ -81,13 +81,16 @@ function Location({route, navigation}) {
   /** Style the header with data */
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      headerTitle: () =>
+      headerTitle: () => (
         <View>
-            <Text fontWeight="bold" fontSize="lg">{name}</Text>
-            <Text>{fullItem.media_name || ''}</Text>
-        </View>,
-        headerRight: () => (
-          <>
+          <Text fontWeight="bold" fontSize="lg">
+            {name}
+          </Text>
+          <Text>{fullItem.media_name || ''}</Text>
+        </View>
+      ),
+      headerRight: () => (
+        <>
           {isLocationSaved ? (
                 <MatIcon name="bookmark-check" style={{ position: 'absolute', right: -15}} size={40} color="#ff0000" onPress={onDeleteClick} />
             ) : (
@@ -174,48 +177,54 @@ function Location({route, navigation}) {
                 uri: location_pic,
               }}
               alt="image">
-                <Button colorScheme="blue" position="absolute" right="2" top="2" onPress={() => setShowModal(true)}>
-                  <MatIcon name="camera-plus" size={25} color="#ffffff" />
-                </Button>
-              </ImageBackground>
+              <Button
+                colorScheme="blue"
+                position="absolute"
+                right="2"
+                top="2"
+                onPress={() => setShowModal(true)}>
+                <MatIcon name="camera-plus" size={25} color="#ffffff" />
+              </Button>
+            </ImageBackground>
           )}
         </AspectRatio>
         <Box
-        safeArea
-        w="100%"
-        mt="0"
-        mb="4"
-        borderColor="coolGray.200"
-        borderWidth="1"
-        p="2"
-        shadow="3"
-        _dark={{
-          borderColor: 'coolGray.600',
-          backgroundColor: 'gray.700',
-        }}
-        _web={{
-          shadow: 2,
-          borderWidth: 0,
-        }}
-        _light={{
-          backgroundColor: 'gray.50',
-        }}>
+          safeArea
+          w="100%"
+          mt="0"
+          mb="4"
+          borderColor="coolGray.200"
+          borderWidth="1"
+          p="2"
+          shadow="3"
+          _dark={{
+            borderColor: 'coolGray.600',
+            backgroundColor: 'gray.700',
+          }}
+          _web={{
+            shadow: 2,
+            borderWidth: 0,
+          }}
+          _light={{
+            backgroundColor: 'gray.50',
+          }}>
           <Text fontWeight="400" mb="1">
             {description === '' || description === null
               ? 'No description yet.'
               : description}
           </Text>
           <>
-          {fullItem.media_pics !== undefined && fullItem.media_pics.length > 0 && (
-              <AspectRatio w="100%" ratio={16 / 9}>
-                <Image
-                  source={{
-                    uri: fullItem.media_pics[0],
-                  }}
-                  alt={`Media pic from ${fullItem.media_name}`}
-                />
-              </AspectRatio>
-            )}
+            {fullItem.media_pics !== undefined &&
+              fullItem.media_pics.length > 0 && (
+                <AspectRatio w="100%" ratio={16 / 9}>
+                  <Image
+                    source={{
+                      uri: fullItem.media_pics[0],
+                    }}
+                    alt={`Media pic from ${fullItem.media_name}`}
+                  />
+                </AspectRatio>
+              )}
           </>
         </Box>
         <Box
@@ -270,21 +279,35 @@ function Location({route, navigation}) {
               </AspectRatio>
             </Box>
             {isLocationSaved ? (
-              <Button colorScheme="blue" size="md" onPress={onDeleteClick} 
-                leftIcon={<Icon as={MatIcon} name="bookmark-minus"
-                  _dark={{
-                    color: "warmGray.50",
-                  }}
-                />}>
-                 Remove Location         
+              <Button
+                colorScheme="blue"
+                size="md"
+                onPress={onDeleteClick}
+                leftIcon={
+                  <Icon
+                    as={MatIcon}
+                    name="bookmark-minus"
+                    _dark={{
+                      color: 'warmGray.50',
+                    }}
+                  />
+                }>
+                Remove Location
               </Button>
             ) : (
-              <Button colorScheme="blue" size="md" onPress={onSaveClick}
-              leftIcon={<Icon as={MatIcon} name="bookmark-plus-outline"
-                  _dark={{
-                    color: "warmGray.50",
-                  }}
-                />}>
+              <Button
+                colorScheme="blue"
+                size="md"
+                onPress={onSaveClick}
+                leftIcon={
+                  <Icon
+                    as={MatIcon}
+                    name="bookmark-plus-outline"
+                    _dark={{
+                      color: 'warmGray.50',
+                    }}
+                  />
+                }>
                 Save Location
               </Button>
             )}
@@ -299,18 +322,31 @@ function Location({route, navigation}) {
           </Stack>
         </Box>
       </VStack>
-      { photoData.length > 0 && <Heading><MatIcon name="image-multiple-outline" size={30} /> User Photo Gallery</Heading> }
+      {photoData !== undefined ? (
+        <Heading>
+          <MatIcon name="image-multiple-outline" size={30} /> User Photo Gallery
+        </Heading>
+      ) : null}
     </ScrollView>
   );
 
   // Footer element for the scrolling Flatlist
   const _renderFooter = () => (
-    <Button colorScheme="blue" w="90%" mx="5" my="2" onPress={() => setShowModal(true)}
-      leftIcon={<Icon as={MatIcon} name="camera-plus"
+    <Button
+      colorScheme="blue"
+      w="90%"
+      mx="5"
+      my="2"
+      onPress={() => setShowModal(true)}
+      leftIcon={
+        <Icon
+          as={MatIcon}
+          name="camera-plus"
           _dark={{
-            color: "warmGray.50",
+            color: 'warmGray.50',
           }}
-        />}>
+        />
+      }>
       Add Your Own Photo
     </Button>
   );
