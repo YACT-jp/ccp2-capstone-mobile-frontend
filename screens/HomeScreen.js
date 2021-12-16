@@ -187,43 +187,38 @@ function HomeScreen({navigation}) {
 
   return (
     <NativeBaseProvider theme={theme}>
-      <ScrollView
-        style={styles.container}
-        style={{
-          backgroundColor: isDarkMode ? '#000' : '#fff',
-        }}>
-        <Input
-          value={queryString}
-          onChangeText={input => {
-            setQueryString(input);
-          }}
-          placeholder="Search anime, novels, &amp; movies"
-          bg="#fff"
-          width="100%"
-          borderRadius="4"
-          py="3"
-          px="1"
-          fontSize="14"
-          _web={{
-            _focus: {borderColor: 'muted.300', style: {boxShadow: 'none'}},
-          }}
-          InputLeftElement={
-            <SearchIcon m="2" ml="3" size="6" color="gray.400" size="sm" />
-          }
-          InputRightElement={
-            <Button
-              mr="5"
-              size="lg"
-              margin="2"
-              colorScheme="blue"
-              onPress={() =>
-                navigation.navigate('Search', {screen: 'Media Results'})
-              }>
-              Search
-            </Button>
-          }
-        />
-
+      <Input
+        value={queryString}
+        onChangeText={input => {
+          setQueryString(input);
+        }}
+        placeholder="Search anime, novels, &amp; movies"
+        bg="#fff"
+        width="100%"
+        borderRadius="4"
+        py="3"
+        px="1"
+        fontSize="14"
+        _web={{
+          _focus: {borderColor: 'muted.300', style: {boxShadow: 'none'}},
+        }}
+        InputLeftElement={
+          <SearchIcon m="2" ml="3" size="6" color="gray.400" size="sm" />
+        }
+        InputRightElement={
+          <Button
+            mr="5"
+            size="lg"
+            margin="2"
+            colorScheme="blue"
+            onPress={() =>
+              navigation.navigate('Search', {screen: 'Media Results'})
+            }>
+            Search
+          </Button>
+        }
+      />
+      <ScrollView>
         <Heading mt="2" style={{textAlign: 'center'}}>
           Top Media
         </Heading>
