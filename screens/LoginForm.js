@@ -17,7 +17,7 @@ import {
 import {useAuth, AuthProvider} from '../providers/AuthProvider';
 
 export const LoginForm = ({navigation: {navigate}}) => {
-  const appText = require('../assets/emina_text.png');
+  const appText = require('../assets/images/emina_text.png');
   const {signIn} = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
