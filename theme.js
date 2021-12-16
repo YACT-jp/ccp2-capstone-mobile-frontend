@@ -76,7 +76,7 @@ export default extendTheme({
         };
       },
       defaultProps: {
-        colorScheme: 'lightBlue',
+        colorScheme: 'blue',
       },
     },
   },

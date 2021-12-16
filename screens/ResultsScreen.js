@@ -1,17 +1,16 @@
 import React, {useEffect, useState, useCallback} from 'react';
-import {StyleSheet, useColorScheme, FlatList} from 'react-native';
+import {StyleSheet, useColorScheme} from 'react-native';
 import {
+  FlatList,
   Center,
   Heading,
   Input,
-  IconButton,
   HStack,
   VStack,
   Pressable,
   Text,
   Image,
   NativeBaseProvider,
-  ScrollView,
   SearchIcon,
 } from 'native-base';
 import {TextInput} from 'react-native';
@@ -121,20 +120,10 @@ function ResultsScreen({navigation}) {
           _focus: {borderColor: 'muted.300', style: {boxShadow: 'none'}},
         }}
         InputLeftElement={
-          <IconButton
-            m="2"
-            ml="3"
-            size="6"
-            color="gray.400"
-            icon={<SearchIcon />}
-            _icon={{
-              color: '#3c83f3ff',
-              size: 'sm',
-            }}
-          />
+          <SearchIcon m="2" ml="3" size="6" color="gray.400" size="sm" />
         }
       />
-      <Center mb="20">
+      <Center>
         <FlatList data={DATA} renderItem={renderItem} />
       </Center>
     </NativeBaseProvider>
