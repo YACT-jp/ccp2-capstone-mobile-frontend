@@ -25,7 +25,6 @@ function HomeScreen({navigation}) {
     setThreeRandomMedia(fetchedThreeMedias);
 
     const locationData = await locationResultApi();
-    console.log(locationData);
     const fetchedThreeLocations = fetchThreeRandomData(locationData);
     setThreeRandomLocations(fetchedThreeLocations);
   },[]);
