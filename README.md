@@ -32,3 +32,31 @@ ie.
 ```
 npx react-native start --port=8088
 ```
+
+## Building official AAB package for Google Play Store Release 
+
+1. Run the following command - this will also update the androidVersion required in the release
+
+```
+npm run android-build
+```
+
+### Test builds
+
+1. Run the following command - this will NOT update the androidVersion
+
+```
+npm run android-temp-build
+```
+
+2. Test the application in the Android Emulator
+
+```
+npm run test-android-build
+```
+
+### Note
+
+Although build may be successful on your local, only the one with the upload key will have a successful upload for the Play Store release.
+
+- https://reactnative.dev/docs/signed-apk-android
