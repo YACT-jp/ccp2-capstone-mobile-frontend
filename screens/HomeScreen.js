@@ -25,6 +25,7 @@ function HomeScreen({navigation}) {
     setThreeRandomMedia(fetchedThreeMedias);
 
     const locationData = await locationResultApi();
+    console.log(locationData);
     const fetchedThreeLocations = fetchThreeRandomData(locationData);
     setThreeRandomLocations(fetchedThreeLocations);
   },[]);
@@ -42,21 +43,13 @@ function HomeScreen({navigation}) {
     return randomThree.map(index => data[index]);
   }
 
-  const renderMediaItem = ({item}) =>
-  item.name.toLowerCase().includes(queryString.toLowerCase()) ? (
-    <MediaItem
-      name={item.name}
-      path={item['poster_path']}
-      description={item['overview']}
-      id={item['id']}
-    />
-  ) : null;
-
-  const renderLocationItem = ({item}) => (
-    //JSON.parse(item['Media id']).includes(mediaId) ? <Item name={item.Name} fullItem={item} /> : null
-    <LocationItem name={item.name} fullItem={item} />
+  const renderMediaItem = ({item}) => (
+    <MediaItem name={item.name} path={item['poster_path']} description={item['overview']} id={item['id']}/>
   );
 
+  const renderLocationItem = ({item}) => (
+    <LocationItem fullItem={item} media_name={item.media_name} description={item.description}/>
+  );
 
   const MediaItem = ({name, path, description, mediaId}) => (
     <NativeBaseProvider>
@@ -107,49 +100,52 @@ function HomeScreen({navigation}) {
     </NativeBaseProvider>
   );
 
-  const LocationItem = ({name, fullItem}) => (
+  const LocationItem = ({fullItem, media_name, description}) => (
     <NativeBaseProvider>
-      <View style={styles.item} rounded="xl">
+      <View style={styles.item} rounded="lg">
         <Pressable
-          rounded="xl"
+          rounded="lg"
           onPress={() => navigation.navigate('Location', {fullItem})}>
-          <HStack
-            style={styles.container}
-            space={5}
-            justifyContent="space-between">
+          <HStack style={styles.container} space={5}>
             <Image
               border={1}
-              borderWidth={5}
+              borderWidth={2}
               borderColor="white"
               height={150}
               borderRadius={150}
               source={{
                 uri: fullItem.location_pic,
               }}
-              alt="Alternate Text"
-              size="xl"
-              ml="5"
+              alt={`${media_name} poster`}
+              size="md"
+              ml="2"
             />
-            <Text
-              fontSize="4xl"
-              lineHeight="sm"
-              color="white"
-              isTruncated
-              maxW="180"
-              w="80%"
-              multiline={true}
-              numberOfLines={3}>
-              {name}
-            </Text>
-            <Text>
-              {console.log(fullItem)}
-            </Text>
+            <VStack>
+              <Text
+                fontSize="xl"
+                color="white"
+                isTruncated
+                maxW="225"
+                lineHeight="xs">
+                {media_name}
+              </Text>
+              <Text
+                  mt="1"
+                  fontSize="2xs"
+                  color="white"
+                  isTruncated
+                  maxW="225"
+                  fontWeight="500"
+                  multiline={true}
+                  numberOfLines={3}>
+                  {description}
+                </Text>
+            </VStack>
           </HStack>
         </Pressable>
       </View>
     </NativeBaseProvider>
   );
-
 
   const styles = StyleSheet.create({
     container: {
@@ -166,6 +162,9 @@ function HomeScreen({navigation}) {
     name: {
       fontSize: 32,
     },
+    media_name: {
+      fontSize: 32,
+    },
   });
 
   return (
@@ -178,29 +177,31 @@ function HomeScreen({navigation}) {
         style={{
           backgroundColor: isDarkMode ? '#000' : '#fff',
         }}>
-        <Text style={styles.text}>Home Page</Text>
         <TextInput
           value={text}
           style={{fontSize: 42, color: 'steelblue'}}
-          placeholder="Type here..."
+          placeholder="I want to search..."
           onChangeText={text => {
             setText(text);
             setQueryString(text);
           }}
         />
-        <Text style={{fontSize: 24}}>
-          {'\n'}You entered: {text}
-        </Text>
-        <FlatList data={threeRandomMedias} renderItem={renderMediaItem}></FlatList>
-        <FlatList data={threeRandomLocations} renderItem={renderLocationItem}></FlatList>
         <Button
           margin="2"
           colorScheme="blue"
           onPress={() =>
             navigation.navigate('Search', {screen: 'Media Results'})
           }>
-          Go to Results
+          Search
         </Button>
+        <Text style={{fontsize: 18}}>
+          You may like these contents?
+        </Text>
+        <FlatList data={threeRandomMedias} renderItem={renderMediaItem}></FlatList>
+        <Text style={{fontsize: 18}}>
+          May be you wanna visit place here?
+        </Text>
+        <FlatList data={threeRandomLocations} renderItem={renderLocationItem}></FlatList>
       </ScrollView>
     </SafeAreaView>
   );
