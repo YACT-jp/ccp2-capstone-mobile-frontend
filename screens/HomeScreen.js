@@ -1,41 +1,45 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, useColorScheme, SafeAreaView} from 'react-native';
 import {
   SearchIcon,
   Center,
   Input,
-  FlatList,
   Heading,
   Button,
   Text,
   Box,
   HStack,
-  View,
   VStack,
-  Pressable,
   Image,
   NativeBaseProvider,
-  ScrollView,
+  SectionList,
 } from 'native-base';
 import theme from '../theme';
 import {searchContext} from '../providers/SearchProvider';
 import {mediaResultsApi, locationResultApi} from '../data/data';
 
 function HomeScreen({navigation}) {
-  const isDarkMode = useColorScheme() === 'dark';
   const [queryString, setQueryString] = React.useContext(searchContext);
-  const [threeRandomMedias, setThreeRandomMedia] = useState([]);
-  const [threeRandomLocations, setThreeRandomLocations] = useState([]);
+  const [randomizedData, setRandomizedData] = useState([]);
 
   //Hook
-  useEffect(async () => {
-    const mediaData = await mediaResultsApi();
-    const fetchedThreeMedias = fetchThreeRandomData(mediaData);
-    setThreeRandomMedia(fetchedThreeMedias);
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const mediaData = await mediaResultsApi();
+        const fetchedThreeMedias = fetchThreeRandomData(mediaData);
 
-    const locationData = await locationResultApi();
-    const fetchedThreeLocations = fetchThreeRandomData(locationData);
-    setThreeRandomLocations(fetchedThreeLocations);
+        const locationData = await locationResultApi();
+        const fetchedThreeLocations = fetchThreeRandomData(locationData);
+
+        setRandomizedData([
+          {title: 'Top Media', data: fetchedThreeMedias},
+          {title: 'Top Locations', data: fetchedThreeLocations},
+        ]);
+      } catch (error) {
+        throw error;
+      }
+    }
+    fetchData();
   }, []);
 
   //Hanlder
@@ -51,139 +55,101 @@ function HomeScreen({navigation}) {
     return randomThree.map(index => data[index]);
   }
 
-  const renderMediaItem = ({item}) => (
-    <MediaItem
-      name={item.name}
-      path={item['poster_path']}
-      description={item['overview']}
-      id={item['id']}
-    />
-  );
-
-  const renderLocationItem = ({item}) => (
-    <LocationItem
-      fullItem={item}
-      name={item.name}
-      description={item.description}
-    />
-  );
+  const renderItem = ({item}) => {
+    if (item.media_name === undefined) {
+      return (
+        <MediaItem
+          name={item.name}
+          path={item['poster_path']}
+          description={item['overview']}
+          id={item['id']}
+        />
+      );
+    } else {
+      return (
+        <LocationItem
+          fullItem={item}
+          name={item.name}
+          description={item.description}
+        />
+      );
+    }
+  };
 
   const MediaItem = ({name, path, description, mediaId}) => (
-    <Box
+    <HStack
+      bgColor="#d5524aff"
       rounded="lg"
-      // onPress={() =>
-      //   navigation.navigate('Location Results', {
-      //     name,
-      //     mediaId,
-      //     description,
-      //   })
-      // }
-    >
-      <HStack
-        bgColor="#d5524aff"
-        rounded="lg"
-        my="2"
-        px="4"
-        py="2"
-        alignItems="center">
-        <Image
-          border={1}
-          borderWidth={2}
-          borderColor="white"
-          height={150}
-          borderRadius={150}
-          source={{
-            uri: 'https://image.tmdb.org/t/p/w500' + path,
-          }}
-          alt={`${name} poster`}
-          size="md"
-        />
-        <VStack w="225" maxW="225" ml="4">
-          <Heading fontSize="xl" color="white">
-            {name}
-          </Heading>
-          <Text
-            fontSize="xs"
-            color="white"
-            isTruncated
-            fontWeight="500"
-            multiline={true}
-            numberOfLines={2}>
-            {description}
-          </Text>
-        </VStack>
-      </HStack>
-    </Box>
+      my="2"
+      px="4"
+      py="2"
+      alignItems="center">
+      <Image
+        border={1}
+        borderWidth={2}
+        borderColor="white"
+        height={150}
+        borderRadius={150}
+        source={{
+          uri: 'https://image.tmdb.org/t/p/w500' + path,
+        }}
+        alt={`${name} poster`}
+        size="md"
+      />
+      <VStack w="225" maxW="225" ml="4">
+        <Heading fontSize="xl" color="white">
+          {name}
+        </Heading>
+        <Text
+          fontSize="xs"
+          color="white"
+          isTruncated
+          fontWeight="500"
+          multiline={true}
+          numberOfLines={2}>
+          {description}
+        </Text>
+      </VStack>
+    </HStack>
   );
 
   const LocationItem = ({fullItem, name, description}) => (
-    <Box
+    <HStack
+      bgColor="#3c83f3ff"
       rounded="lg"
-      // onPress={() =>
-      //   navigation.navigate('Location Results', {
-      //     name,
-      //     mediaId,
-      //     description,
-      //   })
-      // }
-    >
-      <HStack
-        bgColor="#3c83f3ff"
-        rounded="lg"
-        my="2"
-        px="3"
-        py="2"
-        alignItems="center"
-        justifyContent="space-between">
-        <Image
-          border={1}
-          borderWidth={2}
-          borderColor="white"
-          height={150}
-          borderRadius={150}
-          source={{
-            uri: fullItem.location_pic,
-          }}
-          alt="Media Image"
-          size="md"
-          ml="2.5"
-        />
-        <VStack w="225" maxW="225" ml="4">
-          <Heading
-            fontSize="xl"
-            lineHeight="sm"
-            color="white"
-            isTruncated
-            maxW="200"
-            w="80%"
-            multiline={true}
-            numberOfLines={3}>
-            {name}
-          </Heading>
-        </VStack>
-      </HStack>
-    </Box>
+      my="2"
+      px="3"
+      py="2"
+      alignItems="center"
+      justifyContent="space-between">
+      <Image
+        border={1}
+        borderWidth={2}
+        borderColor="white"
+        height={150}
+        borderRadius={150}
+        source={{
+          uri: fullItem.location_pic,
+        }}
+        alt="Media Image"
+        size="md"
+        ml="2.5"
+      />
+      <VStack w="225" maxW="225" ml="4">
+        <Heading
+          fontSize="xl"
+          lineHeight="sm"
+          color="white"
+          isTruncated
+          maxW="200"
+          w="80%"
+          multiline={true}
+          numberOfLines={3}>
+          {name}
+        </Heading>
+      </VStack>
+    </HStack>
   );
-
-  const styles = StyleSheet.create({
-    container: {
-      justifyContent: 'center',
-      alignItems: 'center',
-      flex: 1,
-    },
-    item: {
-      backgroundColor: '#3b81f6',
-      padding: 10,
-      marginVertical: 2,
-      marginHorizontal: 16,
-    },
-    name: {
-      fontSize: 32,
-    },
-    media_name: {
-      fontSize: 32,
-    },
-  });
 
   return (
     <NativeBaseProvider theme={theme}>
@@ -218,20 +184,18 @@ function HomeScreen({navigation}) {
           </Button>
         }
       />
-      <ScrollView>
-        <Heading mt="2" style={{textAlign: 'center'}}>
-          Top Media
-        </Heading>
-        <Center>
-          <FlatList
-            data={threeRandomMedias}
-            renderItem={renderMediaItem}></FlatList>
-          <Heading style={{textAlign: 'center'}}>Top Locations</Heading>
-          <FlatList
-            data={threeRandomLocations}
-            renderItem={renderLocationItem}></FlatList>
-        </Center>
-      </ScrollView>
+      <Center>
+        <SectionList
+          sections={randomizedData}
+          keyExtractor={(item, index) => item + index}
+          renderItem={renderItem}
+          renderSectionHeader={({section: {title}}) => (
+            <Heading fontSize="lg" mt="8" mb="2">
+              {title}
+            </Heading>
+          )}
+        />
+      </Center>
     </NativeBaseProvider>
   );
 }
