@@ -111,7 +111,7 @@ export const savedLocationsApi = async userId => {
       },
     );
     const data = await response.json();
-    return data[0].bookmarks;
+    return data.bookmarks;
   } catch (err) {
     console.log(err);
   }

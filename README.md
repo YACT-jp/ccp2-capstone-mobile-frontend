@@ -1,4 +1,20 @@
-# ccp2-capstone-mobile-frontend
+# E-mina Pop Culture Tourism App - React Native Mobile Frontend
+
+## About the app
+
+![Screen shots of various E-mina screens](e-mina-screens.png?raw=true "Screen shots of various E-mina screens")
+
+E-Mina is a Pop Culture Tourism App that will introduce travelers to their favorite Japanese pop culture locations in real life, allowing users to self-curate the travel experience of their dreams.
+
+Re/Create memories in your favorite anime/movie/book locations and be able to share them with other members of the community.
+
+[Download the app from Google Play](https://play.google.com/store/apps/details?id=com.reactnativehello)
+
+## Technical Details
+
+Built using React, React Native, React Navigation, NativeBase, Android Studio, JWT Tokens and more. 
+
+Connects to the [backend REST api](https://github.com/YACT-jp/e-mina-backend)
 
 ## Cloning this repository
 
@@ -6,6 +22,14 @@
 git clone https://github.com/YACT-jp/ccp2-capstone-mobile-frontend.git
 npm install
 ```
+
+## Environment variables
+
+The app will look for a `.env` file with 
+```
+APPID=<your_app_id_here>
+````
+Create the file locally and replace <your_app_id_here> with your MongoDb Realm AppId
 
 ## Running locally
 
